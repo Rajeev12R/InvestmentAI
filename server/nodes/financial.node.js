@@ -1,19 +1,17 @@
+import { getFinancialData } from "../tools/financial.tool.js";
+
 export async function financialNode(state) {
 
     console.log("Running Financial Node");
+
+    const financials = await getFinancialData(state.companyProfile.ticker);
 
     return {
 
         ...state,
 
-        financials: {
-            revenue: "100B",
-            profit: "25B",
-            debt: null,
-            cashFlow: null,
-            peRatio: null,
-            marketCap: null
-        },
+        financials,
+        
         progress: [
             ...state.progress,
             "Financial research completed"
