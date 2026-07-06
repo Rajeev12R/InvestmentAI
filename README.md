@@ -4,8 +4,9 @@ Initail Planning
 
 For an AI Investment Research Agent that can perform due diligence like a junior investment analyst.
 Think about how an analyst at a VC, hedge fund or investment bank would work. They don't immediately say "Invest" They gather evidence, evaluate it, weigh risks, and then recommend.
-So, We should build something like:
 
+So, We should build something like:
+```
 Company
    ↓
 Evidence Collection
@@ -18,3 +19,4 @@ Investment Decision
    ↓
 Detailed Report
 
+```
