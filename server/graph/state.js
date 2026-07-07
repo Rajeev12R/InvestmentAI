@@ -7,9 +7,9 @@ export const GraphState = Annotation.Root({
 
     financials: Annotation(),
 
-    stock: Annotation(),
+    stockData: Annotation(),
 
-    news: Annotation(),
+    newsData: Annotation(),
 
     competitors: Annotation(),
 
