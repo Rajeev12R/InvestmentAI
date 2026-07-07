@@ -23,6 +23,7 @@ ${JSON.stringify(companyProfile, null, 2)}
 
     });
 
-    return JSON.parse(response.text);
+    const cleanedText = response.text.replace(/```json|```/g, "").trim();
+    return JSON.parse(cleanedText);
 
 }

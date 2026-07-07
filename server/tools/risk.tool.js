@@ -1,7 +1,7 @@
 import ai from "../services/gemini.service.js";
 import { riskPrompt } from "../prompts/risk.prompt.js";
 
-export async function analyzeRisk(state){
+export async function analyzeRisk(state) {
 
     const prompt = `
 ${riskPrompt}
@@ -16,11 +16,11 @@ ${JSON.stringify(state.financials)}
 
 Stock:
 
-${JSON.stringify(state.stock)}
+${JSON.stringify(state.stockData)}
 
 News:
 
-${JSON.stringify(state.news)}
+${JSON.stringify(state.newsData)}
 
 Competitors:
 
@@ -29,9 +29,9 @@ ${JSON.stringify(state.competitors)}
 
     const response = await ai.models.generateContent({
 
-        model:"gemini-2.5-flash",
+        model: "gemini-2.5-flash",
 
-        contents:prompt,
+        contents: prompt,
 
         config: {
             responseMimeType: "application/json"
@@ -39,6 +39,7 @@ ${JSON.stringify(state.competitors)}
 
     });
 
-    return JSON.parse(response.text);
+    const cleanedText = response.text.replace(/```json|```/g, "").trim();
+    return JSON.parse(cleanedText);
 
 }
