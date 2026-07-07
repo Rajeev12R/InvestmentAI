@@ -1,4 +1,4 @@
-import { analyzeRisk } from "../tools/risk.tool";
+import { analyzeRisk } from "../tools/risk.tool.js";
 
 export async function riskNode(state) {
     console.log("Running Risk Node");

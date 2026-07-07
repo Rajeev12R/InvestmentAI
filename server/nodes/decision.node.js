@@ -1,12 +1,12 @@
 import { generateDecision } from "../tools/decision.tool.js";
 
-export async function decisionNode(state){
+export async function decisionNode(state) {
 
     console.log("Running Decision Node");
 
     const decision = await generateDecision(state);
 
-    return{
+    return {
 
         ...state,
 
@@ -26,7 +26,7 @@ export async function decisionNode(state){
 
         investmentHorizon: decision.investmentHorizon,
 
-        progress:[
+        progress: [
             ...state.progress,
             "Investment decision generated"
         ]

@@ -11,7 +11,7 @@ export async function financialNode(state) {
         ...state,
 
         financials,
-        
+
         progress: [
             ...state.progress,
             "Financial research completed"

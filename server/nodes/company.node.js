@@ -1,6 +1,6 @@
 import { getCompanyProfile } from "../tools/company.tool.js";
 
-export async function companyNode(state){
+export async function companyNode(state) {
     console.log("Running Company Node");
 
     const companyProfile = await getCompanyProfile(state.companyName);
@@ -9,10 +9,10 @@ export async function companyNode(state){
 
         companyProfile,
 
-        progress:[
+        progress: [
             ...state.progress,
             "Company research completed"
         ]
     };
-    
+
 }

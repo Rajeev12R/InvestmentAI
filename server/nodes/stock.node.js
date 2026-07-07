@@ -4,12 +4,12 @@ export async function stockNode(state) {
 
     console.log("Running Stock Node");
 
-    const stock = await getStockData(state.companyProfile.ticker);
+    const stockData = await getStockData(state.companyProfile.ticker);
 
     return {
         ...state,
 
-        stock,
+        stockData,
 
         progress: [
             ...state.progress,
