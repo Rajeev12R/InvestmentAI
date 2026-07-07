@@ -3,6 +3,7 @@ import {GraphState} from "./state.js";
 
 import {companyNode} from "../nodes/company.node.js";
 import {financialNode} from "../nodes/financial.node.js";
+import {stockNode} from "../nodes/stock.node.js";
 import {newsNode} from "../nodes/news.node.js";
 import {competitorNode} from "../nodes/competitor.node.js";
 import {riskNode} from "../nodes/risk.node.js";
@@ -12,6 +13,7 @@ const graphBuilder = new StateGraph(GraphState);
 
 graphBuilder.addNode("company", companyNode);
 graphBuilder.addNode("financial", financialNode);
+graphBuilder.addNode("stock", stockNode);
 graphBuilder.addNode("news", newsNode);
 graphBuilder.addNode("competitor", competitorNode);
 graphBuilder.addNode("risk", riskNode);
@@ -19,7 +21,8 @@ graphBuilder.addNode("decision", decisionNode);
 
 graphBuilder.addEdge(START, "company");
 graphBuilder.addEdge("company", "financial");
-graphBuilder.addEdge("financial", "news");
+graphBuilder.addEdge("financial", "stock");
+graphBuilder.addEdge("stock", "news");
 graphBuilder.addEdge("news", "competitor");
 graphBuilder.addEdge("competitor", "risk");
 graphBuilder.addEdge("risk", "decision");
