@@ -1,16 +1,15 @@
-export async function competitorNode(state) {
+import { getCompetitors } from "../tools/competitor.tool.js";
+
+export async function competitorNode(state){
+
     console.log("Running Competitor Node");
 
-    return {
+    const competitors = await getCompetitors(state.companyProfile);
+
+    return{
         ...state,
-
-        competitors: [
-            "Google",
-            "Amazon",
-            "Oracle"
-        ],
-
-        progress: [
+        competitors,
+        progress:[
             ...state.progress,
             "Competitor research completed"
         ]
