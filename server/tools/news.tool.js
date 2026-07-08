@@ -8,16 +8,20 @@ export async function getCompanyNews(companyName) {
         );
 
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Unable to fetch news (Status: ${response.status}): ${errorText}`);
+            console.warn(`Unable to fetch news (Status: ${response.status}) - falling back to empty feed`);
+            return [];
         }
 
         const data = await response.json();
 
+        if (!data || !data.articles) {
+            return [];
+        }
+
         return data.articles.map(article => ({
             title: article.title,
             description: article.description,
-            source: article.source.name,
+            source: article.source?.name || "News Feed",
             publishedAt: article.publishedAt,
             url: article.url,
             image: article.image
@@ -27,8 +31,8 @@ export async function getCompanyNews(companyName) {
     }
 
     catch(error){
-        console.error(error);
-        throw error;
+        console.error("News Tool Warning (Graceful Fallback):", error.message);
+        return [];
 
     }
 

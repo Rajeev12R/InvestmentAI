@@ -1,5 +1,6 @@
 import ai from "../services/gemini.service.js";
 import { decisionPrompt } from "../prompts/decision.prompt.js";
+import { cleanAndParseJSON } from "../utils/jsonParser.js";
 
 export async function generateDecision(state) {
 
@@ -45,7 +46,6 @@ ${JSON.stringify(state.risks, null, 2)}
 
     });
 
-    const cleanedText = response.text.replace(/```json|```/g, "").trim();
-    return JSON.parse(cleanedText);
+    return cleanAndParseJSON(response.text);
 
 }

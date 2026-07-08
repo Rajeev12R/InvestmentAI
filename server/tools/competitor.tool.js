@@ -1,29 +1,36 @@
-import ai from "../services/gemini.service.js";
-import { competitorPrompt } from "../prompts/competitor.prompt.js";
+import YahooFinance from "yahoo-finance2";
+
+const yahooFinance = new YahooFinance();
 
 export async function getCompetitors(companyProfile) {
-
-    const prompt = `
-${competitorPrompt}
-
-Company:
-
-${JSON.stringify(companyProfile, null, 2)}
-`;
-
-    const response = await ai.models.generateContent({
-
-        model: "gemini-2.5-flash",
-
-        contents: prompt,
-
-        config: {
-            responseMimeType: "application/json"
+    try {
+        console.log(`Extracting competitors for: ${companyProfile.name}`);
+        
+        const searchResult = await yahooFinance.search(companyProfile.name || companyProfile.ticker);
+        
+        if (!searchResult || !searchResult.quotes || !searchResult.quotes.length) {
+            return { primaryCompetitors: [] };
         }
 
-    });
+        const primaryCompetitors = searchResult.quotes
+            .filter(quote => 
+                quote.symbol !== companyProfile.ticker && 
+                (quote.quoteType === "EQUITY" || quote.quoteType === "ETF") &&
+                (quote.shortname || quote.longname)
+            )
+            .slice(0, 5)
+            .map(quote => ({
+                name: quote.shortname || quote.longname || quote.symbol,
+                ticker: quote.symbol
+            }));
 
-    const cleanedText = response.text.replace(/```json|```/g, "").trim();
-    return JSON.parse(cleanedText);
-
+        return {
+            primaryCompetitors
+        };
+    } catch (error) {
+        console.error("Competitor Extraction Error:", error.message);
+        return {
+            primaryCompetitors: []
+        };
+    }
 }
