@@ -26,6 +26,10 @@ export async function decisionNode(state) {
 
         investmentHorizon: decision.investmentHorizon,
 
+        competitors: decision.competitors || state.competitors,
+
+        risks: decision.risks || state.risks,
+
         progress: [
             ...state.progress,
             "Investment decision generated"
