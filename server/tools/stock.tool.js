@@ -1,9 +1,13 @@
-import yahooFinance from "../services/yahooFinance.service.js";
+import yahooFinance, { scrapeQuotePage } from "../services/yahooFinance.service.js";
 
 export async function getStockData(symbol) {
     try {
 
-        const quote = await yahooFinance.quote(symbol);
+        const { quote } = await scrapeQuotePage(symbol);
+
+        if (!quote) {
+            throw new Error("Failed to load stock quote details");
+        }
 
         return {
             currentPrice: quote.regularMarketPrice ?? null,

@@ -1,36 +1,35 @@
-import yahooFinance from "../services/yahooFinance.service.js";
+import yahooFinance, { scrapeQuotePage } from "../services/yahooFinance.service.js";
 
-export async function getCompanyProfile(companyName){
+export async function getCompanyProfile(companyName) {
     try {
         const searchResult = await yahooFinance.search(companyName);
 
-        if (!searchResult.quotes.length) {
+        if (!searchResult || !searchResult.quotes || !searchResult.quotes.length) {
             throw new Error("Company not found");
         }
 
         const symbol = searchResult.quotes[0].symbol;
 
-        const summary = await yahooFinance.quoteSummary(symbol, {
-            modules: [
-                "assetProfile",
-                "price"
-            ]
-        });
+        const { quoteSummary } = await scrapeQuotePage(symbol);
+
+        if (!quoteSummary) {
+            throw new Error("Failed to load company profile statistics");
+        }
 
         return {
-            name: summary.price?.longName || companyName,
+            name: quoteSummary.price?.longName || companyName,
             ticker: symbol,
-            exchange: summary.price?.exchangeName || null,
-            industry: summary.assetProfile?.industry || null,
-            sector: summary.assetProfile?.sector || null,
-            country: summary.assetProfile?.country || null,
-            website: summary.assetProfile?.website || null,
-            employees: summary.assetProfile?.fullTimeEmployees || null,
-            description: summary.assetProfile?.longBusinessSummary || null,
-            marketCap: summary.price?.marketCap || null,
-            currency: summary.price?.currency || null
+            exchange: quoteSummary.price?.exchangeName || null,
+            industry: quoteSummary.summaryProfile?.industry || null,
+            sector: quoteSummary.summaryProfile?.sector || null,
+            country: quoteSummary.summaryProfile?.country || null,
+            website: quoteSummary.summaryProfile?.website || null,
+            employees: quoteSummary.summaryProfile?.fullTimeEmployees || null,
+            description: quoteSummary.summaryProfile?.longBusinessSummary || null,
+            marketCap: quoteSummary.price?.marketCap || null,
+            currency: quoteSummary.price?.currency || null
         };
-    } catch (error){
+    } catch (error) {
         console.error("Company Tool Error:", error.message);
         throw error;
     }

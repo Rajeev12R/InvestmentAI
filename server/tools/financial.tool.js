@@ -1,42 +1,39 @@
-import yahooFinance from "../services/yahooFinance.service.js";
+import yahooFinance, { scrapeQuotePage } from "../services/yahooFinance.service.js";
 
 export async function getFinancialData(symbol) {
 
     try {
 
-        const summary = await yahooFinance.quoteSummary(symbol, {
-            modules: [
-                "financialData",
-                "defaultKeyStatistics",
-                "price",
-                "summaryDetail"
-            ]
-        });
+        const { quoteSummary } = await scrapeQuotePage(symbol);
+
+        if (!quoteSummary) {
+            throw new Error("Failed to load financial statistics");
+        }
 
         return {
-            revenue: summary.financialData?.totalRevenue ?? null,
-            revenueGrowth: summary.financialData?.revenueGrowth ?? null,
-            netIncome: summary.financialData?.netIncomeToCommon ?? null,
-            operatingMargin: summary.financialData?.operatingMargins ?? null,
-            profitMargin: summary.financialData?.profitMargins ?? null,
-            freeCashFlow: summary.financialData?.freeCashflow ?? null,
-            totalCash: summary.financialData?.totalCash ?? null,
-            totalDebt: summary.financialData?.totalDebt ?? null,
-            currentRatio: summary.financialData?.currentRatio ?? null,
-            quickRatio:summary.financialData?.quickRatio ?? null,
-            marketCap: summary.price?.marketCap ?? null,
-            enterpriseValue: summary.defaultKeyStatistics?.enterpriseValue ?? null,
-            peRatio: summary.summaryDetail?.trailingPE ?? null,
-            eps: summary.defaultKeyStatistics?.trailingEps ?? null,
-            roe: summary.financialData?.returnOnEquity ?? null,
-            roa: summary.financialData?.returnOnAssets ?? null,
-            dividendYield: summary.summaryDetail?.dividendYield ?? null,
-            currency: summary.price?.currency ?? null
+            revenue: quoteSummary.financialData?.totalRevenue ?? null,
+            revenueGrowth: quoteSummary.financialData?.revenueGrowth ?? null,
+            netIncome: quoteSummary.financialData?.netIncomeToCommon ?? null,
+            operatingMargin: quoteSummary.financialData?.operatingMargins ?? null,
+            profitMargin: quoteSummary.financialData?.profitMargins ?? null,
+            freeCashFlow: quoteSummary.financialData?.freeCashflow ?? null,
+            totalCash: quoteSummary.financialData?.totalCash ?? null,
+            totalDebt: quoteSummary.financialData?.totalDebt ?? null,
+            currentRatio: quoteSummary.financialData?.currentRatio ?? null,
+            quickRatio: quoteSummary.financialData?.quickRatio ?? null,
+            marketCap: quoteSummary.price?.marketCap ?? null,
+            enterpriseValue: quoteSummary.defaultKeyStatistics?.enterpriseValue ?? null,
+            peRatio: quoteSummary.summaryDetail?.trailingPE ?? null,
+            eps: quoteSummary.defaultKeyStatistics?.trailingEps ?? null,
+            roe: quoteSummary.financialData?.returnOnEquity ?? null,
+            roa: quoteSummary.financialData?.returnOnAssets ?? null,
+            dividendYield: quoteSummary.summaryDetail?.dividendYield ?? null,
+            currency: quoteSummary.price?.currency ?? null
 
         };
 
     } catch (error) {
-        console.error(error);
+        console.error("Financial Tool Error:", error.message);
         throw error;
     }
 
