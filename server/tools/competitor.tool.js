@@ -1,6 +1,4 @@
-import YahooFinance from "yahoo-finance2";
-
-const yahooFinance = new YahooFinance();
+import yahooFinance from "../services/yahooFinance.service.js";
 
 export async function getCompetitors(companyProfile) {
     try {
