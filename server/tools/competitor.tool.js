@@ -3,16 +3,16 @@ import yahooFinance from "../services/yahooFinance.service.js";
 export async function getCompetitors(companyProfile) {
     try {
         console.log(`Extracting competitors for: ${companyProfile.name}`);
-        
+
         const searchResult = await yahooFinance.search(companyProfile.name || companyProfile.ticker);
-        
+
         if (!searchResult || !searchResult.quotes || !searchResult.quotes.length) {
             return { primaryCompetitors: [] };
         }
 
         const primaryCompetitors = searchResult.quotes
-            .filter(quote => 
-                quote.symbol !== companyProfile.ticker && 
+            .filter(quote =>
+                quote.symbol !== companyProfile.ticker &&
                 (quote.quoteType === "EQUITY" || quote.quoteType === "ETF") &&
                 (quote.shortname || quote.longname)
             )
