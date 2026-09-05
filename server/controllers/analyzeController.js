@@ -1,28 +1,28 @@
 import { analyzeCompany } from "../graph/investmentGraph.js";
 
-// High-performance 24-Hour Cache for high-traffic scalability & zero API quota waste
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 Hours
+// Tiered Cache: 30 minutes for full analysis freshness
+const CACHE_TTL_MS = 30 * 60 * 1000; // 30 Minutes
 const analysisCache = new Map();
 
 export const analyzecontroller = async (req, res) => {
     try {
-        const { companyName, forceRefresh } = req.body;
+        const { companyName, forceRefresh, investorProfile } = req.body;
 
         if (!companyName) {
             return res.status(400).json({
                 success: false,
-                message: "Company name is required."
+                message: "Company name or ticker symbol is required."
             });
         }
 
         const normalizedKey = companyName.trim().toUpperCase();
         const now = Date.now();
 
-        // Check cache unless forceRefresh requested
-        if (!forceRefresh && analysisCache.has(normalizedKey)) {
+        // Check cache unless forceRefresh requested or custom investor profile provided
+        if (!forceRefresh && !investorProfile && analysisCache.has(normalizedKey)) {
             const cachedEntry = analysisCache.get(normalizedKey);
             if (now - cachedEntry.timestamp < CACHE_TTL_MS) {
-                console.log(`[Cache Hit] Serving cached analysis for ${normalizedKey} (${Math.round((now - cachedEntry.timestamp)/60000)}m old)`);
+                console.log(`[Cache Hit] Serving fresh analysis for ${normalizedKey} (${Math.round((now - cachedEntry.timestamp)/60000)}m old)`);
                 return res.status(200).json({
                     success: true,
                     data: cachedEntry.data,
@@ -34,8 +34,8 @@ export const analyzecontroller = async (req, res) => {
             }
         }
 
-        console.log(`[Cache Miss] Running full AI synthesis pipeline for ${normalizedKey}...`);
-        const result = await analyzeCompany(companyName);
+        console.log(`[Truth Layer Pipeline] Executing institutional research synthesis for ${normalizedKey}...`);
+        const result = await analyzeCompany(companyName, investorProfile);
 
         // Store in cache
         if (result && result.companyProfile) {
@@ -43,7 +43,6 @@ export const analyzecontroller = async (req, res) => {
                 timestamp: now,
                 data: result
             });
-            // Also store under resolved ticker if different
             if (result.companyProfile.ticker && result.companyProfile.ticker.toUpperCase() !== normalizedKey) {
                 analysisCache.set(result.companyProfile.ticker.toUpperCase(), {
                     timestamp: now,

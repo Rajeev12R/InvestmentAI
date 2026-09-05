@@ -13,9 +13,9 @@ import AIRecommendation from './Dashboard/AIRecommendation';
 import ValuationModel from './Dashboard/ValuationModel';
 import ExportMemoModal from './Dashboard/ExportMemoModal';
 import ShareScorecardModal from './Dashboard/ShareScorecardModal';
-import SponsoredBrokerBanner from './Common/SponsoredBrokerBanner';
-import AdSenseSlot from './Common/AdSenseSlot';
-import { AlertCircle, ArrowLeft, RefreshCw, FileText, Share2, Star } from 'lucide-react';
+import EvidenceDrawer from './Dashboard/EvidenceDrawer';
+import InvestorProfileModal from './Dashboard/InvestorProfileModal';
+import { AlertCircle, ArrowLeft, RefreshCw, FileText, Share2, Star, ShieldCheck, Sliders } from 'lucide-react';
 
 const DashboardPage = () => {
   const { ticker } = useParams();
@@ -25,10 +25,30 @@ const DashboardPage = () => {
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
 
-  // Modals state
+  // Modals & Drawers state
   const [isExportMemoOpen, setIsExportMemoOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isEvidenceDrawerOpen, setIsEvidenceDrawerOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isSavedInWatchlist, setIsSavedInWatchlist] = useState(false);
+
+  // Active Investor Fit Profile
+  const [investorProfile, setInvestorProfile] = useState(() => {
+    try {
+      const saved = localStorage.getItem('investmentai_investor_profile');
+      return saved ? JSON.parse(saved) : {
+        horizon: 'Long (3-5 Years)',
+        riskTolerance: 'Moderate / Balanced',
+        goal: 'Capital Growth & Compounding'
+      };
+    } catch {
+      return {
+        horizon: 'Long (3-5 Years)',
+        riskTolerance: 'Moderate / Balanced',
+        goal: 'Capital Growth & Compounding'
+      };
+    }
+  });
 
   // Check Watchlist status
   useEffect(() => {
@@ -68,59 +88,55 @@ const DashboardPage = () => {
       }
       localStorage.setItem('investmentai_watchlist', JSON.stringify(updated));
     } catch (e) {
-      console.error('Watchlist Error:', e);
+      console.error(e);
     }
+  };
+
+  const handleSaveProfile = (newProfile) => {
+    setInvestorProfile(newProfile);
+    try {
+      localStorage.setItem('investmentai_investor_profile', JSON.stringify(newProfile));
+    } catch (e) {
+      console.error(e);
+    }
+    // Re-run analysis with updated investor profile
+    handleRetry();
   };
 
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
     setError(null);
-    setData(null);
     setProgressIndex(0);
 
-    const progressTimer = setInterval(() => {
-      if (isMounted) {
-        setProgressIndex((prev) => {
-          if (prev < 6) {
-            return prev + 1;
-          }
-          return prev;
-        });
-      }
-    }, 2200);
+    const timer = setInterval(() => {
+      setProgressIndex((prev) => (prev < 4 ? prev + 1 : prev));
+    }, 450);
 
-    const fetchData = async () => {
-      try {
-        const response = await analyzeCompany(ticker);
-        
+    analyzeCompany(ticker, false, investorProfile)
+      .then((res) => {
         if (!isMounted) return;
-
-        if (response.success && response.data) {
-          setProgressIndex(6);
-          setTimeout(() => {
-            if (isMounted) {
-              setData(response.data);
-              setLoading(false);
-            }
-          }, 800);
+        if (res.success && res.data) {
+          setData(res.data);
+          setError(null);
         } else {
-          throw new Error(response.message || 'No analysis data returned.');
+          setError(res.message || 'Failed to analyze company.');
         }
-      } catch (err) {
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        setError(err.message || 'Network error occurred.');
+      })
+      .finally(() => {
         if (isMounted) {
-          console.error(err);
-          setError(err.message || 'An unexpected error occurred during company analysis.');
+          clearInterval(timer);
           setLoading(false);
         }
-      }
-    };
-
-    fetchData();
+      });
 
     return () => {
       isMounted = false;
-      clearInterval(progressTimer);
+      clearInterval(timer);
     };
   }, [ticker, retryCount]);
 
@@ -129,43 +145,32 @@ const DashboardPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex-1 flex items-center justify-center bg-slate-50 min-h-[calc(100vh-4rem)]">
-        <LoadingProgress ticker={ticker} progressIndex={progressIndex} />
-      </div>
-    );
+    return <LoadingProgress currentStep={progressIndex} ticker={ticker} />;
   }
 
-  if (error) {
+  if (error || !data) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-6 bg-slate-50 text-slate-800 min-h-[calc(100vh-4rem)]">
-        <div className="w-full max-w-lg bg-white border border-red-200 rounded-2xl p-6 space-y-6 shadow-md text-center">
-          <div className="flex justify-center">
-            <div className="p-3.5 bg-rose-50 border border-rose-100 rounded-full">
-              <AlertCircle className="h-8 w-8 text-rose-600" />
-            </div>
+      <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
+        <div className="max-w-md w-full bg-white border border-slate-200 rounded-2xl p-8 text-center space-y-4 shadow-sm">
+          <div className="mx-auto w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center text-rose-600">
+            <AlertCircle className="h-6 w-6" />
           </div>
-          <div className="space-y-2">
-            <span className="text-xs font-bold tracking-wider text-rose-600 uppercase">Analysis Failed</span>
-            <h1 className="text-lg font-bold text-slate-900">Analysis Pipeline Aborted</h1>
-            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-left text-xs font-semibold text-rose-700 max-h-32 overflow-y-auto leading-relaxed shadow-inner">
-              {error}
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+          <h2 className="text-lg font-bold text-slate-900">Analysis Unavailable</h2>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            {error || 'Unable to retrieve real-time market data or audited statements for this security.'}
+          </p>
+          <div className="pt-2 flex flex-col sm:flex-row gap-3">
             <Link
               to="/"
-              className="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-slate-100 border border-slate-200 px-4 py-2.5 rounded-full text-xs font-semibold text-slate-700 uppercase transition-all cursor-pointer shadow-sm"
+              className="flex-1 py-2 px-4 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
             >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Return to search
+              Back to Terminal
             </Link>
             <button
               onClick={handleRetry}
-              className="inline-flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-full text-xs font-semibold uppercase transition-all cursor-pointer shadow-sm"
+              className="flex-1 py-2 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer"
             >
-              <RefreshCw className="h-3.5 w-3.5" />
-              Retry analysis
+              Retry Analysis
             </button>
           </div>
         </div>
@@ -173,28 +178,26 @@ const DashboardPage = () => {
     );
   }
 
-  if (!data) return null;
-
   return (
-    <div className="flex-1 bg-slate-50 text-slate-800 p-4 sm:p-6 space-y-6 max-w-[1600px] mx-auto w-full">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       
-      {/* Top Header Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+      {/* Top Header & Quick Actions Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200 p-4 sm:p-5 rounded-2xl shadow-xs">
         <div className="flex items-center gap-3">
           <Link
             to="/"
-            className="p-2 bg-white border border-slate-200 rounded-full hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors shadow-sm"
-            title="Return to Search"
+            className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors"
+            title="Back to Global Terminal"
           >
-            <ArrowLeft className="h-4 w-4 stroke-[2.5]" />
+            <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[9px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-100">
-                AI RESEARCH ACTIVE
+              <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">
+                {data.companyProfile?.sector || 'Global Equity'}
               </span>
-              <span className="text-[10px] font-semibold text-slate-500 uppercase">
-                Exchange: {data.companyProfile?.exchange || data.stockData?.exchange || 'Global'}
+              <span className="text-[11px] text-slate-500 font-medium">
+                {data.companyProfile?.exchange || 'Exchange Listed'}
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight mt-0.5">
@@ -203,12 +206,21 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Controls */}
         <div className="flex flex-wrap items-center gap-2">
+          {/* Truth Layer Evidence Button */}
+          <button
+            onClick={() => setIsEvidenceDrawerOpen(true)}
+            className="inline-flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded-full text-xs font-bold text-emerald-800 transition-all cursor-pointer shadow-2xs"
+          >
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+            <span>Audit & Evidence</span>
+          </button>
+
           {/* Watchlist Toggle */}
           <button
             onClick={toggleWatchlist}
-            className={`inline-flex items-center gap-1.5 border px-3.5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
+            className={`inline-flex items-center gap-1.5 border px-3.5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-2xs ${
               isSavedInWatchlist 
                 ? 'bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100' 
                 : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
@@ -218,28 +230,28 @@ const DashboardPage = () => {
             <span>{isSavedInWatchlist ? 'In Watchlist' : 'Watchlist'}</span>
           </button>
 
-          {/* Share Scorecard Button */}
+          {/* Share Button */}
           <button
             onClick={() => setIsShareModalOpen(true)}
-            className="inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 border border-slate-200 px-3.5 py-2 rounded-full text-xs font-bold text-slate-700 uppercase tracking-wider transition-all cursor-pointer shadow-sm"
+            className="inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 border border-slate-200 px-3.5 py-2 rounded-full text-xs font-bold text-slate-700 uppercase tracking-wider transition-all cursor-pointer shadow-2xs"
           >
             <Share2 className="h-3.5 w-3.5 text-blue-600" />
             Share
           </button>
 
-          {/* Export Institutional Memo Button */}
+          {/* Export Institutional Memo */}
           <button
             onClick={() => setIsExportMemoOpen(true)}
-            className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm"
+            className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
           >
             <FileText className="h-3.5 w-3.5" />
-            Export Memo (PDF)
+            Export Memo
           </button>
 
           {/* Refresh */}
           <button
             onClick={handleRetry}
-            className="p-2 bg-white hover:bg-slate-100 border border-slate-200 rounded-full text-slate-500 hover:text-slate-800 transition-all cursor-pointer shadow-sm"
+            className="p-2 bg-white hover:bg-slate-100 border border-slate-200 rounded-full text-slate-500 hover:text-slate-800 transition-all cursor-pointer shadow-2xs"
             title="Refresh Analysis"
           >
             <RefreshCw className="h-3.5 w-3.5" />
@@ -249,25 +261,31 @@ const DashboardPage = () => {
 
       <div className="space-y-6">
         
-        {/* Executive KPI Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
-            <ExecutiveSummary 
-              recommendation={data.recommendation}
-              score={data.investmentScore}
-              confidence={data.confidence}
-              horizon={data.investmentHorizon}
-            />
-          </div>
-          <div className="lg:col-span-1">
-            <CompanyOverview profile={data.companyProfile} />
-          </div>
-          <div className="lg:col-span-1">
-            <StockOverview stock={data.stockData} />
-          </div>
+        {/* 10-Second Executive Verdict Header */}
+        <ExecutiveSummary 
+          recommendation={data.recommendation}
+          qualityScore={data.companyQualityScore || data.investmentScore}
+          attractivenessScore={data.stockAttractivenessScore || Math.round(data.investmentScore * 0.9)}
+          investorFitScore={data.investorFitScore || 85}
+          confidence={data.confidence}
+          horizon={data.investmentHorizon}
+          fairValue={data.valuation?.fairValuePriceTarget}
+          currentPrice={data.stockData?.currentPrice}
+          upside={data.valuation?.upsidePotential}
+          marginOfSafety={data.valuation?.marginOfSafety}
+          pros={data.pros}
+          cons={data.cons}
+          onOpenEvidence={() => setIsEvidenceDrawerOpen(true)}
+          onOpenProfile={() => setIsProfileModalOpen(true)}
+        />
+
+        {/* Company & Stock Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CompanyOverview profile={data.companyProfile} />
+          <StockOverview stock={data.stockData} />
         </div>
 
-        {/* Interactive DCF & Fair Value Model */}
+        {/* Governed DCF & Valuation Model */}
         <div className="w-full">
           <ValuationModel 
             valuation={data.valuation} 
@@ -276,13 +294,7 @@ const DashboardPage = () => {
           />
         </div>
 
-        {/* Monetization: Sponsored Broker Banner */}
-        <SponsoredBrokerBanner 
-          ticker={data.companyProfile?.ticker || ticker}
-          currency={data.stockData?.currency || data.financials?.currency || 'USD'}
-        />
-
-        {/* Financials & Risks */}
+        {/* Financial Statements & Risk Assessment */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-7">
             <FinancialHealth financials={data.financials} />
@@ -292,7 +304,7 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* AI Catalyst Rationale Grid */}
+        {/* AI Strategic Reasoning & Catalysts */}
         <div className="w-full">
           <AIRecommendation 
             recommendation={data.recommendation}
@@ -304,7 +316,7 @@ const DashboardPage = () => {
           />
         </div>
 
-        {/* Competitor Analysis & Latest News */}
+        {/* Competitor Benchmarking & News Events */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <CompetitorAnalysis 
             competitors={data.competitors} 
@@ -313,12 +325,23 @@ const DashboardPage = () => {
           <LatestNews news={data.newsData} />
         </div>
 
-        {/* AdSense Slot */}
-        <AdSenseSlot slotId="dashboard-bottom-banner" />
-
       </div>
 
-      {/* Modals */}
+      {/* Modals & Drawers */}
+      <EvidenceDrawer 
+        isOpen={isEvidenceDrawerOpen}
+        onClose={() => setIsEvidenceDrawerOpen(false)}
+        provenance={data.provenance || []}
+        confidence={typeof data.confidence === 'object' ? data.confidence : { overall: data.confidence }}
+      />
+
+      <InvestorProfileModal 
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        activeProfile={investorProfile}
+        onSaveProfile={handleSaveProfile}
+      />
+
       <ExportMemoModal 
         isOpen={isExportMemoOpen} 
         onClose={() => setIsExportMemoOpen(false)} 
@@ -337,5 +360,3 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
-
-

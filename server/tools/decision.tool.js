@@ -1,5 +1,4 @@
 import ai from "../services/gemini.service.js";
-import { decisionPrompt } from "../prompts/decision.prompt.js";
 import { cleanAndParseJSON } from "../utils/jsonParser.js";
 
 const CANDIDATE_MODELS = [
@@ -8,186 +7,272 @@ const CANDIDATE_MODELS = [
     "gemini-2.5-pro"
 ];
 
-function generateFallbackDecision(state) {
+/**
+ * Calculates Tri-Factor Scores deterministically:
+ * 1. Company Quality Score (0-100)
+ * 2. Stock Attractiveness Score (0-100)
+ * 3. Investor Fit Score (0-100)
+ */
+export function calculateTriFactorScores(state) {
     const fin = state.financials || {};
     const stock = state.stockData || {};
+    const valuation = state.valuation || {};
     const risks = state.risks || {};
     const profile = state.companyProfile || {};
-    const news = state.newsData || [];
+    const investorProfile = state.investorProfile || {
+        horizon: "Long (3-5 Years)",
+        riskTolerance: "Moderate / Balanced",
+        goal: "Capital Growth & Compounding"
+    };
 
-    let score = 50;
+    // 1. Company Quality Score (0-100)
+    let qualityScore = 50;
     const pros = [];
     const cons = [];
     const keyFactors = [];
 
-    // Evaluate revenue growth
-    if (fin.revenueGrowth !== null && fin.revenueGrowth !== undefined) {
-        const revGrowth = Number(fin.revenueGrowth) * (Math.abs(Number(fin.revenueGrowth)) < 1 ? 100 : 1);
-        if (revGrowth > 10) {
-            score += 12;
-            pros.push(`Solid Top-Line Growth: Revenue growth is active at ${revGrowth.toFixed(1)}%.`);
-        } else if (revGrowth < 0) {
-            score -= 10;
-            cons.push(`Revenue Contraction: Top-line revenue contracted by ${Math.abs(revGrowth).toFixed(1)}%.`);
-        }
+    // Profitability & Margins (30 pts)
+    const opMargin = Number(fin.operatingMargin || 0) * (Math.abs(Number(fin.operatingMargin || 0)) < 1 ? 100 : 1);
+    if (opMargin > 22) {
+        qualityScore += 16;
+        pros.push(`High Operating Moat: Operating margin is strong at ${opMargin.toFixed(1)}%.`);
+        keyFactors.push(`Operating Margin: ${opMargin.toFixed(1)}%`);
+    } else if (opMargin > 12) {
+        qualityScore += 8;
+        pros.push(`Healthy Profitability: Operating margin is solid at ${opMargin.toFixed(1)}%.`);
+    } else if (opMargin < 5 && opMargin > 0) {
+        qualityScore -= 8;
+        cons.push(`Compressed Margins: Operating margin is tight at ${opMargin.toFixed(1)}%.`);
+    } else if (opMargin <= 0) {
+        qualityScore -= 18;
+        cons.push("Operating Deficit: Company is operating at an un-profitable operating margin.");
     }
 
-    // Evaluate profit/operating margins
-    if (fin.operatingMargin !== null && fin.operatingMargin !== undefined) {
-        const opMargin = Number(fin.operatingMargin) * (Math.abs(Number(fin.operatingMargin)) < 1 ? 100 : 1);
-        if (opMargin > 20) {
-            score += 10;
-            pros.push(`High Operating Efficiency: Operating margin is strong at ${opMargin.toFixed(1)}%.`);
-        } else if (opMargin < 5) {
-            score -= 8;
-            cons.push(`Compressed Margins: Operating margin is narrow at ${opMargin.toFixed(1)}%.`);
-        }
+    // Capital Efficiency & ROE/ROIC (25 pts)
+    const roe = Number(fin.roe || 0) * (Math.abs(Number(fin.roe || 0)) < 1 ? 100 : 1);
+    if (roe > 20) {
+        qualityScore += 14;
+        pros.push(`Superior Capital Efficiency: Return on Equity (ROE) is high at ${roe.toFixed(1)}%.`);
+        keyFactors.push(`ROE: ${roe.toFixed(1)}%`);
+    } else if (roe > 12) {
+        qualityScore += 7;
+    } else if (roe < 6 && roe > 0) {
+        qualityScore -= 8;
+        cons.push(`Sub-par Capital Returns: ROE of ${roe.toFixed(1)}% trails typical cost of capital.`);
     }
 
-    // Evaluate cash vs debt
+    // Balance Sheet Solvency & Debt (25 pts)
     const debt = Number(fin.totalDebt || 0);
     const cash = Number(fin.totalCash || 0);
-    if (cash > 0 && debt <= cash) {
-        score += 8;
-        pros.push(`Healthy Solvency: Total cash reserves ($${(cash / 1e9).toFixed(2)}B) cover total debt ($${(debt / 1e9).toFixed(2)}B).`);
-    } else if (debt > 0 && cash > 0 && (debt / cash) > 2) {
-        score -= 10;
-        cons.push(`Elevated Leverage: Total debt is ${(debt / cash).toFixed(2)}x cash holdings.`);
+    const netDebt = debt - cash;
+    const currentRatio = Number(fin.currentRatio || 1.2);
+
+    if (netDebt <= 0 && cash > 0) {
+        qualityScore += 14;
+        pros.push(`Fortress Balance Sheet: Net cash position with $${(cash / 1e9).toFixed(2)}B cash vs $${(debt / 1e9).toFixed(2)}B debt.`);
+    } else if (debt > 0 && cash > 0 && (debt / cash) > 2.5) {
+        qualityScore -= 12;
+        cons.push(`Leverage Burden: Total debt is ${(debt / cash).toFixed(2)}x liquid cash reserves.`);
     }
 
-    // Evaluate current ratio
-    const cr = Number(fin.currentRatio || 0);
-    if (cr >= 1.3) {
-        score += 5;
-        pros.push(`Adequate Liquidity: Current ratio stands healthy at ${cr.toFixed(2)}x.`);
-    } else if (cr > 0 && cr < 1.0) {
-        score -= 8;
-        cons.push(`Tight Working Capital: Current ratio is below parity at ${cr.toFixed(2)}x.`);
+    if (currentRatio >= 1.5) {
+        qualityScore += 6;
+    } else if (currentRatio < 1.05 && currentRatio > 0) {
+        qualityScore -= 8;
+        cons.push(`Liquidity Pressure: Current ratio is low at ${currentRatio.toFixed(2)}x.`);
     }
 
-    // Evaluate news
-    if (news.length > 0) {
-        keyFactors.push(`Recent active coverage: ${news.length} press events and market articles recorded.`);
-    }
-    if (profile.sector) {
-        keyFactors.push(`Sector momentum and macro tailwinds in ${profile.sector}.`);
-    }
-    keyFactors.push("Core product execution and recurring revenue stability.");
-
-    if (pros.length === 0) {
-        pros.push("Established market brand presence and operational infrastructure.");
-    }
-    if (cons.length === 0) {
-        cons.push("Macroeconomic volatility and competitive pressure from industry peers.");
+    // Revenue Growth Consistency (20 pts)
+    const revGrowth = Number(fin.revenueGrowth || 0) * (Math.abs(Number(fin.revenueGrowth || 0)) < 1 ? 100 : 1);
+    if (revGrowth > 15) {
+        qualityScore += 12;
+        pros.push(`Dynamic Top-Line Growth: Revenue expansion is active at ${revGrowth.toFixed(1)}% YoY.`);
+        keyFactors.push(`Revenue Growth: +${revGrowth.toFixed(1)}%`);
+    } else if (revGrowth > 6) {
+        qualityScore += 6;
+    } else if (revGrowth < -5) {
+        qualityScore -= 12;
+        cons.push(`Revenue Contraction: Top-line revenue declined by ${Math.abs(revGrowth).toFixed(1)}% YoY.`);
     }
 
-    score = Math.max(15, Math.min(95, Math.round(score)));
+    const companyQualityScore = Math.max(15, Math.min(98, Math.round(qualityScore)));
 
+    // 2. Stock Attractiveness Score (0-100)
+    let attractivenessScore = 50;
+    const upside = Number(valuation.upsidePotential || valuation.upside || 0);
+    const marginOfSafety = Number(valuation.marginOfSafety || 0);
+
+    if (upside > 30) {
+        attractivenessScore += 35;
+        pros.push(`Significant Discount to Intrinsic Value: DCF and relative models indicate +${upside.toFixed(1)}% upside.`);
+        keyFactors.push(`Fair Value Upside: +${upside.toFixed(1)}%`);
+    } else if (upside > 15) {
+        attractivenessScore += 20;
+        pros.push(`Favorable Valuation Margin: Fair value estimate offers +${upside.toFixed(1)}% margin.`);
+    } else if (upside < -20) {
+        attractivenessScore -= 30;
+        cons.push(`Stretched Valuation: Stock trades at a ${Math.abs(upside).toFixed(1)}% premium to estimated fair value.`);
+        keyFactors.push(`Valuation Premium: ${Math.abs(upside).toFixed(1)}% Overvalued`);
+    } else if (upside < -8) {
+        attractivenessScore -= 15;
+        cons.push(`Valuation Headwind: Current price trades above estimated base-case fair value.`);
+    }
+
+    if (marginOfSafety > 15) {
+        attractivenessScore += 12;
+    }
+
+    const stockAttractivenessScore = Math.max(10, Math.min(98, Math.round(attractivenessScore)));
+
+    // 3. Investor Profile Fit Score (0-100)
+    let fitScore = 70;
+    const beta = Number(stock.beta || 1.0);
+    const divYield = Number(fin.dividendYield || 0) * (Math.abs(Number(fin.dividendYield || 0)) < 1 ? 100 : 1);
+
+    const horizon = String(investorProfile.horizon || "").toLowerCase();
+    const riskTolerance = String(investorProfile.riskTolerance || "").toLowerCase();
+    const goal = String(investorProfile.goal || "").toLowerCase();
+
+    // Risk tolerance matching
+    if (riskTolerance.includes("conservative") || riskTolerance.includes("preservation")) {
+        if (beta > 1.3 || companyQualityScore < 70) fitScore -= 20;
+        if (divYield > 2.0 && companyQualityScore >= 75) fitScore += 15;
+    } else if (riskTolerance.includes("aggressive") || riskTolerance.includes("growth")) {
+        if (revGrowth > 15 && stockAttractivenessScore > 65) fitScore += 18;
+    }
+
+    // Goal matching
+    if (goal.includes("dividend") || goal.includes("income")) {
+        if (divYield > 2.5) fitScore += 20;
+        else if (divYield === 0) fitScore -= 18;
+    } else if (goal.includes("compound") || goal.includes("growth")) {
+        if (companyQualityScore >= 80 && revGrowth > 10) fitScore += 15;
+    }
+
+    const investorFitScore = Math.max(25, Math.min(98, Math.round(fitScore)));
+
+    // 4. Decision Matrix: Distinct Recommendation Logic
     let recommendation = "HOLD";
-    if (score >= 70) recommendation = "INVEST";
-    else if (score <= 45) recommendation = "PASS";
+    let rationale = "";
 
-    const reasoning = `${profile.name || state.companyName || "The equity"} displays a composite suitability score of ${score}/100. ${
-        recommendation === "INVEST"
-            ? "Strong fundamentals, solid margins, and viable solvency provide a favorable risk/reward profile."
-            : recommendation === "PASS"
-            ? "Elevated leverage, valuation headwinds, or compressed liquidity suggest caution under current market conditions."
-            : "Balanced operational indicators with mixed risk vectors recommend maintaining a watchful hold position."
-    }`;
+    if (companyQualityScore >= 75 && stockAttractivenessScore >= 65) {
+        recommendation = "BUY";
+        rationale = "High operational quality combined with an attractive intrinsic valuation discount provides a compelling risk/reward setup.";
+    } else if (companyQualityScore >= 75 && stockAttractivenessScore < 45) {
+        recommendation = "HOLD";
+        rationale = "Exceptional company fundamentals, but current market price reflects premium valuation multiples. Recommend awaiting a pullback.";
+    } else if (companyQualityScore >= 55 && stockAttractivenessScore >= 75) {
+        recommendation = "ACCUMULATE";
+        rationale = "Deep valuation discount and viable margin of safety compensate for moderate operational cyclicality.";
+    } else if (companyQualityScore < 50 || stockAttractivenessScore < 30) {
+        recommendation = "AVOID";
+        rationale = "Deteriorating balance sheet leverage, compressed operating margins, or excessive valuation premium warrant capital protection.";
+    } else {
+        recommendation = "HOLD";
+        rationale = "Balanced operational quality and fair market pricing recommend maintaining an observant holding position.";
+    }
 
     return {
+        companyQualityScore,
+        stockAttractivenessScore,
+        investorFitScore,
+        investmentScore: Math.round((companyQualityScore * 0.55) + (stockAttractivenessScore * 0.45)),
         recommendation,
-        investmentScore: score,
-        confidence: 80,
-        pros,
-        cons,
-        keyFactors,
-        reasoning,
-        investmentHorizon: score >= 65 ? "Long Term" : "Medium Term",
-        competitors: state.competitors || {
-            industry: profile.industry || "General Industry",
-            marketPosition: `${profile.name || "Company"} operates within ${profile.sector || "its respective sector"}.`,
-            primaryCompetitors: []
-        },
-        risks: state.risks || {
-            overallRisk: score >= 70 ? "LOW" : score >= 45 ? "MEDIUM" : "HIGH",
-            financialRisk: { level: cr < 1.0 ? "HIGH" : "MEDIUM", reason: "Standard capital structure and liquidity evaluation." },
-            marketRisk: { level: "MEDIUM", reason: "Index and general equities market exposure." },
-            competitionRisk: { level: "MEDIUM", reason: "Competitive dynamics within the sector." },
-            sentimentRisk: { level: "LOW", reason: "News sentiment and public disclosures." },
-            summary: ["Market volatility risk", "Sector-wide competitive developments"]
-        }
+        reasoning: `${profile.name || state.companyName || "The security"} scores Quality ${companyQualityScore}/100 and Attractiveness ${stockAttractivenessScore}/100. ${rationale}`,
+        pros: pros.slice(0, 5),
+        cons: cons.slice(0, 5),
+        keyFactors: keyFactors.slice(0, 4)
     };
 }
 
-export async function generateDecision(state) {
-    const prompt = `
-${decisionPrompt}
+export async function makeInvestmentDecision(state) {
+    const scores = calculateTriFactorScores(state);
+    const truthPackage = state.truthPackage || {};
 
-Company Profile:
-${JSON.stringify(state.companyProfile || {}, null, 2)}
+    // Build the Sealed AI Reasoning Prompt
+    const prompt = `You are the Lead Investment Reasoning Engine for InvestmentAI.
+CONSTITUTIONAL INVARIANTS:
+1. You CANNOT invent or modify ANY financial numbers or ratios.
+2. You MUST reason strictly over the facts provided in the Sealed Investment Truth Package.
+3. Every claim must align with the provided balance sheet, valuation scenarios, and risk metrics.
 
-Financials:
-${JSON.stringify(state.financials || {}, null, 2)}
+SEALED INVESTMENT TRUTH PACKAGE:
+${JSON.stringify({
+    company: truthPackage.company || state.companyProfile,
+    financialFacts: truthPackage.financialFacts || state.financials,
+    calculatedMetrics: truthPackage.calculatedMetrics || {},
+    valuationModels: truthPackage.valuationModels || state.valuation,
+    riskSignals: truthPackage.riskSignals || state.risks,
+    newsEvents: truthPackage.newsEvents || state.newsData,
+    scores: {
+        companyQualityScore: scores.companyQualityScore,
+        stockAttractivenessScore: scores.stockAttractivenessScore,
+        investorFitScore: scores.investorFitScore,
+        recommendation: scores.recommendation
+    },
+    confidence: state.confidence || {}
+}, null, 2)}
 
-Stock Data:
-${JSON.stringify(state.stockData || {}, null, 2)}
-
-News Data:
-${JSON.stringify(state.newsData || [], null, 2)}
-
-Competitors:
-${JSON.stringify(state.competitors || {}, null, 2)}
-
-Risk Assessment:
-${JSON.stringify(state.risks || {}, null, 2)}
-
-DCF & Valuation Model:
-${JSON.stringify(state.valuation || {}, null, 2)}
+Produce a structured JSON investment evaluation with the following exact schema:
+{
+  "recommendation": "${scores.recommendation}",
+  "reasoning": "Comprehensive executive investment thesis (2-3 sentences explaining quality vs valuation dynamics without hallucinating outside figures)",
+  "pros": ["Key verified strength 1", "Key verified strength 2", "Key verified strength 3"],
+  "cons": ["Key verified risk factor 1", "Key verified risk factor 2", "Key verified risk factor 3"],
+  "keyFactors": ["Catalyst 1", "Catalyst 2", "Catalyst 3"],
+  "investmentHorizon": "3-5 Years"
+}
 `;
-
-    let lastError = null;
 
     for (const modelName of CANDIDATE_MODELS) {
         try {
-            console.log(`[Decision Tool] Attempting synthesis with model: ${modelName}...`);
+            console.log(`[Decision Engine] Generating reasoned investment thesis with ${modelName}...`);
             const response = await ai.models.generateContent({
                 model: modelName,
                 contents: prompt,
-                config: {
-                    responseMimeType: "application/json"
-                }
+                config: { responseMimeType: "application/json" }
             });
 
             if (response && response.text) {
                 const parsed = cleanAndParseJSON(response.text);
-                if (parsed && typeof parsed === "object" && (parsed.recommendation || parsed.investmentScore !== undefined)) {
-                    console.log(`[Decision Tool] Successfully generated decision with ${modelName}`);
+                if (parsed && (parsed.recommendation || parsed.reasoning)) {
                     return {
-                        recommendation: (parsed.recommendation || "HOLD").toUpperCase(),
-                        investmentScore: Number(parsed.investmentScore) || 50,
-                        confidence: Number(parsed.confidence) || 75,
-                        pros: Array.isArray(parsed.pros) ? parsed.pros : [],
-                        cons: Array.isArray(parsed.cons) ? parsed.cons : [],
-                        keyFactors: Array.isArray(parsed.keyFactors) ? parsed.keyFactors : [],
-                        reasoning: parsed.reasoning || "Consolidated investment evaluation complete.",
-                        investmentHorizon: parsed.investmentHorizon || "Medium Term",
-                        competitors: parsed.competitors || state.competitors,
-                        risks: parsed.risks || state.risks
+                        recommendation: scores.recommendation,
+                        companyQualityScore: scores.companyQualityScore,
+                        stockAttractivenessScore: scores.stockAttractivenessScore,
+                        investorFitScore: scores.investorFitScore,
+                        investmentScore: scores.investmentScore,
+                        confidence: state.confidence?.overall || 85,
+                        reasoning: parsed.reasoning || scores.reasoning,
+                        pros: Array.isArray(parsed.pros) && parsed.pros.length ? parsed.pros : scores.pros,
+                        cons: Array.isArray(parsed.cons) && parsed.cons.length ? parsed.cons : scores.cons,
+                        keyFactors: Array.isArray(parsed.keyFactors) && parsed.keyFactors.length ? parsed.keyFactors : scores.keyFactors,
+                        investmentHorizon: parsed.investmentHorizon || "3-5 Years"
                     };
                 }
             }
         } catch (err) {
             const isQuota = err.message?.includes("429") || err.message?.includes("RESOURCE_EXHAUSTED");
             if (isQuota) {
-                console.warn(`[Decision Tool] Gemini quota/rate limit reached on ${modelName}. Switching to local Wall Street quantitative analysis engine.`);
+                console.warn(`[Decision Engine] Gemini rate limit reached on ${modelName}. Using verified deterministic thesis.`);
                 break;
             }
-            console.warn(`[Decision Tool] Model ${modelName} encountered error:`, err.message);
-            lastError = err;
+            console.warn(`[Decision Engine] Model ${modelName} error:`, err.message);
         }
     }
 
-    console.warn("[Decision Tool] All Gemini models failed or unparseable. Utilizing robust fallback decision engine.");
-    return generateFallbackDecision(state);
+    // Grounded deterministic fallback
+    return {
+        recommendation: scores.recommendation,
+        companyQualityScore: scores.companyQualityScore,
+        stockAttractivenessScore: scores.stockAttractivenessScore,
+        investorFitScore: scores.investorFitScore,
+        investmentScore: scores.investmentScore,
+        confidence: state.confidence?.overall || 85,
+        reasoning: scores.reasoning,
+        pros: scores.pros,
+        cons: scores.cons,
+        keyFactors: scores.keyFactors,
+        investmentHorizon: "3-5 Years"
+    };
 }
