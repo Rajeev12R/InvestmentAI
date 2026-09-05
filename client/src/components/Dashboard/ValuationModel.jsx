@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Calculator, TrendingUp, TrendingDown, Sliders, ShieldAlert, Sparkles, BarChart3, HelpCircle } from 'lucide-react';
+import FinancialTooltip from '../Common/FinancialTooltip';
 
 const ValuationModel = ({ valuation, stock, financials }) => {
   const currentPrice = Number(stock?.currentPrice || valuation?.currentPrice || 0);
