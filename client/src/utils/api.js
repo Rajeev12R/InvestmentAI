@@ -34,3 +34,18 @@ export const analyzeCompany = async (companyName) => {
   }
 };
 
+export const compareCompanies = async (tickers) => {
+  try {
+    const response = await api.post('/api/compare', { tickers });
+    return response.data;
+  } catch (error) {
+    console.error('Compare API Error:', error);
+    if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+      throw new Error('Comparison timed out. Please try again.');
+    }
+    const message = error.response?.data?.message || error.response?.data?.error || error.message || 'Failed to compare companies';
+    throw new Error(message);
+  }
+};
+
+

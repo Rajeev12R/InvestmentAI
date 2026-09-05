@@ -15,6 +15,8 @@ export const GraphState = Annotation.Root({
 
     risks: Annotation(),
 
+    valuation: Annotation(),
+
     investmentScore: Annotation(),
 
     pros: Annotation(),

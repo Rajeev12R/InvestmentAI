@@ -142,6 +142,9 @@ ${JSON.stringify(state.competitors || {}, null, 2)}
 
 Risk Assessment:
 ${JSON.stringify(state.risks || {}, null, 2)}
+
+DCF & Valuation Model:
+${JSON.stringify(state.valuation || {}, null, 2)}
 `;
 
     let lastError = null;

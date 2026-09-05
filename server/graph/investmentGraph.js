@@ -7,6 +7,7 @@ import { stockNode } from "../nodes/stock.node.js";
 import { newsNode } from "../nodes/news.node.js";
 import { competitorNode } from "../nodes/competitor.node.js";
 import { riskNode } from "../nodes/risk.node.js";
+import { valuationNode } from "../nodes/valuation.node.js";
 import { decisionNode } from "../nodes/decision.node.js";
 
 const graphBuilder = new StateGraph(GraphState);
@@ -17,6 +18,7 @@ graphBuilder.addNode("stock", stockNode);
 graphBuilder.addNode("news", newsNode);
 graphBuilder.addNode("competitor", competitorNode);
 graphBuilder.addNode("risk", riskNode);
+graphBuilder.addNode("valuationStep", valuationNode);
 graphBuilder.addNode("decision", decisionNode);
 
 graphBuilder.addEdge(START, "company");
@@ -25,7 +27,8 @@ graphBuilder.addEdge("financial", "stock");
 graphBuilder.addEdge("stock", "news");
 graphBuilder.addEdge("news", "competitor");
 graphBuilder.addEdge("competitor", "risk");
-graphBuilder.addEdge("risk", "decision");
+graphBuilder.addEdge("risk", "valuationStep");
+graphBuilder.addEdge("valuationStep", "decision");
 graphBuilder.addEdge("decision", END);
 
 export const investmentGraph = graphBuilder.compile();
@@ -40,11 +43,15 @@ export async function analyzeCompany(companyName) {
 
         financials: null,
 
+        stockData: null,
+
         newsData: [],
 
         competitors: [],
 
         risks: [],
+
+        valuation: null,
 
         opportunities: [],
 
