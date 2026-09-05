@@ -1,6 +1,90 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Search, TrendingUp, ShieldAlert, BarChart3, Newspaper } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { 
+  Search, 
+  TrendingUp, 
+  ShieldCheck, 
+  BarChart3, 
+  Calculator, 
+  Swords, 
+  FileText, 
+  Star, 
+  Sparkles, 
+  ArrowRight, 
+  Check, 
+  Zap, 
+  Layers, 
+  Lock,
+  Globe2,
+  ChevronRight,
+  HelpCircle
+} from 'lucide-react';
+
+const POPULAR_TICKERS = [
+  { ticker: 'NVDA', name: 'NVIDIA Corp', sector: 'Semiconductors', gain: '+3.1%' },
+  { ticker: 'AAPL', name: 'Apple Inc', sector: 'Consumer Tech', gain: '+0.6%' },
+  { ticker: 'MSFT', name: 'Microsoft', sector: 'Cloud & Software', gain: '+1.1%' },
+  { ticker: 'TSLA', name: 'Tesla Inc', sector: 'Automotive & AI', gain: '+2.8%' },
+  { ticker: 'TCS.NS', name: 'Tata Consultancy', sector: 'IT Services', gain: '+1.4%' },
+  { ticker: 'AMZN', name: 'Amazon.com', sector: 'E-Commerce & Cloud', gain: '+0.9%' }
+];
+
+const PRICING_PLANS = [
+  {
+    name: 'Starter Tier',
+    price: '$0',
+    period: 'forever free',
+    badge: 'Free Tier',
+    highlight: false,
+    description: 'Perfect for retail investors discovering fundamental and sentiment analysis.',
+    features: [
+      'Daily Equity Analysis (US & Global)',
+      'Basic Fundamental Audits & Ratios',
+      'Standard AI Recommendation & Score',
+      'Latest News & Sentiment Feeds',
+      'Portfolio Watchlist (Up to 5 stocks)'
+    ],
+    cta: 'Start Analyzing Free',
+    action: '/'
+  },
+  {
+    name: 'Pro Analyst',
+    price: '$29',
+    period: 'per month',
+    badge: 'Most Popular',
+    highlight: true,
+    description: 'For active investors and research analysts requiring deep quantitative valuation models.',
+    features: [
+      'Unlimited High-Speed AI Analyses',
+      'Interactive 5-Year DCF Valuation Modeler',
+      'Multi-Stock Head-to-Head Comparisons',
+      'Printable Institutional PDF Investment Memos',
+      'Shareable Social Scorecard Cards',
+      'Unlimited Watchlist & Target Price Alerts',
+      'Quantitative Risk & Leverage Auditing'
+    ],
+    cta: 'Get Pro Access',
+    action: '/compare'
+  },
+  {
+    name: 'Institutional / RIA',
+    price: '$149',
+    period: 'per month',
+    badge: 'Wealth Managers',
+    highlight: false,
+    description: 'Built for family offices, RIAs, wealth managers, and boutique investment firms.',
+    features: [
+      'Everything in Pro Analyst',
+      'White-Label Client PDF Memos (Custom Logo)',
+      'Custom Investment Thesis Scoring Weights',
+      'Full REST API Access (5,000 req/mo)',
+      'Priority Model Queue & 99.9% SLA',
+      'Dedicated Account Manager Support'
+    ],
+    cta: 'Contact Sales',
+    action: '/compare'
+  }
+];
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -13,107 +97,323 @@ const LandingPage = () => {
     }
   };
 
-  const handleQuickSelect = (ticker) => {
-    navigate(`/company/${ticker}`);
-  };
-
-  const sampleTickers = ['AAPL', 'TSLA', 'MSFT', 'NVDA', 'AMZN'];
-
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-6 py-16 bg-slate-50 text-slate-800 max-w-5xl mx-auto w-full">
-      <div className="text-center space-y-4 mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-100 rounded-full text-xs font-semibold text-blue-700">
-          <TrendingUp className="h-3.5 w-3.5" />
-          <span>Professional Investment Analyst Assistant</span>
+    <div className="flex-1 flex flex-col bg-slate-950 text-slate-100 overflow-hidden font-sans">
+      
+      {/* Hero Section */}
+      <section className="relative px-4 sm:px-6 lg:px-8 pt-16 pb-24 lg:pt-24 lg:pb-32 flex flex-col items-center justify-center text-center max-w-7xl mx-auto w-full">
+        
+        {/* Ambient Radial Background Glows */}
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-blue-600/25 via-indigo-600/20 to-purple-600/10 blur-[120px] rounded-full pointer-events-none -z-10" />
+        <div className="absolute top-1/2 left-10 w-72 h-72 bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none -z-10" />
+        
+        {/* Version Badge */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/25 rounded-full text-xs font-bold text-blue-400 mb-6 shadow-inner backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-500">
+          <Sparkles className="h-3.5 w-3.5 text-blue-400" />
+          <span>InvestmentAI 2.0 &bull; Institutional Valuation & DCF Engine</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
-          Investment <span className="text-blue-600">AI</span>
-        </h1>
-        <p className="text-sm md:text-base text-slate-500 max-w-2xl mx-auto leading-relaxed">
-          Search ticker symbols to generate comprehensive, institutional-grade equity reports. Powered by live SEC records, corporate filings, market news sentiment, and risk auditing models.
-        </p>
-      </div>
 
-      <div className="w-full max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-6 shadow-md">
-        <form onSubmit={handleSubmit} className="space-y-2">
-          <div className="relative flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-4.5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+        {/* Headline */}
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl leading-[1.08] mb-6">
+          Wall Street Intelligence. <br />
+          <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400 bg-clip-text text-transparent">
+            Automated at Light Speed.
+          </span>
+        </h1>
+
+        {/* Subhead */}
+        <p className="text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed mb-10 font-normal">
+          Instant balance sheet audits, interactive 5-year DCF fair value models, multi-stock battle comparisons, and white-label investment memos in 3 seconds.
+        </p>
+
+        {/* Search Box */}
+        <div className="w-full max-w-2xl relative mb-8">
+          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur-md opacity-30 group-hover:opacity-100 transition duration-500" />
+          <form 
+            onSubmit={handleSubmit}
+            className="relative bg-slate-900 border border-slate-700/80 rounded-2xl p-2 sm:p-2.5 flex flex-col sm:flex-row items-center gap-2 shadow-2xl backdrop-blur-xl"
+          >
+            <div className="relative flex-1 w-full">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
               <input
                 type="text"
                 required
-                placeholder="Search by company name or ticker (e.g. AAPL, TSLA)..."
+                placeholder="Enter stock ticker or company (e.g. AAPL, NVDA, TSLA, TCS.NS)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-slate-50 hover:bg-slate-100/80 border border-transparent focus:border-blue-500 focus:bg-white rounded-full pl-12 pr-4 py-4 text-base text-slate-900 placeholder:text-slate-500 focus:outline-none shadow-inner transition-all duration-200"
+                className="w-full bg-transparent pl-12 pr-4 py-3 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none uppercase font-semibold"
               />
             </div>
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-full text-sm tracking-wider uppercase transition-colors shrink-0 shadow-sm cursor-pointer"
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-bold px-7 py-3.5 rounded-xl text-xs uppercase tracking-wider transition-all duration-200 shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer shrink-0"
             >
-              Analyze Company
+              <span>Analyze Stock</span>
+              <ArrowRight className="h-4 w-4" />
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
 
-        <div className="flex flex-wrap items-center gap-3 pt-2 text-xs">
-          <span className="font-medium text-slate-500 uppercase tracking-wider">Peers Indexes:</span>
-          <div className="flex flex-wrap gap-2">
-            {sampleTickers.map((ticker) => (
-              <button
-                key={ticker}
-                onClick={() => handleQuickSelect(ticker)}
-                className="px-3.5 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full cursor-pointer transition-colors border border-transparent hover:border-slate-300"
+        {/* Trending Equities Bar */}
+        <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
+          <span className="text-slate-500 font-bold uppercase tracking-wider text-[10px] mr-1">Trending Equities:</span>
+          {POPULAR_TICKERS.map((item) => (
+            <button
+              key={item.ticker}
+              onClick={() => navigate(`/company/${item.ticker}`)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/50 rounded-full text-slate-300 hover:text-white transition-all cursor-pointer shadow-xs text-xs font-semibold"
+            >
+              <span>{item.ticker}</span>
+              <span className="text-[10px] text-emerald-400 font-mono">{item.gain}</span>
+            </button>
+          ))}
+        </div>
+
+      </section>
+
+      {/* Interactive Terminal Mockup Showcase */}
+      <section className="px-4 sm:px-6 lg:px-8 pb-20 max-w-6xl mx-auto w-full">
+        <div className="relative rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl overflow-hidden backdrop-blur-xl">
+          <div className="flex items-center justify-between px-6 py-3.5 border-b border-slate-800 bg-slate-950/60">
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded-full bg-rose-500/80" />
+              <div className="h-3 w-3 rounded-full bg-amber-500/80" />
+              <div className="h-3 w-3 rounded-full bg-emerald-500/80" />
+              <span className="ml-2 text-xs font-mono text-slate-400">terminal.investmentai.io &bull; NVIDIA Corp (NVDA)</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-400 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Synthesis Complete</span>
+            </div>
+          </div>
+
+          <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div className="bg-slate-950 border border-slate-800/80 p-5 rounded-2xl space-y-3">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">AI Suitability Verdict</span>
+              <div className="flex items-baseline justify-between">
+                <span className="text-3xl font-black text-white">88<span className="text-sm font-normal text-slate-500">/100</span></span>
+                <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase">INVEST</span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Exceptional operating margin of 62.4% and market dominance in accelerated compute infrastructure.
+              </p>
+            </div>
+
+            <div className="bg-slate-950 border border-slate-800/80 p-5 rounded-2xl space-y-3">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">DCF Fair Value Target</span>
+              <div className="flex items-baseline justify-between">
+                <span className="text-3xl font-black text-blue-400">$165.00</span>
+                <span className="text-emerald-400 text-xs font-bold font-mono">+19.3% Upside</span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                5-year discounted cash flow projection based on 22% forward free cash flow growth and 9.5% WACC.
+              </p>
+            </div>
+
+            <div className="bg-slate-950 border border-slate-800/80 p-5 rounded-2xl space-y-3">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Instant Pro Actions</span>
+              <div className="space-y-2 pt-1">
+                <Link 
+                  to="/company/NVDA"
+                  className="flex items-center justify-between bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold uppercase transition-colors"
+                >
+                  <span>Open Full Dashboard</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+                <Link 
+                  to="/compare?tickers=NVDA,AMD"
+                  className="flex items-center justify-between bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-xl text-xs font-bold uppercase transition-colors"
+                >
+                  <span>Compare vs AMD</span>
+                  <Swords className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Bento Grid Feature Matrix */}
+      <section className="px-4 sm:px-6 lg:px-8 py-20 bg-slate-900/40 border-t border-b border-slate-800/80">
+        <div className="max-w-7xl mx-auto w-full space-y-12">
+          
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-blue-400">
+              Institutional Capabilities
+            </h2>
+            <h3 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+              Engineered for Discerning Investors
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-400 font-medium">
+              Every tool and model required to evaluate equity risk, calculate fair values, and draft thesis memos in seconds.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            {/* Feature 1: DCF Engine */}
+            <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 hover:border-slate-700 transition-colors">
+              <div className="bg-blue-500/10 text-blue-400 p-3 rounded-2xl w-fit">
+                <Calculator className="h-6 w-6" />
+              </div>
+              <h4 className="text-lg font-bold text-white">Interactive DCF Modeler</h4>
+              <p className="text-xs text-slate-450 leading-relaxed font-medium">
+                Adjust growth rates, terminal multipliers, and discount rates with real-time slider controls to compute fair value targets.
+              </p>
+            </div>
+
+            {/* Feature 2: Head-to-Head Compare */}
+            <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 hover:border-slate-700 transition-colors">
+              <div className="bg-indigo-500/10 text-indigo-400 p-3 rounded-2xl w-fit">
+                <Swords className="h-6 w-6" />
+              </div>
+              <h4 className="text-lg font-bold text-white">Head-to-Head Multi-Stock Compare</h4>
+              <p className="text-xs text-slate-450 leading-relaxed font-medium">
+                Battle 2–4 stocks side-by-side. AI assigns category victor badges across Growth, Valuation, Margins, and Solvency.
+              </p>
+            </div>
+
+            {/* Feature 3: Institutional PDF Memo */}
+            <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 hover:border-slate-700 transition-colors">
+              <div className="bg-emerald-500/10 text-emerald-400 p-3 rounded-2xl w-fit">
+                <FileText className="h-6 w-6" />
+              </div>
+              <h4 className="text-lg font-bold text-white">1-Click PDF Investment Memos</h4>
+              <p className="text-xs text-slate-450 leading-relaxed font-medium">
+                Generate clean, 3-page Institutional Investment Memos formatted for printing, client presentations, and investment clubs.
+              </p>
+            </div>
+
+            {/* Feature 4: Risk Radar */}
+            <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 hover:border-slate-700 transition-colors">
+              <div className="bg-rose-500/10 text-rose-400 p-3 rounded-2xl w-fit">
+                <ShieldCheck className="h-6 w-6" />
+              </div>
+              <h4 className="text-lg font-bold text-white">Quantitative Risk Radar</h4>
+              <p className="text-xs text-slate-450 leading-relaxed font-medium">
+                Deep audit of liquidity margins (current/quick ratio), debt-to-cash leverage multiples, and historical beta volatility.
+              </p>
+            </div>
+
+            {/* Feature 5: News Sentiment */}
+            <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 hover:border-slate-700 transition-colors">
+              <div className="bg-amber-500/10 text-amber-400 p-3 rounded-2xl w-fit">
+                <BarChart3 className="h-6 w-6" />
+              </div>
+              <h4 className="text-lg font-bold text-white">Sentiment & Catalyst Feeds</h4>
+              <p className="text-xs text-slate-450 leading-relaxed font-medium">
+                Scans global press wires and news indices to map positive momentum triggers and emerging litigation/governance threats.
+              </p>
+            </div>
+
+            {/* Feature 6: Watchlist */}
+            <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 hover:border-slate-700 transition-colors">
+              <div className="bg-purple-500/10 text-purple-400 p-3 rounded-2xl w-fit">
+                <Star className="h-6 w-6" />
+              </div>
+              <h4 className="text-lg font-bold text-white">Persistent Portfolio Radar</h4>
+              <p className="text-xs text-slate-450 leading-relaxed font-medium">
+                Track your favorite equities with implied fair value discounts, customized investment thesis notes, and live pricing.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* Pricing Plans Section */}
+      <section className="px-4 sm:px-6 lg:px-8 py-24 max-w-7xl mx-auto w-full space-y-12">
+        
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-emerald-400">
+            Transparent Pricing
+          </h2>
+          <h3 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            Plans for Individuals & Institutions
+          </h3>
+          <p className="text-xs sm:text-sm text-slate-400 font-medium">
+            Start free, or unlock institutional models and unlimited analyses with Pro.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {PRICING_PLANS.map((plan, idx) => (
+            <div 
+              key={idx}
+              className={`rounded-3xl p-8 flex flex-col justify-between space-y-8 transition-all ${
+                plan.highlight 
+                  ? 'bg-gradient-to-b from-blue-900/40 via-slate-900 to-slate-900 border-2 border-blue-500/60 shadow-2xl shadow-blue-500/10 relative scale-105' 
+                  : 'bg-slate-900 border border-slate-800'
+              }`}
+            >
+              {plan.highlight && (
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full shadow-md">
+                  {plan.badge}
+                </div>
+              )}
+
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-lg font-bold text-white">{plan.name}</h4>
+                  <p className="text-xs text-slate-400 mt-1 font-medium">{plan.description}</p>
+                </div>
+
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-black text-white">{plan.price}</span>
+                  <span className="text-xs text-slate-400 font-semibold">/ {plan.period}</span>
+                </div>
+
+                <ul className="space-y-3 text-xs text-slate-300 font-medium">
+                  {plan.features.map((feat, fIdx) => (
+                    <li key={fIdx} className="flex items-start gap-2.5">
+                      <Check className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <Link
+                to={plan.action}
+                className={`w-full py-3 rounded-xl text-xs font-bold uppercase tracking-wider text-center transition-all shadow-md block ${
+                  plan.highlight 
+                    ? 'bg-blue-600 hover:bg-blue-500 text-white' 
+                    : 'bg-slate-800 hover:bg-slate-700 text-slate-200'
+                }`}
               >
-                {ticker}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 w-full mt-20 border-t border-slate-200 pt-12">
-        <div className="bg-white border border-slate-200/80 p-5 rounded-xl shadow-sm space-y-2.5">
-          <div className="flex items-center gap-2 text-blue-600 font-semibold text-xs uppercase tracking-wider">
-            <BarChart3 className="h-4.5 w-4.5" />
-            <span>Fundementals</span>
-          </div>
-          <p className="text-xs text-slate-550 leading-relaxed font-medium">
-            Aggregates profit margins, operating returns, liquidity status, debt ratios, and historical valuations.
-          </p>
+                {plan.cta}
+              </Link>
+            </div>
+          ))}
         </div>
 
-        <div className="bg-white border border-slate-200/80 p-5 rounded-xl shadow-sm space-y-2.5">
-          <div className="flex items-center gap-2 text-blue-600 font-semibold text-xs uppercase tracking-wider">
-            <TrendingUp className="h-4.5 w-4.5" />
-            <span>Peer Groups</span>
-          </div>
-          <p className="text-xs text-slate-555 leading-relaxed font-medium">
-            Identifies core competitor indexes, maps market positions, and tracks relative performance.
-          </p>
-        </div>
+      </section>
 
-        <div className="bg-white border border-slate-200/80 p-5 rounded-xl shadow-sm space-y-2.5">
-          <div className="flex items-center gap-2 text-blue-600 font-semibold text-xs uppercase tracking-wider">
-            <Newspaper className="h-4.5 w-4.5" />
-            <span>News Audits</span>
+      {/* Footer */}
+      <footer className="border-t border-slate-800/80 bg-slate-950 px-6 py-12 text-xs text-slate-500">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2 font-bold text-slate-300">
+            <div className="bg-blue-600 p-1 rounded-md text-white">
+              <TrendingUp className="h-3.5 w-3.5" />
+            </div>
+            <span>Investment <span className="text-blue-500">AI</span> &bull; 2026</span>
           </div>
-          <p className="text-xs text-slate-555 leading-relaxed font-medium">
-            Analyzes global press feeds and investor publications for real-time sentiment shifts.
-          </p>
-        </div>
 
-        <div className="bg-white border border-slate-200/80 p-5 rounded-xl shadow-sm space-y-2.5">
-          <div className="flex items-center gap-2 text-blue-600 font-semibold text-xs uppercase tracking-wider">
-            <ShieldAlert className="h-4.5 w-4.5" />
-            <span>Risk Ledger</span>
+          <div className="flex items-center gap-6">
+            <Link to="/compare" className="hover:text-slate-300 transition-colors">Compare</Link>
+            <Link to="/watchlist" className="hover:text-slate-300 transition-colors">Watchlist</Link>
+            <a href="https://google.com/finance" target="_blank" rel="noopener noreferrer" className="hover:text-slate-300 transition-colors">Markets</a>
           </div>
-          <p className="text-xs text-slate-555 leading-relaxed font-medium">
-            Assesses operational, competitive, market-driven, and currency-based investment threats.
+
+          <p className="text-[11px] text-slate-600">
+            For financial research & educational support purposes only.
           </p>
         </div>
-      </div>
+      </footer>
+
     </div>
   );
 };
