@@ -1,37 +1,59 @@
-import React from 'react';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-const MARKET_ITEMS = [
-  { symbol: 'S&P 500', price: '5,864.67', change: '+0.82%', up: true, isIndex: true },
-  { symbol: 'NASDAQ', price: '18,518.61', change: '+1.24%', up: true, isIndex: true },
-  { symbol: 'NIFTY 50', price: '25,235.90', change: '+0.45%', up: true, isIndex: true },
-  { symbol: 'NVDA', price: '$138.25', change: '+3.14%', up: true, ticker: 'NVDA' },
-  { symbol: 'AAPL', price: '$228.50', change: '+0.64%', up: true, ticker: 'AAPL' },
-  { symbol: 'MSFT', price: '$448.20', change: '+1.10%', up: true, ticker: 'MSFT' },
-  { symbol: 'TSLA', price: '$248.10', change: '+2.85%', up: true, ticker: 'TSLA' },
-  { symbol: 'AMZN', price: '$186.40', change: '+0.95%', up: true, ticker: 'AMZN' },
-  { symbol: 'TCS', price: '₹4,512.00', change: '+1.35%', up: true, ticker: 'TCS.NS' },
-  { symbol: 'BTC/USD', price: '$64,280', change: '+2.40%', up: true, isCrypto: true },
-  { symbol: '10Y YIELD', price: '4.08%', change: '-0.04%', up: false, isIndex: true }
-];
+import { getMarketTickersApi } from '../utils/api';
 
 const TickerBar = () => {
+  const [tickers, setTickers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchLiveTickers = async () => {
+    try {
+      const res = await getMarketTickersApi();
+      if (res.success && res.data && res.data.length > 0) {
+        setTickers(res.data);
+      }
+    } catch (e) {
+      console.warn('Failed to load market ticker feed:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLiveTickers();
+    const interval = setInterval(fetchLiveTickers, 60000); // 60s live poll
+    return () => clearInterval(interval);
+  }, []);
+
+  if (tickers.length === 0 && loading) {
+    return (
+      <div className="h-8 bg-white border-b border-slate-200 text-[11px] text-slate-500 flex items-center px-4 justify-between font-mono select-none shadow-xs">
+        <div className="flex items-center gap-2">
+          <div className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Connecting Global Markets Feed...</span>
+        </div>
+      </div>
+    );
+  }
+
+  const displayList = tickers.length > 0 ? [...tickers, ...tickers] : [];
+
   return (
-    <div className="h-8 bg-slate-900 border-b border-slate-800/80 text-[11px] overflow-hidden flex items-center select-none">
-      <div className="flex items-center px-3 bg-slate-950 text-slate-400 font-bold uppercase tracking-wider text-[9px] shrink-0 z-10 border-r border-slate-800 gap-1.5 shadow-sm">
-        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
-        <span>Live Markets</span>
+    <div className="h-8 bg-white border-b border-slate-200 text-[11px] overflow-hidden flex items-center select-none shadow-xs">
+      <div className="flex items-center px-3 bg-slate-50 text-slate-700 font-bold uppercase tracking-wider text-[9px] shrink-0 z-10 border-r border-slate-200 gap-1.5 shadow-xs">
+        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        <span>LIVE GLOBAL MARKETS</span>
       </div>
 
       <div className="flex overflow-x-auto no-scrollbar scrollbar-none whitespace-nowrap animate-marquee hover:pause gap-6 px-4">
-        {[...MARKET_ITEMS, ...MARKET_ITEMS].map((item, idx) => {
+        {displayList.map((item, idx) => {
           const content = (
-            <div key={idx} className="inline-flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer">
-              <span className="font-extrabold text-slate-300">{item.symbol}</span>
-              <span className="text-slate-400 font-mono text-[10px]">{item.price}</span>
+            <div key={idx} className="inline-flex items-center gap-1.5 text-slate-700 hover:text-blue-600 transition-colors cursor-pointer">
+              <span className="font-extrabold text-slate-900">{item.symbol}</span>
+              <span className="text-slate-600 font-mono text-[10px] font-medium">{item.price}</span>
               <span className={`inline-flex items-center text-[10px] font-bold ${
-                item.up ? 'text-emerald-400' : 'text-rose-400'
+                item.up ? 'text-emerald-600' : 'text-rose-600'
               }`}>
                 {item.up ? <TrendingUp className="h-2.5 w-2.5 mr-0.5" /> : <TrendingDown className="h-2.5 w-2.5 mr-0.5" />}
                 {item.change}
@@ -55,3 +77,4 @@ const TickerBar = () => {
 };
 
 export default TickerBar;
+

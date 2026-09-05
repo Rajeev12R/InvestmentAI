@@ -124,14 +124,16 @@ const ValuationModel = ({ valuation, stock, financials }) => {
         
         {/* Fair Value Price Target */}
         <div className="bg-gradient-to-br from-blue-50/70 to-indigo-50/40 border border-blue-100 p-4 rounded-xl space-y-1">
-          <span className="text-[10px] font-bold uppercase text-blue-700 tracking-wider">
-            Fair Value Price Target
-          </span>
+          <FinancialTooltip termKey="dcf" label="DCF Fair Value">
+            <span className="text-[10px] font-bold uppercase text-blue-700 tracking-wider">
+              Fair Value Price Target
+            </span>
+          </FinancialTooltip>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-black text-slate-900">
               {currencySymbol}{computedValuation.targetPrice}
             </span>
-            <span className="text-xs font-semibold text-slate-450">DCF Intrinsic</span>
+            <span className="text-xs font-semibold text-slate-500">DCF Intrinsic</span>
           </div>
         </div>
 
@@ -188,7 +190,9 @@ const ValuationModel = ({ valuation, stock, financials }) => {
           {/* Slider 1: Growth Rate */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-semibold">
-              <span className="text-slate-600">Projected FCF Growth (Yr 1-5):</span>
+              <FinancialTooltip termKey="freeCashFlow" label="Projected FCF Growth">
+                <span className="text-slate-600">Projected FCF Growth (Yr 1-5):</span>
+              </FinancialTooltip>
               <span className="font-bold text-blue-600">{growthRate.toFixed(1)}%</span>
             </div>
             <input 
@@ -210,7 +214,9 @@ const ValuationModel = ({ valuation, stock, financials }) => {
           {/* Slider 2: Discount Rate */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-semibold">
-              <span className="text-slate-600">Discount Rate / WACC:</span>
+              <FinancialTooltip termKey="wacc" label="Discount Rate / WACC">
+                <span className="text-slate-600">Discount Rate / WACC:</span>
+              </FinancialTooltip>
               <span className="font-bold text-blue-600">{discountRate.toFixed(1)}%</span>
             </div>
             <input 
@@ -228,6 +234,7 @@ const ValuationModel = ({ valuation, stock, financials }) => {
               <span>High Risk (16%)</span>
             </div>
           </div>
+
 
           {/* Slider 3: Terminal Growth Rate */}
           <div className="space-y-1.5">

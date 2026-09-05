@@ -1,35 +1,32 @@
 import React from 'react';
 import { Lightbulb, CheckCircle2, XCircle, FileText, ChevronRight, Bookmark, Sparkles } from 'lucide-react';
-import { useInvestorMode } from '../../context/InvestorModeContext';
 
 const AIRecommendation = ({ recommendation, score, pros = [], cons = [], keyFactors = [], reasoning }) => {
-  const { isSimpleMode } = useInvestorMode();
-
   const getRecommendationTheme = (rec) => {
     const formatted = (rec || '').toUpperCase();
     if (formatted === 'INVEST' || formatted === 'BUY') {
       return {
-        bg: 'bg-emerald-50/70 border-emerald-150 text-slate-800',
+        bg: 'bg-emerald-50/70 border-emerald-200 text-slate-900',
         badge: 'bg-emerald-600 text-white',
         text: 'text-emerald-700',
         bullet: 'text-emerald-600',
-        label: isSimpleMode ? 'INVEST / BUY' : 'INVEST'
+        label: 'INVEST / ACCUMULATE'
       };
     } else if (formatted === 'PASS' || formatted === 'SELL') {
       return {
-        bg: 'bg-rose-50/70 border-rose-150 text-slate-800',
+        bg: 'bg-rose-50/70 border-rose-200 text-slate-900',
         badge: 'bg-rose-600 text-white',
         text: 'text-rose-700',
         bullet: 'text-rose-600',
-        label: isSimpleMode ? 'AVOID / SELL' : 'PASS'
+        label: 'AVOID / REDUCE'
       };
     } else {
       return {
-        bg: 'bg-amber-50/70 border-amber-150 text-slate-800',
+        bg: 'bg-amber-50/70 border-amber-200 text-slate-900',
         badge: 'bg-amber-600 text-white',
         text: 'text-amber-700',
         bullet: 'text-amber-600',
-        label: isSimpleMode ? 'WAIT / HOLD' : 'HOLD'
+        label: 'HOLD / NEUTRAL'
       };
     }
   };
@@ -38,25 +35,23 @@ const AIRecommendation = ({ recommendation, score, pros = [], cons = [], keyFact
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 space-y-6 shadow-sm">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-150 pb-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Bookmark className="h-4.5 w-4.5 text-blue-600" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
-              {isSimpleMode ? 'Key Reasons & Investment Catalysts' : 'Equity Suitability Analysis & Catalyst Grid'}
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+              Equity Suitability & Factor Breakdown
             </h3>
           </div>
           <p className="text-xs text-slate-500 font-medium">
-            {isSimpleMode 
-              ? 'Plain-English summary of why you should or shouldn\'t invest.' 
-              : 'Consolidated AI qualitative and quantitative rating matrix.'}
+            Multi-factor synthesis of balance sheet fundamentals, growth triggers, and operational risks.
           </p>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="text-right">
             <span className="text-[10px] font-bold text-slate-400 uppercase block">
-              {isSimpleMode ? 'AI Quality Score' : 'Suitability Score'}
+              Suitability Score
             </span>
             <span className="text-lg font-black text-slate-900">
               {score ?? 'N/A'}<span className="text-xs font-normal text-slate-400">/100</span>
@@ -71,10 +66,10 @@ const AIRecommendation = ({ recommendation, score, pros = [], cons = [], keyFact
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Pros */}
-        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs space-y-3.5">
-          <div className="flex items-center gap-2 text-xs font-bold text-emerald-900 bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-100">
+        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs space-y-3.5">
+          <div className="flex items-center gap-2 text-xs font-bold text-emerald-900 bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-200">
             <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-            <span>{isSimpleMode ? '🟢 WHY TO BUY (STRENGTHS)' : 'INVESTMENT PROS'}</span>
+            <span>PRIMARY POSITIVE CATALYSTS</span>
           </div>
           
           {pros.length > 0 ? (
@@ -87,15 +82,15 @@ const AIRecommendation = ({ recommendation, score, pros = [], cons = [], keyFact
               ))}
             </ul>
           ) : (
-            <p className="text-xs text-slate-400 italic">No positive catalysts identified.</p>
+            <p className="text-xs text-slate-400 italic">No primary positive catalysts highlighted.</p>
           )}
         </div>
 
         {/* Cons */}
-        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs space-y-3.5">
-          <div className="flex items-center gap-2 text-xs font-bold text-rose-900 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-100">
+        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs space-y-3.5">
+          <div className="flex items-center gap-2 text-xs font-bold text-rose-900 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-200">
             <XCircle className="h-4 w-4 text-rose-600" />
-            <span>{isSimpleMode ? '🔴 RISKS & RED FLAGS' : 'INVESTMENT CONS'}</span>
+            <span>RISK FACTORS & HEADWINDS</span>
           </div>
           
           {cons.length > 0 ? (
@@ -108,15 +103,15 @@ const AIRecommendation = ({ recommendation, score, pros = [], cons = [], keyFact
               ))}
             </ul>
           ) : (
-            <p className="text-xs text-slate-400 italic">No negative risks identified.</p>
+            <p className="text-xs text-slate-400 italic">No significant headwinds noted.</p>
           )}
         </div>
 
         {/* Factors */}
-        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs space-y-3.5">
-          <div className="flex items-center gap-2 text-xs font-bold text-amber-900 bg-amber-50 px-2.5 py-1.5 rounded-lg border border-amber-100">
+        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs space-y-3.5">
+          <div className="flex items-center gap-2 text-xs font-bold text-amber-900 bg-amber-50 px-2.5 py-1.5 rounded-lg border border-amber-200">
             <Lightbulb className="h-4 w-4 text-amber-600" />
-            <span>{isSimpleMode ? '⚡ FUTURE TRIGGERS TO WATCH' : 'PRIMARY PEER CATALYSTS'}</span>
+            <span>MACRO & SECTOR DRIVERS</span>
           </div>
           
           {keyFactors.length > 0 ? (
@@ -131,16 +126,16 @@ const AIRecommendation = ({ recommendation, score, pros = [], cons = [], keyFact
               ))}
             </ul>
           ) : (
-            <p className="text-xs text-slate-400 italic">No significant catalysts highlighted.</p>
+            <p className="text-xs text-slate-400 italic">No sector drivers highlighted.</p>
           )}
         </div>
       </div>
 
       {reasoning && (
-        <div className={`p-4.5 rounded-xl border text-xs leading-relaxed space-y-2 shadow-inner ${theme.bg}`}>
+        <div className={`p-4.5 rounded-xl border text-xs leading-relaxed space-y-2 shadow-2xs ${theme.bg}`}>
           <div className="flex items-center gap-2 text-[10px] font-bold text-slate-600 uppercase">
             <FileText className="h-3.5 w-3.5 text-slate-500" />
-            <span>{isSimpleMode ? 'AI Final Takeaway' : 'AI Analytical Rationale Statement'}</span>
+            <span>AI Analytical Rationale Statement</span>
           </div>
           <p className="text-slate-800 leading-relaxed font-sans font-medium text-xs">
             {reasoning}
@@ -152,4 +147,5 @@ const AIRecommendation = ({ recommendation, score, pros = [], cons = [], keyFact
 };
 
 export default AIRecommendation;
+
 

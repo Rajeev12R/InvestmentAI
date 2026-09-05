@@ -4,6 +4,7 @@ import cors from "cors";
 import { testGemini } from "./test-script/geminiTest.js";
 import { analyzecontroller } from "./controllers/analyzeController.js";
 import { compareController } from "./controllers/compareController.js";
+import { getMarketTickers } from "./controllers/marketController.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,9 +35,11 @@ app.use(cors({
 }));
 
 app.get('/api/test', testGemini);
+app.get('/api/market/ticker', getMarketTickers);
 app.post('/api/analyze', analyzecontroller);
 app.post('/api/compare', compareController);
 
 app.listen(port, () => {
     console.log(`Server Started at port: ${port}`);
 });
+

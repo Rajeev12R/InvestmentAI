@@ -48,4 +48,15 @@ export const compareCompanies = async (tickers) => {
   }
 };
 
+export const getMarketTickersApi = async () => {
+  try {
+    const response = await api.get('/api/market/ticker');
+    return response.data;
+  } catch (error) {
+    console.warn('Market Ticker API Error:', error.message);
+    return { success: false, data: [] };
+  }
+};
+
+
 

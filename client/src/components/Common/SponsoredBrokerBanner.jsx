@@ -5,22 +5,22 @@ const SponsoredBrokerBanner = ({ ticker, currency = 'USD' }) => {
   const isINR = currency === 'INR' || ticker?.endsWith('.NS') || ticker?.endsWith('.BO');
 
   return (
-    <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border border-blue-800/40 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg text-white">
+    <div className="bg-gradient-to-r from-blue-50/90 via-indigo-50/50 to-slate-50 border border-blue-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm text-slate-800">
       <div className="flex items-center gap-3.5">
-        <div className="p-2.5 bg-blue-600/20 border border-blue-500/30 rounded-xl text-blue-400 shrink-0">
+        <div className="p-2.5 bg-blue-100 border border-blue-200 rounded-xl text-blue-700 shrink-0">
           <Zap className="h-5 w-5" />
         </div>
-        <div className="space-y-0.5">
+        <div className="space-y-0.5 text-left">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded uppercase tracking-wider">
-              {isINR ? 'Partner Broker • ₹0 Brokerage' : 'Commission-Free Trading'}
+            <span className="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded uppercase tracking-wider">
+              {isINR ? 'Partner Broker • Zero Brokerage' : 'Commission-Free Trading Partner'}
             </span>
-            <span className="text-[10px] text-slate-450 font-medium">Sponsored</span>
+            <span className="text-[10px] text-slate-400 font-semibold uppercase">Sponsored Partner</span>
           </div>
-          <p className="text-xs sm:text-sm font-bold text-slate-100">
+          <p className="text-xs sm:text-sm font-bold text-slate-900">
             {isINR 
-              ? `Trade ${ticker || 'equities'} with Zero Brokerage on Zerodha / Groww` 
-              : `Execute trades for ${ticker || 'this stock'} with $0 Commission`}
+              ? `Execute trades on ${ticker || 'equities'} with Zero Brokerage via Partner Platform` 
+              : `Execute live institutional orders for ${ticker || 'this equity'} with $0 Commission`}
           </p>
         </div>
       </div>
@@ -29,9 +29,9 @@ const SponsoredBrokerBanner = ({ ticker, currency = 'USD' }) => {
         href="https://zerodha.com"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-md shrink-0 cursor-pointer"
+        className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm shrink-0 cursor-pointer"
       >
-        <span>Open Demat Account</span>
+        <span>Open Trading Account</span>
         <ExternalLink className="h-3.5 w-3.5" />
       </a>
     </div>
@@ -39,3 +39,4 @@ const SponsoredBrokerBanner = ({ ticker, currency = 'USD' }) => {
 };
 
 export default SponsoredBrokerBanner;
+
