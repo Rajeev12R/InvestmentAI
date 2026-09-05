@@ -13,7 +13,10 @@ import AIRecommendation from './Dashboard/AIRecommendation';
 import ValuationModel from './Dashboard/ValuationModel';
 import ExportMemoModal from './Dashboard/ExportMemoModal';
 import ShareScorecardModal from './Dashboard/ShareScorecardModal';
-import { AlertCircle, ArrowLeft, RefreshCw, FileText, Share2, Star, Check } from 'lucide-react';
+import AIBriefingAudio from './Common/AIBriefingAudio';
+import SponsoredBrokerBanner from './Common/SponsoredBrokerBanner';
+import AdSenseSlot from './Common/AdSenseSlot';
+import { AlertCircle, ArrowLeft, RefreshCw, FileText, Share2, Star } from 'lucide-react';
 
 const DashboardPage = () => {
   const { ticker } = useParams();
@@ -146,7 +149,7 @@ const DashboardPage = () => {
           <div className="space-y-2">
             <span className="text-xs font-bold tracking-wider text-rose-600 uppercase">Analysis Failed</span>
             <h1 className="text-lg font-bold text-slate-900">Analysis Pipeline Aborted</h1>
-            <div className="bg-slate-50 border border-slate-250 p-4 rounded-xl text-left text-xs font-semibold text-rose-700 max-h-32 overflow-y-auto leading-relaxed shadow-inner">
+            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-left text-xs font-semibold text-rose-700 max-h-32 overflow-y-auto leading-relaxed shadow-inner">
               {error}
             </div>
           </div>
@@ -175,22 +178,24 @@ const DashboardPage = () => {
 
   return (
     <div className="flex-1 bg-slate-50 text-slate-800 p-4 sm:p-6 space-y-6 max-w-[1600px] mx-auto w-full">
+      
+      {/* Top Header Bar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div className="flex items-center gap-3">
           <Link
             to="/"
             className="p-2 bg-white border border-slate-200 rounded-full hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors shadow-sm"
-            title="Return to Query Center"
+            title="Return to Search"
           >
             <ArrowLeft className="h-4 w-4 stroke-[2.5]" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[9px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-100">
-                PRO REPORT ACTIVE
+                AI RESEARCH ACTIVE
               </span>
-              <span className="text-[10px] font-semibold text-slate-450 uppercase">
-                Updated: {new Date().toLocaleDateString()}
+              <span className="text-[10px] font-semibold text-slate-500 uppercase">
+                Exchange: {data.companyProfile?.exchange || data.stockData?.exchange || 'Global'}
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight mt-0.5">
@@ -243,6 +248,18 @@ const DashboardPage = () => {
         </div>
       </div>
 
+      {/* 60s AI Audio Executive Player */}
+      <AIBriefingAudio 
+        companyName={data.companyProfile?.name}
+        ticker={data.companyProfile?.ticker || ticker}
+        recommendation={data.recommendation}
+        score={data.investmentScore}
+        reasoning={data.reasoning}
+        pros={data.pros}
+        cons={data.cons}
+        valuation={data.valuation}
+      />
+
       <div className="space-y-6">
         
         {/* Executive KPI Summary Cards */}
@@ -272,6 +289,12 @@ const DashboardPage = () => {
           />
         </div>
 
+        {/* Monetization: Sponsored Broker Banner */}
+        <SponsoredBrokerBanner 
+          ticker={data.companyProfile?.ticker || ticker}
+          currency={data.stockData?.currency || data.financials?.currency || 'USD'}
+        />
+
         {/* Financials & Risks */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-7">
@@ -296,9 +319,15 @@ const DashboardPage = () => {
 
         {/* Competitor Analysis & Latest News */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <CompetitorAnalysis competitors={data.competitors} />
+          <CompetitorAnalysis 
+            competitors={data.competitors} 
+            currentTicker={data.companyProfile?.ticker || ticker}
+          />
           <LatestNews news={data.newsData} />
         </div>
+
+        {/* AdSense Slot */}
+        <AdSenseSlot slotId="dashboard-bottom-banner" />
 
       </div>
 
@@ -321,4 +350,5 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
+
 

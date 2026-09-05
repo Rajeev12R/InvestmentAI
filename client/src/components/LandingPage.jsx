@@ -17,16 +17,29 @@ import {
   Lock,
   Globe2,
   ChevronRight,
-  HelpCircle
+  HelpCircle,
+  Award,
+  BookOpen
 } from 'lucide-react';
 
-const POPULAR_TICKERS = [
-  { ticker: 'NVDA', name: 'NVIDIA Corp', sector: 'Semiconductors', gain: '+3.1%' },
+const INDIAN_TICKERS = [
+  { ticker: 'RELIANCE.NS', name: 'Reliance Industries', sector: 'Energy & Retail', gain: '+1.8%' },
+  { ticker: 'TATAMOTORS.NS', name: 'Tata Motors', sector: 'Automotive & EV', gain: '+2.4%' },
+  { ticker: 'HDFCBANK.NS', name: 'HDFC Bank', sector: 'Banking & Financials', gain: '+0.9%' },
+  { ticker: 'INFY.NS', name: 'Infosys', sector: 'IT Services', gain: '+1.5%' },
+  { ticker: 'ZOMATO.NS', name: 'Zomato', sector: 'Consumer Tech', gain: '+3.7%' },
+  { ticker: 'SUZLON.NS', name: 'Suzlon Energy', sector: 'Renewable Power', gain: '+4.2%' },
+  { ticker: 'TATAPOWER.NS', name: 'Tata Power', sector: 'Green Energy', gain: '+2.1%' },
+  { ticker: 'ITC.NS', name: 'ITC Limited', sector: 'FMCG & Agri', gain: '+0.5%' }
+];
+
+const GLOBAL_TICKERS = [
+  { ticker: 'NVDA', name: 'NVIDIA Corp', sector: 'Semiconductors & AI', gain: '+3.1%' },
   { ticker: 'AAPL', name: 'Apple Inc', sector: 'Consumer Tech', gain: '+0.6%' },
   { ticker: 'MSFT', name: 'Microsoft', sector: 'Cloud & Software', gain: '+1.1%' },
   { ticker: 'TSLA', name: 'Tesla Inc', sector: 'Automotive & AI', gain: '+2.8%' },
-  { ticker: 'TCS.NS', name: 'Tata Consultancy', sector: 'IT Services', gain: '+1.4%' },
-  { ticker: 'AMZN', name: 'Amazon.com', sector: 'E-Commerce & Cloud', gain: '+0.9%' }
+  { ticker: 'AMZN', name: 'Amazon.com', sector: 'E-Commerce & Cloud', gain: '+0.9%' },
+  { ticker: 'GOOGL', name: 'Alphabet Inc', sector: 'Search & Cloud', gain: '+1.3%' }
 ];
 
 const PRICING_PLANS = [
@@ -38,9 +51,9 @@ const PRICING_PLANS = [
     highlight: false,
     description: 'Perfect for retail investors discovering fundamental and sentiment analysis.',
     features: [
-      'Daily Equity Analysis (US & Global)',
+      'Daily Equity Analysis (NSE, BSE & US Equities)',
       'Basic Fundamental Audits & Ratios',
-      'Standard AI Recommendation & Score',
+      'Plain-English Aarav Mode Explanations',
       'Latest News & Sentiment Feeds',
       'Portfolio Watchlist (Up to 5 stocks)'
     ],
@@ -89,6 +102,7 @@ const PRICING_PLANS = [
 const LandingPage = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [marketTab, setMarketTab] = useState('india'); // 'india' or 'global'
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -97,37 +111,39 @@ const LandingPage = () => {
     }
   };
 
+  const activeTickers = marketTab === 'india' ? INDIAN_TICKERS : GLOBAL_TICKERS;
+
   return (
     <div className="flex-1 flex flex-col bg-slate-950 text-slate-100 overflow-hidden font-sans">
       
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-6 lg:px-8 pt-16 pb-24 lg:pt-24 lg:pb-32 flex flex-col items-center justify-center text-center max-w-7xl mx-auto w-full">
+      <section className="relative px-4 sm:px-6 lg:px-8 pt-12 pb-20 lg:pt-20 lg:pb-28 flex flex-col items-center justify-center text-center max-w-7xl mx-auto w-full">
         
         {/* Ambient Radial Background Glows */}
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-blue-600/25 via-indigo-600/20 to-purple-600/10 blur-[120px] rounded-full pointer-events-none -z-10" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-blue-600/25 via-indigo-600/20 to-emerald-600/10 blur-[120px] rounded-full pointer-events-none -z-10" />
         <div className="absolute top-1/2 left-10 w-72 h-72 bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none -z-10" />
         
         {/* Version Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/25 rounded-full text-xs font-bold text-blue-400 mb-6 shadow-inner backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-500">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-500/10 border border-blue-500/25 rounded-full text-xs font-bold text-blue-400 mb-6 shadow-inner backdrop-blur-md">
           <Sparkles className="h-3.5 w-3.5 text-blue-400" />
-          <span>InvestmentAI 2.0 &bull; Institutional Valuation & DCF Engine</span>
+          <span>InvestmentAI 2.0 &bull; Built for India (NSE/BSE) & Global Equities</span>
         </div>
 
         {/* Headline */}
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl leading-[1.08] mb-6">
           Wall Street Intelligence. <br />
           <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400 bg-clip-text text-transparent">
-            Automated at Light Speed.
+            Simplified for Everyone.
           </span>
         </h1>
 
         {/* Subhead */}
-        <p className="text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed mb-10 font-normal">
-          Instant balance sheet audits, interactive 5-year DCF fair value models, multi-stock battle comparisons, and white-label investment memos in 3 seconds.
+        <p className="text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed mb-8 font-normal">
+          Instant balance sheet audits, interactive 5-year DCF fair value models, multi-stock battles, and plain-English AI explanations for non-MBAs.
         </p>
 
         {/* Search Box */}
-        <div className="w-full max-w-2xl relative mb-8">
+        <div className="w-full max-w-2xl relative mb-6">
           <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur-md opacity-30 group-hover:opacity-100 transition duration-500" />
           <form 
             onSubmit={handleSubmit}
@@ -138,7 +154,7 @@ const LandingPage = () => {
               <input
                 type="text"
                 required
-                placeholder="Enter stock ticker or company (e.g. AAPL, NVDA, TSLA, TCS.NS)..."
+                placeholder="Enter company or ticker (e.g. TATAMOTORS, RELIANCE, NVDA)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full bg-transparent pl-12 pr-4 py-3 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none uppercase font-semibold"
@@ -154,22 +170,82 @@ const LandingPage = () => {
           </form>
         </div>
 
+        {/* Market Category Selector Tabs */}
+        <div className="flex items-center gap-2 mb-4 bg-slate-900/90 border border-slate-800 p-1 rounded-full text-xs font-bold shadow-inner">
+          <button
+            onClick={() => setMarketTab('india')}
+            className={`px-4 py-1.5 rounded-full transition-all cursor-pointer ${
+              marketTab === 'india' 
+                ? 'bg-blue-600 text-white shadow-sm' 
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            🇮🇳 Indian Equities (NSE/BSE)
+          </button>
+          <button
+            onClick={() => setMarketTab('global')}
+            className={`px-4 py-1.5 rounded-full transition-all cursor-pointer ${
+              marketTab === 'global' 
+                ? 'bg-blue-600 text-white shadow-sm' 
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            🇺🇸 US Tech Titans (NASDAQ)
+          </button>
+        </div>
+
         {/* Trending Equities Bar */}
-        <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
-          <span className="text-slate-500 font-bold uppercase tracking-wider text-[10px] mr-1">Trending Equities:</span>
-          {POPULAR_TICKERS.map((item) => (
+        <div className="flex flex-wrap items-center justify-center gap-2 text-xs max-w-4xl">
+          <span className="text-slate-500 font-bold uppercase tracking-wider text-[10px] mr-1">
+            {marketTab === 'india' ? 'Popular Indian Chips:' : 'Popular Global Chips:'}
+          </span>
+          {activeTickers.map((item) => (
             <button
               key={item.ticker}
               onClick={() => navigate(`/company/${item.ticker}`)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/50 rounded-full text-slate-300 hover:text-white transition-all cursor-pointer shadow-xs text-xs font-semibold"
             >
-              <span>{item.ticker}</span>
+              <span>{item.name}</span>
+              <span className="text-[10px] text-slate-500 font-mono">({item.ticker})</span>
               <span className="text-[10px] text-emerald-400 font-mono">{item.gain}</span>
             </button>
           ))}
         </div>
 
+        {/* Institutional Trust Badges Strip */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 pt-8 border-t border-slate-800/80 w-full max-w-4xl text-left">
+          <div className="flex items-center gap-2.5">
+            <ShieldCheck className="h-5 w-5 text-emerald-400 shrink-0" />
+            <div>
+              <span className="text-xs font-bold text-white block">NSE & SEC Feeds</span>
+              <span className="text-[10px] text-slate-450">Audited financial data</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <Calculator className="h-5 w-5 text-blue-400 shrink-0" />
+            <div>
+              <span className="text-xs font-bold text-white block">5-Year DCF Engine</span>
+              <span className="text-[10px] text-slate-450">Intrinsic fair value targets</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <BookOpen className="h-5 w-5 text-indigo-400 shrink-0" />
+            <div>
+              <span className="text-xs font-bold text-white block">Aarav ELI5 Mode</span>
+              <span className="text-[10px] text-slate-450">Plain-English AI glossary</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <Award className="h-5 w-5 text-amber-400 shrink-0" />
+            <div>
+              <span className="text-xs font-bold text-white block">100k+ Reports</span>
+              <span className="text-[10px] text-slate-450">Used by retail & pro analysts</span>
+            </div>
+          </div>
+        </div>
+
       </section>
+
 
       {/* Interactive Terminal Mockup Showcase */}
       <section className="px-4 sm:px-6 lg:px-8 pb-20 max-w-6xl mx-auto w-full">

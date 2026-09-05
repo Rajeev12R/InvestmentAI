@@ -1,11 +1,62 @@
 import yahooFinance, { scrapeQuotePage } from "../services/yahooFinance.service.js";
 
+// Common Indian equity aliases mapping to NSE tickers
+const INDIAN_STOCK_MAP = {
+    'TATAMOTORS': 'TATAMOTORS.NS',
+    'TATA MOTORS': 'TATAMOTORS.NS',
+    'RELIANCE': 'RELIANCE.NS',
+    'RIL': 'RELIANCE.NS',
+    'INFOSYS': 'INFY.NS',
+    'INFY': 'INFY.NS',
+    'TCS': 'TCS.NS',
+    'HDFCBANK': 'HDFCBANK.NS',
+    'HDFC BANK': 'HDFCBANK.NS',
+    'ICICIBANK': 'ICICIBANK.NS',
+    'ICICI BANK': 'ICICIBANK.NS',
+    'SBIN': 'SBIN.NS',
+    'STATE BANK OF INDIA': 'SBIN.NS',
+    'ZOMATO': 'ZOMATO.NS',
+    'SUZLON': 'SUZLON.NS',
+    'PAYTM': 'PAYTM.NS',
+    'ONE97': 'PAYTM.NS',
+    'ITC': 'ITC.NS',
+    'WIPRO': 'WIPRO.NS',
+    'BHARTIARTL': 'BHARTIARTL.NS',
+    'AIRTEL': 'BHARTIARTL.NS',
+    'ADANIENT': 'ADANIENT.NS',
+    'ADANI ENTERPRISES': 'ADANIENT.NS',
+    'ADANIPORTS': 'ADANIPORTS.NS',
+    'BAJFINANCE': 'BAJFINANCE.NS',
+    'BAJAJ FINANCE': 'BAJFINANCE.NS',
+    'TATAPOWER': 'TATAPOWER.NS',
+    'TATA POWER': 'TATAPOWER.NS',
+    'TATASTEEL': 'TATASTEEL.NS',
+    'TATA STEEL': 'TATASTEEL.NS',
+    'MARUTI': 'MARUTI.NS',
+    'MARUTI SUZUKI': 'MARUTI.NS',
+    'LT': 'LT.NS',
+    'LARSEN': 'LT.NS',
+    'LARSEN & TOUBRO': 'LT.NS'
+};
+
 export async function getCompanyProfile(companyName) {
     try {
-        const searchResult = await yahooFinance.search(companyName);
+        const cleanName = (companyName || '').trim().toUpperCase();
+        let targetQuery = INDIAN_STOCK_MAP[cleanName] || companyName;
+
+        let searchResult = await yahooFinance.search(targetQuery);
+
+        if ((!searchResult || !searchResult.quotes || !searchResult.quotes.length) && !cleanName.includes('.')) {
+            // Try appending .NS for Indian markets
+            try {
+                searchResult = await yahooFinance.search(`${cleanName}.NS`);
+            } catch (e) {
+                // Ignore fallback search error
+            }
+        }
 
         if (!searchResult || !searchResult.quotes || !searchResult.quotes.length) {
-            throw new Error(`Company "${companyName}" not found`);
+            throw new Error(`Company "${companyName}" not found on global or Indian exchanges`);
         }
 
         const validQuotes = searchResult.quotes.filter(

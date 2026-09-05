@@ -27,19 +27,19 @@ const CompanyOverview = ({ profile }) => {
   const formattedUrl = website && !website.startsWith('http') ? `https://${website}` : website;
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between h-full shadow-sm">
+    <div className="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 flex flex-col justify-between h-full space-y-4 shadow-sm">
       <div className="space-y-4">
         {/* Header */}
         <div className="flex justify-between items-start border-b border-slate-100 pb-3">
           <div className="space-y-0.5">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">Company Overview</h3>
-            <h2 className="text-lg font-bold text-slate-900 leading-tight">{name}</h2>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Corporate Identity</h3>
+            <h2 className="text-lg font-black text-slate-900 leading-tight">{name}</h2>
           </div>
           <div className="text-right">
-            <span className="text-xs font-bold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full uppercase border border-slate-200">
+            <span className="text-xs font-black bg-blue-50 text-blue-700 px-3 py-1 rounded-full uppercase border border-blue-200">
               {ticker}
             </span>
-            <span className="block text-[10px] font-semibold text-slate-450 mt-1.5 uppercase">
+            <span className="block text-[10px] font-bold text-slate-400 mt-1 uppercase">
               {exchange || 'Exchange'}
             </span>
           </div>
@@ -48,41 +48,42 @@ const CompanyOverview = ({ profile }) => {
         <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs border-b border-slate-100 pb-3.5">
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-slate-450">
-              <Building2 className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+              <Building2 className="h-3.5 w-3.5 text-blue-600 shrink-0" />
               <span className="text-[10px] uppercase font-bold tracking-wider">Sector</span>
             </div>
-            <p className="font-semibold text-slate-800 truncate">{sector || 'N/A'}</p>
+            <p className="font-bold text-slate-800 truncate">{sector || 'N/A'}</p>
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-slate-450">
-              <Building2 className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+              <Building2 className="h-3.5 w-3.5 text-blue-600 shrink-0" />
               <span className="text-[10px] uppercase font-bold tracking-wider">Industry</span>
             </div>
-            <p className="font-semibold text-slate-800 truncate">{industry || 'N/A'}</p>
+            <p className="font-bold text-slate-800 truncate">{industry || 'N/A'}</p>
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-slate-450">
-              <Users className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+              <Users className="h-3.5 w-3.5 text-blue-600 shrink-0" />
               <span className="text-[10px] uppercase font-bold tracking-wider">Employees</span>
             </div>
-            <p className="font-bold text-slate-800">
+            <p className="font-bold text-slate-900">
               {employees ? Number(employees).toLocaleString() : 'N/A'}
             </p>
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-slate-450">
-              <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-              <span className="text-[10px] uppercase font-bold tracking-wider">Country</span>
+              <MapPin className="h-3.5 w-3.5 text-blue-600 shrink-0" />
+              <span className="text-[10px] uppercase font-bold tracking-wider">HQ Country</span>
             </div>
-            <p className="font-semibold text-slate-800 truncate">{country || 'N/A'}</p>
+            <p className="font-bold text-slate-800 truncate">{country || 'N/A'}</p>
           </div>
         </div>
+
         <div className="space-y-1.5">
           <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wider block">
-            Business Profile Summary
+            Business Profile & Operations
           </span>
           <p className={`text-xs text-slate-650 leading-relaxed font-normal transition-all duration-300 ${
             expanded ? '' : 'line-clamp-4'
