@@ -13,7 +13,6 @@ import AIRecommendation from './Dashboard/AIRecommendation';
 import ValuationModel from './Dashboard/ValuationModel';
 import ExportMemoModal from './Dashboard/ExportMemoModal';
 import ShareScorecardModal from './Dashboard/ShareScorecardModal';
-import AIBriefingAudio from './Common/AIBriefingAudio';
 import SponsoredBrokerBanner from './Common/SponsoredBrokerBanner';
 import AdSenseSlot from './Common/AdSenseSlot';
 import { AlertCircle, ArrowLeft, RefreshCw, FileText, Share2, Star } from 'lucide-react';
@@ -247,18 +246,6 @@ const DashboardPage = () => {
           </button>
         </div>
       </div>
-
-      {/* 60s AI Audio Executive Player */}
-      <AIBriefingAudio 
-        companyName={data.companyProfile?.name}
-        ticker={data.companyProfile?.ticker || ticker}
-        recommendation={data.recommendation}
-        score={data.investmentScore}
-        reasoning={data.reasoning}
-        pros={data.pros}
-        cons={data.cons}
-        valuation={data.valuation}
-      />
 
       <div className="space-y-6">
         
