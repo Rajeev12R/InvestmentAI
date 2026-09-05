@@ -26,11 +26,6 @@ const Navbar = () => {
           </div>
           <span className="font-extrabold tracking-tight">Investment<span className="text-blue-600">AI</span></span>
         </Link>
-        
-        <div className="hidden xl:flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-full text-[11px] text-emerald-700 font-semibold shadow-2xs">
-          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Global Real-Time Intelligence</span>
-        </div>
       </div>
 
       {!isLandingPage && (

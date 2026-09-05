@@ -7,9 +7,8 @@ import { calculateValuation } from "./valuation.tool.js";
 
 const CANDIDATE_MODELS = [
     "gemini-2.5-flash",
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-pro"
+    "gemini-2.5-flash-lite",
+    "gemini-2.5-pro"
 ];
 
 export async function compareCompanies(tickers = []) {
@@ -117,6 +116,11 @@ Return ONLY valid JSON matching this schema:
                 }
             }
         } catch (err) {
+            const isQuota = err.message?.includes("429") || err.message?.includes("RESOURCE_EXHAUSTED");
+            if (isQuota) {
+                console.warn(`[Compare Tool] Gemini quota reached on ${modelName}. Switching to local quantitative multi-stock engine.`);
+                break;
+            }
             console.warn(`[Compare Tool] Model ${modelName} error:`, err.message);
         }
     }

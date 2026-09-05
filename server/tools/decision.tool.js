@@ -4,9 +4,8 @@ import { cleanAndParseJSON } from "../utils/jsonParser.js";
 
 const CANDIDATE_MODELS = [
     "gemini-2.5-flash",
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-pro"
+    "gemini-2.5-flash-lite",
+    "gemini-2.5-pro"
 ];
 
 function generateFallbackDecision(state) {
@@ -179,6 +178,11 @@ ${JSON.stringify(state.valuation || {}, null, 2)}
                 }
             }
         } catch (err) {
+            const isQuota = err.message?.includes("429") || err.message?.includes("RESOURCE_EXHAUSTED");
+            if (isQuota) {
+                console.warn(`[Decision Tool] Gemini quota/rate limit reached on ${modelName}. Switching to local Wall Street quantitative analysis engine.`);
+                break;
+            }
             console.warn(`[Decision Tool] Model ${modelName} encountered error:`, err.message);
             lastError = err;
         }
