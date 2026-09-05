@@ -44,6 +44,29 @@ export async function getCompanyProfile(companyName) {
         const cleanName = (companyName || '').trim().toUpperCase();
         let targetQuery = INDIAN_STOCK_MAP[cleanName] || companyName;
 
+        // 1. Direct Ticker Resolution Attempt (fast path for explicit tickers like MSFT, RELIANCE.NS, TATAMOTORS.NS)
+        try {
+            const directSymbol = targetQuery.toUpperCase();
+            const { quoteSummary, quote } = await scrapeQuotePage(directSymbol);
+            if (quoteSummary || quote) {
+                return {
+                    name: quoteSummary.price?.longName || quoteSummary.price?.shortName || directSymbol,
+                    ticker: directSymbol,
+                    exchange: quoteSummary.price?.exchangeName || quote?.fullExchangeName || null,
+                    industry: quoteSummary.summaryProfile?.industry || null,
+                    sector: quoteSummary.summaryProfile?.sector || null,
+                    country: quoteSummary.summaryProfile?.country || null,
+                    website: quoteSummary.summaryProfile?.website || null,
+                    employees: quoteSummary.summaryProfile?.fullTimeEmployees || null,
+                    description: quoteSummary.summaryProfile?.longBusinessSummary || null,
+                    marketCap: quoteSummary.price?.marketCap || quote?.marketCap || null,
+                    currency: quoteSummary.price?.currency || quote?.currency || null
+                };
+            }
+        } catch (directErr) {
+            // Fall through to search
+        }
+
         let searchResult = await yahooFinance.search(targetQuery);
 
         if ((!searchResult || !searchResult.quotes || !searchResult.quotes.length) && !cleanName.includes('.')) {
