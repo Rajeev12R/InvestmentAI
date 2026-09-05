@@ -42,7 +42,7 @@ const StockOverview = ({ stock }) => {
       <div className="space-y-4">
         <div className="flex justify-between items-center border-b border-slate-100 pb-2.5">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">Stock Overview</h3>
-          <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full uppercase truncate max-w-[150px]">
+          <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full uppercase truncate max-w-37.5">
             {exchange || 'Equity'}
           </span>
         </div>

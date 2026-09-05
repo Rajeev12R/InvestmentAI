@@ -82,7 +82,7 @@ const LoadingProgress = ({ ticker, progressIndex = 0 }) => {
                 <div className="mt-0.5 shrink-0 flex items-center justify-center">
                   {isCompleted && (
                     <div className="h-5 w-5 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center">
-                      <Check className="h-3 w-3 text-blue-600 stroke-[3]" />
+                      <Check className="h-3 w-3 text-blue-600 stroke-3" />
                     </div>
                   )}
                   {isCurrent && (
