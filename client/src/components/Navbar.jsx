@@ -45,6 +45,18 @@ const Navbar = () => {
 
       <div className="flex items-center gap-2 sm:gap-3 text-xs font-bold uppercase tracking-wider">
         <Link 
+          to="/workspace" 
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-all text-xs font-bold ${
+            location.pathname === '/workspace' 
+              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent hover:border-slate-200'
+          }`}
+        >
+          <Globe2 className="h-3.5 w-3.5" />
+          <span>Workspace</span>
+        </Link>
+
+        <Link 
           to="/compare" 
           className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-all text-xs font-bold ${
             location.pathname === '/compare' 

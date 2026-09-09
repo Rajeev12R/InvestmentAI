@@ -14,6 +14,7 @@ export const GraphState = Annotation.Root({
     provenance: Annotation(),
     companyQualityScore: Annotation(),
     stockAttractivenessScore: Annotation(),
+    stockAttractivenessStatus: Annotation(),
     investorFitScore: Annotation(),
     investmentScore: Annotation(),
     pros: Annotation(),
@@ -24,6 +25,9 @@ export const GraphState = Annotation.Root({
     recommendation: Annotation(),
     confidence: Annotation(),
     reasoning: Annotation(),
+    phase3Decision: Annotation(),
+    decision: Annotation(),
+    research: Annotation(),
     progress: Annotation(),
     errors: Annotation()
 });

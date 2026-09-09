@@ -1,16 +1,151 @@
-/**
- * Evidence & Truth Layer Tool
- * Enforces the Constitution of InvestmentAI:
- * 1. AI cannot create financial facts.
- * 2. AI cannot modify raw financial facts.
- * 3. Every displayed financial number must have provenance.
- * 4. Every calculated number must expose its exact mathematical formula.
- * 5. Every estimated number must be explicitly labeled ESTIMATED.
- * 6. Missing data must remain UNAVAILABLE, never synthesized as fake numbers.
- * 7. Conflicting sources must be preserved and resolved according to source hierarchy.
- * 8. Every fact must have a timestamp and reporting period.
- */
+import crypto from "crypto";
 
+/**
+ * Validates the Canonical Investment Truth Package against the 8 Invariants.
+ * Throws or reports integrity violations.
+ */
+export function validateTruthPackage(truthPackage) {
+    const violations = [];
+
+    if (!truthPackage || typeof truthPackage !== "object") {
+        return { valid: false, violations: ["Truth package is null or not an object"] };
+    }
+
+    const validStatuses = new Set(["GROUNDED", "CALCULATED", "ESTIMATED", "UNAVAILABLE"]);
+
+    // Helper to validate a fact item
+    function checkFact(fact, type = "financialFact") {
+        if (!fact || typeof fact !== "object") {
+            violations.push(`${type} is not an object: ${JSON.stringify(fact)}`);
+            return;
+        }
+
+        if (!fact.id || typeof fact.id !== "string") {
+            violations.push(`${type} missing valid string id: ${JSON.stringify(fact)}`);
+        }
+
+        if (!validStatuses.has(fact.status)) {
+            violations.push(`${fact.id || type} has invalid status '${fact.status}'. Allowed: ${[...validStatuses].join(", ")}`);
+        }
+
+        if (fact.status === "UNAVAILABLE") {
+            if (fact.value !== null && fact.value !== undefined) {
+                violations.push(`${fact.id} status is UNAVAILABLE but value is not null: ${fact.value}`);
+            }
+        }
+
+        if (fact.status === "GROUNDED") {
+            if (!fact.source || typeof fact.source !== "object" || !fact.source.provider) {
+                violations.push(`${fact.id} is GROUNDED but missing valid source metadata object`);
+            }
+        }
+
+        if (fact.status === "CALCULATED") {
+            if (!fact.formula || typeof fact.formula !== "string") {
+                violations.push(`${fact.id} is CALCULATED but missing exact mathematical formula`);
+            }
+            if (!Array.isArray(fact.inputs) || fact.inputs.length === 0) {
+                violations.push(`${fact.id} is CALCULATED but missing input references array`);
+            }
+        }
+
+        if (fact.status === "ESTIMATED") {
+            if (!fact.assumption && !fact.formula) {
+                violations.push(`${fact.id} is ESTIMATED but missing stated assumption or estimation formula`);
+            }
+        }
+
+        if (!fact.retrievedAt) {
+            violations.push(`${fact.id || type} is missing retrievedAt timestamp`);
+        }
+    }
+
+    // 1. Validate all financial facts
+    (truthPackage.financialFacts || []).forEach(f => checkFact(f, "financialFact"));
+
+    // 2. Validate all calculated metrics
+    (truthPackage.calculatedMetrics || []).forEach(m => checkFact(m, "calculatedMetric"));
+
+    // 3. Validate Valuation Models
+    const dcf = truthPackage.valuationModels?.dcf;
+    if (dcf) {
+        if (dcf.status && !validStatuses.has(dcf.status)) {
+            violations.push(`valuationModels.dcf has invalid status '${dcf.status}'`);
+        }
+        if (dcf.status === "UNAVAILABLE" && dcf.fairValue !== null) {
+            violations.push("valuationModels.dcf is UNAVAILABLE but fairValue is not null");
+        }
+    }
+
+    // 4. Validate Provenance integrity
+    (truthPackage.provenance || []).forEach(p => {
+        if (!p.id || !p.status || !validStatuses.has(p.status)) {
+            violations.push(`Provenance item ${p.id || "unnamed"} has invalid status`);
+        }
+    });
+
+    return {
+        valid: violations.length === 0,
+        violations,
+        errors: violations
+    };
+
+}
+
+/**
+ * Generates a deterministic canonical JSON string and SHA-256 package hash to seal the Truth Package.
+ */
+export function sealTruthPackage(truthPackage) {
+    function canonicalize(obj) {
+        if (obj === null || typeof obj !== "object") {
+            return obj;
+        }
+        if (Array.isArray(obj)) {
+            return obj.map(canonicalize);
+        }
+        const sorted = {};
+        Object.keys(obj)
+            .filter(k => k !== "integrity") // Exclude integrity node to avoid circular hash
+            .sort()
+            .forEach(k => {
+                sorted[k] = canonicalize(obj[k]);
+            });
+        return sorted;
+    }
+
+    const canonicalJson = JSON.stringify(canonicalize(truthPackage));
+    const packageHash = crypto.createHash("sha256").update(canonicalJson).digest("hex");
+
+    return {
+        valid: true,
+        packageHash,
+        algorithm: "SHA-256",
+        sealedAt: new Date().toISOString()
+    };
+}
+
+/**
+ * Verifies the integrity of a sealed Truth Package.
+ */
+export function verifyTruthPackageSeal(truthPackage) {
+    if (!truthPackage || !truthPackage.integrity || !truthPackage.integrity.packageHash) {
+        return { valid: false, reason: "MISSING_INTEGRITY_SEAL" };
+    }
+
+    const expectedSeal = sealTruthPackage(truthPackage);
+    const valid = expectedSeal.packageHash === truthPackage.integrity.packageHash;
+
+    return {
+        valid,
+        packageHash: truthPackage.integrity.packageHash,
+        calculatedHash: expectedSeal.packageHash,
+        reason: valid ? "INTEGRITY_VERIFIED" : "HASH_MISMATCH_TAMPER_DETECTED"
+    };
+}
+
+/**
+ * Builds and seals the Canonical Investment Truth Package from state facts.
+ */
 export function buildEvidenceGraph(state) {
     const profile = state.companyProfile || {};
     const fin = state.financials || {};
@@ -44,218 +179,136 @@ export function buildEvidenceGraph(state) {
         return String(num);
     }
 
-    // Helper to register facts
-    function registerFact({ id, name, value, formatted, source, period, status, formula, rawInput, inputs }) {
-        const isAvail = value !== undefined && value !== null && !isNaN(Number(value));
-        const finalStatus = isAvail ? (status || "GROUNDED") : "UNAVAILABLE";
+    // Ingest facts from the canonical financial fact registry
+    const rawFacts = fin.facts || {};
+
+    Object.values(rawFacts).forEach(fact => {
         const item = {
-            id,
-            metric: name,
-            value: isAvail ? Number(value) : null,
-            formattedValue: isAvail ? (formatted || String(value)) : "UNAVAILABLE",
-            source: source || "Yahoo Finance Primary Feed",
-            period: period || fin.filingPeriod || "TTM",
-            timestamp,
-            status: finalStatus,
-            formula: formula || null,
-            inputs: inputs || null,
-            rawInput: rawInput || null
+            id: fact.id,
+            metric: fact.id.replace("financial.", "").replace(/([A-Z])/g, " $1").replace(/^./, str => str.toUpperCase()),
+            value: fact.value,
+            formattedValue: fact.value !== null ? formatValue(fact.value, fact.id.includes("Growth") || fact.id.includes("Margin") || fact.id.includes("return") || fact.id.includes("roic") ? "percent" : fact.id.includes("Ratio") ? "ratio" : "currency") : "UNAVAILABLE",
+            status: fact.status,
+            source: fact.source,
+            period: fact.period,
+            retrievedAt: fact.retrievedAt || timestamp,
+            formula: fact.formula || null,
+            inputs: fact.inputs || null,
+            assumption: fact.assumption || null
         };
+
         provenance.push(item);
-        if (formula || finalStatus === "CALCULATED") {
+        if (fact.status === "CALCULATED" || fact.status === "ESTIMATED" || fact.formula) {
             calculatedMetrics.push(item);
         } else {
             financialFacts.push(item);
         }
-        return item;
-    }
-
-    // 1. Ingest Structured Facts from financial.tool.js
-    const facts = fin.facts || {};
-
-    registerFact({
-        id: "fact_revenue",
-        name: "Total Revenue",
-        value: fin.totalRevenue,
-        formatted: formatValue(fin.totalRevenue, "currency"),
-        source: facts.totalRevenue?.source || "Yahoo Finance Primary Feed (financialData.totalRevenue)",
-        period: facts.totalRevenue?.period || "TTM",
-        status: facts.totalRevenue?.status || (fin.totalRevenue !== null ? "GROUNDED" : "UNAVAILABLE")
     });
 
-    registerFact({
-        id: "fact_net_income",
-        name: "Net Income to Common",
-        value: fin.netIncome,
-        formatted: formatValue(fin.netIncome, "currency"),
-        source: facts.netIncome?.source || "Yahoo Finance Primary Feed (financialData.netIncomeToCommon)",
-        period: facts.netIncome?.period || "TTM",
-        status: facts.netIncome?.status || (fin.netIncome !== null ? "GROUNDED" : "UNAVAILABLE")
-    });
+    // Ingest Market Facts
+    const betaFact = {
+        id: "market.beta",
+        metric: "5Y Monthly Beta",
+        value: stock.beta !== null && stock.beta !== undefined ? Number(stock.beta) : null,
+        formattedValue: stock.beta !== null && stock.beta !== undefined ? Number(stock.beta).toFixed(2) : "UNAVAILABLE",
+        status: stock.beta !== null && stock.beta !== undefined ? "GROUNDED" : "UNAVAILABLE",
+        source: {
+            provider: "Yahoo Finance",
+            sourceType: "AGGREGATED_FINANCIAL_DATA",
+            sourceId: "summaryDetail.beta",
+            hierarchyRank: 4
+        },
+        period: { type: "60_MONTH_TRAILING", startDate: null, endDate: null },
+        retrievedAt: timestamp,
+        formula: null,
+        inputs: null,
+        assumption: null
+    };
+    provenance.push(betaFact);
+    financialFacts.push(betaFact);
 
-    registerFact({
-        id: "fact_operating_income",
-        name: "Operating Income (EBIT)",
-        value: fin.operatingIncome,
-        formatted: formatValue(fin.operatingIncome, "currency"),
-        source: facts.operatingIncome?.source || "Derived Operating Metric",
-        period: facts.operatingIncome?.period || "TTM",
-        status: facts.operatingIncome?.status || (fin.operatingIncome !== null ? "CALCULATED" : "UNAVAILABLE"),
-        formula: facts.operatingIncome?.formula || "totalRevenue * operatingMargins",
-        inputs: facts.operatingIncome?.inputs || ["totalRevenue", "operatingMargins"]
-    });
-
-    registerFact({
-        id: "fact_operating_cashflow",
-        name: "Operating Cash Flow",
-        value: fin.operatingCashFlow,
-        formatted: formatValue(fin.operatingCashFlow, "currency"),
-        source: facts.operatingCashflow?.source || "Yahoo Finance Primary Feed (financialData.operatingCashflow)",
-        period: facts.operatingCashflow?.period || "TTM",
-        status: facts.operatingCashflow?.status || (fin.operatingCashFlow !== null ? "GROUNDED" : "UNAVAILABLE")
-    });
-
-    registerFact({
-        id: "fact_fcf",
-        name: "Free Cash Flow (FCF)",
-        value: fin.freeCashFlow,
-        formatted: formatValue(fin.freeCashFlow, "currency"),
-        source: facts.freeCashflow?.source || "Yahoo Finance Primary Feed (financialData.freeCashflow)",
-        period: facts.freeCashflow?.period || "TTM",
-        status: facts.freeCashflow?.status || (fin.freeCashFlow !== null ? "GROUNDED" : "UNAVAILABLE"),
-        formula: facts.capitalExpenditures?.value !== null ? "Operating Cash Flow - Capital Expenditures" : null
-    });
-
-    registerFact({
-        id: "fact_total_cash",
-        name: "Cash & Cash Equivalents",
-        value: fin.totalCash,
-        formatted: formatValue(fin.totalCash, "currency"),
-        source: facts.totalCash?.source || "Yahoo Finance Primary Feed (financialData.totalCash)",
-        period: facts.totalCash?.period || "Latest Reported Balance Sheet",
-        status: facts.totalCash?.status || (fin.totalCash !== null ? "GROUNDED" : "UNAVAILABLE")
-    });
-
-    registerFact({
-        id: "fact_total_debt",
-        name: "Total Debt (Short + Long Term)",
-        value: fin.totalDebt,
-        formatted: formatValue(fin.totalDebt, "currency"),
-        source: facts.totalDebt?.source || "Yahoo Finance Primary Feed (financialData.totalDebt)",
-        period: facts.totalDebt?.period || "Latest Reported Balance Sheet",
-        status: facts.totalDebt?.status || (fin.totalDebt !== null ? "GROUNDED" : "UNAVAILABLE")
-    });
-
-    registerFact({
-        id: "metric_net_debt",
-        name: "Net Debt",
-        value: fin.netDebt,
-        formatted: formatValue(fin.netDebt, "currency"),
-        source: facts.netDebt?.source || "Derived Balance Sheet Calculation",
-        formula: "Total Debt - Total Cash",
-        inputs: ["totalDebt", "totalCash"],
-        status: facts.netDebt?.status || (fin.netDebt !== null ? "CALCULATED" : "UNAVAILABLE")
-    });
-
-    // 2. Margins & Solvency Ratios
-    registerFact({
-        id: "metric_operating_margin",
-        name: "Operating Margin",
-        value: fin.operatingMargin,
-        formatted: formatValue(fin.operatingMargin, "percent"),
-        source: facts.operatingMargins?.source || "Yahoo Finance Primary Feed (financialData.operatingMargins)",
-        period: "TTM",
-        status: facts.operatingMargins?.status || (fin.operatingMargin !== null ? "GROUNDED" : "UNAVAILABLE")
-    });
-
-    registerFact({
-        id: "metric_current_ratio",
-        name: "Current Ratio",
-        value: fin.currentRatio,
-        formatted: formatValue(fin.currentRatio, "ratio"),
-        source: facts.currentRatio?.source || "Yahoo Finance Primary Feed (financialData.currentRatio)",
-        period: "Latest Balance Sheet",
-        status: facts.currentRatio?.status || (fin.currentRatio !== null ? "GROUNDED" : "UNAVAILABLE")
-    });
-
-    registerFact({
-        id: "metric_roe",
-        name: "Return on Equity (ROE)",
-        value: fin.roe,
-        formatted: formatValue(fin.roe, "percent"),
-        source: facts.returnOnEquity?.source || "Yahoo Finance Primary Feed (financialData.returnOnEquity)",
-        period: "TTM",
-        status: facts.returnOnEquity?.status || (fin.roe !== null ? "GROUNDED" : "UNAVAILABLE")
-    });
-
-    // 3. Valuation & WACC Provenance
-    const waccData = valuation.waccBreakdown || {};
-    registerFact({
-        id: "metric_wacc",
-        name: "Weighted Average Cost of Capital (WACC)",
+    // Ingest Valuation Facts (WACC, DCF, Reverse DCF)
+    const waccBreakdown = valuation.waccBreakdown || {};
+    const waccFact = {
+        id: "valuation.wacc",
+        metric: "Weighted Average Cost of Capital (WACC)",
         value: valuation.assumptions?.discountRate ? valuation.assumptions.discountRate / 100 : null,
-        formatted: valuation.assumptions?.discountRate ? `${valuation.assumptions.discountRate.toFixed(2)}%` : "UNAVAILABLE",
-        source: `Derived CAPM Cost of Capital (${waccData.riskFreeSource || "Benchmark Yield"})`,
-        period: "Live Market Rates",
+        formattedValue: valuation.assumptions?.discountRate ? `${valuation.assumptions.discountRate.toFixed(2)}%` : "UNAVAILABLE",
+        status: valuation.assumptions?.discountRate ? "CALCULATED" : "UNAVAILABLE",
+        source: {
+            provider: "InvestmentAI Valuation Engine",
+            sourceType: "DERIVED_CALCULATION",
+            sourceId: "CAPM Capital Structure Weighting",
+            hierarchyRank: 6
+        },
+        period: { type: "REALTIME", startDate: null, endDate: null },
+        retrievedAt: timestamp,
         formula: "WACC = (Equity_Weight * Cost_of_Equity) + (Debt_Weight * Cost_of_Debt * (1 - Tax_Rate))",
-        rawInput: waccData,
-        status: valuation.assumptions?.discountRate ? "CALCULATED" : "UNAVAILABLE"
-    });
+        inputs: ["market.beta", "financial.marketCap", "financial.totalDebt"],
+        rawInput: waccBreakdown
+    };
+    provenance.push(waccFact);
+    calculatedMetrics.push(waccFact);
 
-    registerFact({
-        id: "metric_dcf_fair_value",
-        name: "DCF Intrinsic Fair Value per Share",
-        value: valuation.dcfValue,
-        formatted: valuation.dcfValue ? `${currency}${Number(valuation.dcfValue).toFixed(2)}` : "UNAVAILABLE",
-        source: "5-Year Discrete FCFF Model + Gordon Growth Terminal Value",
+    const dcfFact = {
+        id: "valuation.dcfFairValue",
+        metric: "DCF Intrinsic Fair Value per Share",
+        value: valuation.dcfValue !== null && valuation.dcfValue !== undefined ? Number(valuation.dcfValue) : null,
+        formattedValue: valuation.dcfValue !== null && valuation.dcfValue !== undefined ? `${currency}${Number(valuation.dcfValue).toFixed(2)}` : "UNAVAILABLE",
+        status: valuation.dcfStatus || (valuation.dcfValue !== null && valuation.dcfValue !== undefined ? "CALCULATED" : "UNAVAILABLE"),
+        source: {
+            provider: "InvestmentAI Valuation Engine",
+            sourceType: valuation.dcfStatus === "ESTIMATED" ? "ESTIMATE" : "DERIVED_CALCULATION",
+            sourceId: "5-Year Discrete FCFF Model",
+            hierarchyRank: valuation.dcfStatus === "ESTIMATED" ? 7 : 6
+        },
+        period: { type: "5_YEAR_FORECAST", startDate: null, endDate: null },
+        retrievedAt: timestamp,
         formula: "Fair Value = (PV of 5-Yr Projected FCFs + PV of Terminal Value - Net Debt) / Shares Outstanding",
-        rawInput: valuation.assumptions,
-        status: valuation.dcfStatus || (valuation.dcfValue ? "CALCULATED" : "UNAVAILABLE")
-    });
+        inputs: ["financial.freeCashFlow", "valuation.wacc", "financial.netDebt"],
+        assumption: valuation.dcfStatus === "ESTIMATED" ? "Estimated cash flows derived via normalized conversion" : null
+    };
+    provenance.push(dcfFact);
+    calculatedMetrics.push(dcfFact);
 
-    registerFact({
-        id: "metric_reverse_dcf",
-        name: "Reverse DCF Implied Growth Rate",
-        value: valuation.reverseDcf?.impliedGrowthRate,
-        formatted: valuation.reverseDcf?.impliedGrowthRate !== undefined && valuation.reverseDcf?.impliedGrowthRate !== null 
-            ? `${(valuation.reverseDcf.impliedGrowthRate * 100).toFixed(1)}%` 
-            : "UNAVAILABLE",
-        source: "Reverse DCF Valuation Engine",
-        formula: "Solves for the exact constant growth rate priced into the stock at today's market price",
-        rawInput: { currentPrice: stock.currentPrice, wacc: valuation.assumptions?.discountRate },
-        status: valuation.reverseDcf?.impliedGrowthRate !== undefined ? "CALCULATED" : "UNAVAILABLE"
-    });
+    const relFact = {
+        id: "valuation.relativeFairValue",
+        metric: "Sector-Adjusted Relative Fair Value per Share",
+        value: valuation.relativeValuation?.fairValue !== null && valuation.relativeValuation?.fairValue !== undefined ? Number(valuation.relativeValuation.fairValue) : null,
+        formattedValue: valuation.relativeValuation?.fairValue !== null && valuation.relativeValuation?.fairValue !== undefined ? `${currency}${Number(valuation.relativeValuation.fairValue).toFixed(2)}` : "UNAVAILABLE",
+        status: valuation.relativeValuation?.status || "UNAVAILABLE",
+        source: {
+            provider: "InvestmentAI Phase 2B Relative Valuation Engine",
+            sourceType: "DERIVED_CALCULATION",
+            sourceId: "Sector Multiple Synthesis",
+            hierarchyRank: 6
+        },
+        period: { type: "PEER_BENCHMARK", startDate: null, endDate: null },
+        retrievedAt: timestamp,
+        formula: "Weighted Average of Sector Multiples (P/E, EV/EBITDA, P/B, EV/Revenue)",
+        inputs: ["peer.distributions", "financial.facts"]
+    };
+    provenance.push(relFact);
+    calculatedMetrics.push(relFact);
 
-    // 4. Market & Risk Signals
-    registerFact({
-        id: "metric_beta",
-        name: "5Y Monthly Beta",
-        value: stock.beta,
-        formatted: stock.beta !== null && stock.beta !== undefined ? Number(stock.beta).toFixed(2) : "UNAVAILABLE",
-        source: "Yahoo Finance Primary Feed (summaryDetail.beta)",
-        period: "60-Month Trailing",
-        status: stock.beta !== null && stock.beta !== undefined ? "GROUNDED" : "UNAVAILABLE"
-    });
-
-    // 5. Mathematical Confidence Scoring
-    const requiredFacts = [
-        fin.totalRevenue, fin.netIncome, fin.operatingCashFlow, fin.freeCashFlow,
-        fin.totalDebt, fin.totalCash, stock.currentPrice, stock.marketCap, stock.beta
+    // Confidence Calculation with Critical Penalties
+    const coreFactKeys = [
+        "financial.totalRevenue", "financial.netIncome", "financial.operatingCashFlow",
+        "financial.freeCashFlow", "financial.totalDebt", "financial.totalCash", "market.beta"
     ];
-    const availableCount = requiredFacts.filter(v => v !== undefined && v !== null && !isNaN(Number(v))).length;
-    const completenessRatio = availableCount / requiredFacts.length;
+    const availableCount = coreFactKeys.filter(k => rawFacts[k] && rawFacts[k].status !== "UNAVAILABLE").length;
+    const completenessRatio = availableCount / coreFactKeys.length;
 
-    // Non-linear critical penalties for missing key data
     let criticalPenalty = 1.0;
-    if (fin.freeCashFlow === null || fin.freeCashFlow === undefined) {
+    if (!rawFacts["financial.freeCashFlow"] || rawFacts["financial.freeCashFlow"].status === "UNAVAILABLE") {
         criticalPenalty *= 0.75; // Missing FCF penalizes valuation confidence
     }
-    if (fin.totalDebt === null || fin.totalDebt === undefined) {
+    if (!rawFacts["financial.totalDebt"] || rawFacts["financial.totalDebt"].status === "UNAVAILABLE") {
         criticalPenalty *= 0.85; // Missing debt penalizes balance sheet confidence
     }
 
     const dataCompleteness = Math.round(completenessRatio * 100);
-    const sourceQuality = 90; // Primary exchange feed
+    const sourceQuality = 90;
     const freshness = 95;
     const modelAgreement = valuation.valuationSpread ? Math.max(40, Math.min(95, Math.round(100 - valuation.valuationSpread))) : 75;
     const calculationIntegrity = 95;
@@ -263,7 +316,7 @@ export function buildEvidenceGraph(state) {
     const rawConfidence = (dataCompleteness * 0.30) + (sourceQuality * 0.25) + (freshness * 0.15) + (modelAgreement * 0.15) + (calculationIntegrity * 0.15);
     const overallConfidence = Math.max(25, Math.min(98, Math.round(rawConfidence * criticalPenalty)));
 
-    // Assemble Sealed InvestmentTruthPackage
+    // Assemble Canonical Investment Truth Package
     const truthPackage = {
         company: {
             name: profile.name || state.companyName || "Unknown Entity",
@@ -276,24 +329,63 @@ export function buildEvidenceGraph(state) {
         financialFacts,
         calculatedMetrics,
         valuationModels: {
-            dcf: {
-                fairValue: valuation.dcfValue !== null && valuation.dcfValue !== undefined ? Number(valuation.dcfValue) : null,
-                upside: valuation.upside !== null && valuation.upside !== undefined ? Number(valuation.upside) : null,
-                wacc: Number(valuation.assumptions?.discountRate || 9.5),
-                terminalGrowth: Number(valuation.assumptions?.terminalGrowthRate || 2.5),
-                method: "5-Year Discrete FCFF + Calculated WACC",
-                status: valuation.dcfStatus || "CALCULATED"
+            dcf: valuation.dcf || {
+                fairValue: null,
+                upside: null,
+                wacc: null,
+                terminalGrowth: null,
+                method: "5-Year Discrete FCFF Model",
+                status: "UNAVAILABLE"
             },
-            relativeMultiples: valuation.relativeValuation || null,
-            reverseDcf: valuation.reverseDcf || null,
-            scenarios: valuation.scenarios || null
+            relativeMultiples: valuation.relativeValuation || {
+                fairValue: null,
+                upside: null,
+                status: "UNAVAILABLE"
+            },
+            relativeValuation: valuation.relativeValuation || {
+                sector: profile.sector || "General Equity",
+                framework: null,
+                peers: [],
+                normalizedMetrics: [],
+                zScores: {},
+                distributions: {},
+                valuationRanges: null,
+                modelAgreement: valuation.modelAgreement || null,
+                status: "UNAVAILABLE",
+                provenance: {
+                    source: "relativeValuation.engine",
+                    timestamp
+                }
+            },
+            reverseDcf: valuation.reverseDcf || {
+                impliedGrowthRate: null,
+                marketPrice: stock.currentPrice || null,
+                status: "UNAVAILABLE"
+            },
+            scenarios: valuation.scenarios || null,
+            sensitivity: valuation.sensitivityGrid || null,
+            valuationRange: valuation.valuationRange || null,
+            marginOfSafety: valuation.marginOfSafety !== undefined ? valuation.marginOfSafety : null,
+            modelAgreement: valuation.modelAgreement || null,
+            confidence: valuation.valuationConfidence || null
         },
         riskSignals: {
-            overallScore: risks.score || 50,
+            overallScore: risks.score ?? null,
+            overallRiskLevel: risks.riskLevel || "UNKNOWN",
+            criticalFlags: risks.criticalFlags || [],
+            categoryBreakdowns: risks.riskProfile?.categoryBreakdowns || {},
+            riskProfile: risks.riskProfile || null,
             financialRisk: risks.financialRisk || {},
             marketRisk: risks.marketRisk || {},
-            governanceRisk: risks.governanceRisk || {},
+            earningsRisk: risks.earningsRisk || {},
+            liquidityRisk: risks.liquidityRisk || {},
+            growthRisk: risks.growthRisk || {},
+            governanceRisk: risks.governanceRisk || { status: "UNAVAILABLE" },
             flags: risks.flags || []
+        },
+        peerBenchmarks: state.competitors || {
+            sector: profile.sector || "General Equity",
+            peers: []
         },
         newsEvents: (news || []).map(item => ({
             title: item.title,
@@ -308,6 +400,11 @@ export function buildEvidenceGraph(state) {
             riskTolerance: "Moderate / Balanced",
             goal: "Capital Growth & Compounding"
         },
+        scores: {
+            companyQualityScore: state.companyQualityScore || null,
+            stockAttractivenessScore: state.stockAttractivenessScore || null,
+            investorFitScore: state.investorFitScore || null
+        },
         confidence: {
             overall: overallConfidence,
             dataCompleteness,
@@ -315,14 +412,24 @@ export function buildEvidenceGraph(state) {
             freshness,
             modelAgreement,
             calculationIntegrity,
+            integrityCheck: true,
             criticalPenaltyApplied: criticalPenalty < 1.0
         },
         provenance
     };
 
+    // Validate Package
+    const validation = validateTruthPackage(truthPackage);
+    truthPackage.confidence.integrityCheck = validation.valid;
+
+    // Seal Package with SHA-256 Hash
+    const integrity = sealTruthPackage(truthPackage);
+    truthPackage.integrity = integrity;
+
     return {
         truthPackage,
         provenance,
-        confidence: truthPackage.confidence
+        confidence: truthPackage.confidence,
+        integrity
     };
 }

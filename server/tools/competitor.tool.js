@@ -1,6 +1,6 @@
-import yahooFinance from "../services/yahooFinance.service.js";
+import yahooFinance, { scrapeQuotePage } from "../services/yahooFinance.service.js";
 
-// Sector & Industry Peer Mapping for Verified Benchmarking
+// Curated Sector Peer Mapping for Verified Benchmarking
 const SECTOR_PEER_MAP = {
     // Automotive
     "TATAMOTORS.NS": [
@@ -8,6 +8,17 @@ const SECTOR_PEER_MAP = {
         { ticker: "M&M.NS", name: "Mahindra & Mahindra Limited", sector: "Automotive" },
         { ticker: "ASHOKLEY.NS", name: "Ashok Leyland Limited", sector: "Commercial Vehicles" },
         { ticker: "BAJAJ-AUTO.NS", name: "Bajaj Auto Limited", sector: "Two-Wheelers" }
+    ],
+    "TMPV.NS": [
+        { ticker: "MARUTI.NS", name: "Maruti Suzuki India Limited", sector: "Automotive" },
+        { ticker: "M&M.NS", name: "Mahindra & Mahindra Limited", sector: "Automotive" },
+        { ticker: "ASHOKLEY.NS", name: "Ashok Leyland Limited", sector: "Commercial Vehicles" },
+        { ticker: "BAJAJ-AUTO.NS", name: "Bajaj Auto Limited", sector: "Two-Wheelers" }
+    ],
+    "TMCV.NS": [
+        { ticker: "ASHOKLEY.NS", name: "Ashok Leyland Limited", sector: "Commercial Vehicles" },
+        { ticker: "EICHERMOT.NS", name: "Eicher Motors Limited", sector: "Commercial Vehicles" },
+        { ticker: "M&M.NS", name: "Mahindra & Mahindra Limited", sector: "Commercial Vehicles" }
     ],
     "TSLA": [
         { ticker: "RIVN", name: "Rivian Automotive, Inc.", sector: "EV Automotive" },
@@ -17,7 +28,7 @@ const SECTOR_PEER_MAP = {
     ],
     // Big Tech & Cloud
     "MSFT": [
-        { ticker: "AAPL", name: "Apple Inc.", sector: "Consumer Electronics & Services" },
+        { ticker: "AAPL", name: "Apple Inc.", sector: "Consumer Electronics & Cloud" },
         { ticker: "GOOGL", name: "Alphabet Inc.", sector: "Search & Cloud" },
         { ticker: "AMZN", name: "Amazon.com, Inc.", sector: "E-Commerce & Cloud" },
         { ticker: "ORCL", name: "Oracle Corporation", sector: "Enterprise Cloud" }
@@ -57,51 +68,103 @@ const SECTOR_PEER_MAP = {
     ]
 };
 
-export async function getCompetitors(companyProfile) {
+/**
+ * Enriches a raw peer record with grounded valuation multiples from Yahoo Finance
+ * @param {Object} peer - Raw peer candidate
+ * @returns {Promise<Object>} Enriched peer record
+ */
+async function enrichPeerData(peer) {
+    try {
+        const rawData = await scrapeQuotePage(peer.ticker);
+        const quote = rawData?.quote || {};
+        const summary = rawData?.quoteSummary || {};
+        const defaultKey = summary.defaultKeyStatistics || {};
+        const finData = summary.financialData || {};
+        const sumDetail = summary.summaryDetail || {};
+
+        const pe = quote.trailingPE ?? sumDetail.trailingPE ?? defaultKey.trailingPE ?? null;
+        const evEbitda = defaultKey.enterpriseToEbitda ?? finData.enterpriseToEbitda ?? null;
+        const pb = quote.priceToBook ?? defaultKey.priceToBook ?? null;
+        const evRevenue = defaultKey.enterpriseToRevenue ?? finData.enterpriseToRevenue ?? null;
+        const marketCap = quote.marketCap ?? sumDetail.marketCap ?? null;
+        const revenueGrowth = finData.revenueGrowth ?? null;
+        const ebitdaMargin = finData.ebitdaMargins ?? null;
+        const roe = finData.returnOnEquity ?? defaultKey.returnOnEquity ?? null;
+
+        return {
+            ...peer,
+            marketCap: typeof marketCap === "number" ? marketCap : null,
+            pe: typeof pe === "number" && pe > 0 ? Number(pe.toFixed(2)) : null,
+            evEbitda: typeof evEbitda === "number" && evEbitda > 0 ? Number(evEbitda.toFixed(2)) : null,
+            pb: typeof pb === "number" && pb > 0 ? Number(pb.toFixed(2)) : null,
+            evRevenue: typeof evRevenue === "number" && evRevenue > 0 ? Number(evRevenue.toFixed(2)) : null,
+            revenueGrowth: typeof revenueGrowth === "number" ? Number(revenueGrowth.toFixed(4)) : null,
+            ebitdaMargin: typeof ebitdaMargin === "number" ? Number(ebitdaMargin.toFixed(4)) : null,
+            roe: typeof roe === "number" ? Number(roe.toFixed(4)) : null,
+            provenance: {
+                source: "yahooFinance.quoteSummary",
+                timestamp: new Date().toISOString()
+            }
+        };
+    } catch (err) {
+        return {
+            ...peer,
+            pe: null,
+            evEbitda: null,
+            pb: null,
+            provenance: {
+                source: "yahooFinance (failed)",
+                timestamp: new Date().toISOString()
+            }
+        };
+    }
+}
+
+export async function getCompetitors(companyProfile = {}) {
     try {
         const rawTicker = String(companyProfile.ticker || "").toUpperCase().trim();
-        console.log(`[Competitor Engine] Sourcing sector-aware peers for: ${rawTicker || companyProfile.name}`);
+        let candidatePeers = [];
 
         // 1. Direct Curated Sector Mapping
         if (SECTOR_PEER_MAP[rawTicker]) {
-            return {
-                sector: companyProfile.sector || "Sector Benchmark",
-                primaryCompetitors: SECTOR_PEER_MAP[rawTicker]
-            };
+            candidatePeers = SECTOR_PEER_MAP[rawTicker];
+        } else {
+            // 2. Dynamic Industry/Sector Search via Yahoo Finance
+            const searchQuery = companyProfile.industry || companyProfile.sector || companyProfile.name;
+            if (searchQuery) {
+                const searchResult = await yahooFinance.search(searchQuery);
+                if (searchResult && searchResult.quotes && searchResult.quotes.length) {
+                    candidatePeers = searchResult.quotes
+                        .filter(quote =>
+                            quote.symbol !== rawTicker &&
+                            quote.quoteType === "EQUITY" &&
+                            (quote.shortname || quote.longname) &&
+                            !quote.symbol.startsWith("^")
+                        )
+                        .slice(0, 4)
+                        .map(quote => ({
+                            name: quote.shortname || quote.longname || quote.symbol,
+                            ticker: quote.symbol,
+                            sector: quote.sector || companyProfile.sector || "Industry Peer"
+                        }));
+                }
+            }
         }
 
-        // 2. Dynamic Industry/Sector Search via Yahoo Finance
-        const searchQuery = companyProfile.industry || companyProfile.sector || companyProfile.name;
-        const searchResult = await yahooFinance.search(searchQuery);
-
-        let primaryCompetitors = [];
-        if (searchResult && searchResult.quotes && searchResult.quotes.length) {
-            primaryCompetitors = searchResult.quotes
-                .filter(quote =>
-                    quote.symbol !== rawTicker &&
-                    (quote.quoteType === "EQUITY") &&
-                    (quote.shortname || quote.longname)
-                )
-                .slice(0, 4)
-                .map(quote => ({
-                    name: quote.shortname || quote.longname || quote.symbol,
-                    ticker: quote.symbol,
-                    sector: quote.sector || companyProfile.sector || "Industry Peer"
-                }));
-        }
+        // Enrich all peers with grounded fundamentals in parallel
+        const enrichedCompetitors = await Promise.all(
+            candidatePeers.map(peer => enrichPeerData(peer))
+        );
 
         return {
-            sector: companyProfile.sector || "Equities",
-            primaryCompetitors: primaryCompetitors.length > 0 ? primaryCompetitors : [
-                { ticker: "SPY", name: "S&P 500 Benchmark ETF", sector: "Index" },
-                { ticker: "^NSEI", name: "NIFTY 50 Benchmark Index", sector: "Index" }
-            ]
+            sector: companyProfile.sector || "Industry Peers",
+            primaryCompetitors: enrichedCompetitors
         };
 
     } catch (error) {
         console.warn("Competitor Extraction Error (Graceful Fallback):", error.message);
         return {
-            sector: companyProfile.sector || "Equities",
+            sector: companyProfile.sector || "Industry Peers",
             primaryCompetitors: []
         };
     }

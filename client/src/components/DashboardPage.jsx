@@ -15,6 +15,7 @@ import ExportMemoModal from './Dashboard/ExportMemoModal';
 import ShareScorecardModal from './Dashboard/ShareScorecardModal';
 import EvidenceDrawer from './Dashboard/EvidenceDrawer';
 import InvestorProfileModal from './Dashboard/InvestorProfileModal';
+import ResearchPanel from './Research/ResearchPanel';
 import { AlertCircle, ArrowLeft, RefreshCw, FileText, Share2, Star, ShieldCheck, Sliders } from 'lucide-react';
 
 const DashboardPage = () => {
@@ -157,8 +158,9 @@ const DashboardPage = () => {
           </div>
           <h2 className="text-lg font-bold text-slate-900">Analysis Unavailable</h2>
           <p className="text-xs text-slate-500 leading-relaxed">
-            {error || 'Unable to retrieve real-time market data or audited statements for this security.'}
+            {error || 'Unable to retrieve real-time market data or financial statements for this security.'}
           </p>
+
           <div className="pt-2 flex flex-col sm:flex-row gap-3">
             <Link
               to="/"
@@ -313,6 +315,17 @@ const DashboardPage = () => {
             cons={data.cons}
             keyFactors={data.keyFactors}
             reasoning={data.reasoning}
+            phase3Decision={data.phase3Decision || data.decision}
+          />
+        </div>
+
+        {/* Institutional AI Research Analyst (Phase 4) */}
+        <div className="w-full">
+          <ResearchPanel 
+            research={data.research}
+            ticker={data.companyProfile?.ticker || ticker}
+            currency={data.stockData?.currency || 'USD'}
+            onOpenEvidence={() => setIsEvidenceDrawerOpen(true)}
           />
         </div>
 

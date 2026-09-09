@@ -5,24 +5,14 @@ export async function valuationNode(state) {
 
     try {
         const valuation = calculateValuation(state);
-
         return {
-            ...state,
-            valuation,
-            progress: [
-                ...(state.progress || []),
-                "Valuation & DCF model generated"
-            ]
+            valuation
         };
     } catch (error) {
         console.error("Valuation Node Error:", error.message);
         return {
-            ...state,
-            valuation: null,
-            progress: [
-                ...(state.progress || []),
-                "Valuation calculation bypassed"
-            ]
+            valuation: null
         };
     }
 }
+

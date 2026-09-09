@@ -45,6 +45,8 @@ function classifyNewsEvent(title = "", description = "") {
 }
 
 export async function getCompanyNews(companyName) {
+    const retrievedAt = new Date().toISOString();
+
     try {
         if (!companyName) return [];
 
@@ -63,15 +65,17 @@ export async function getCompanyNews(companyName) {
                         articles = data.articles.map(a => ({
                             title: a.title,
                             description: a.description,
-                            source: a.source?.name || "Financial Wire",
-                            publishedAt: a.publishedAt,
+                            source: a.source?.name || "Financial News Wire",
+                            sourceId: a.source?.url || a.url || "gnews.io",
+                            publishedAt: a.publishedAt || retrievedAt,
+                            retrievedAt,
                             url: a.url,
                             image: a.image
                         }));
                     }
                 }
             } catch (err) {
-                console.warn("[News Tool] GNews fetch failed, using fallback:", err.message);
+                console.warn("[News Tool] GNews fetch error (graceful fallback):", err.message);
             }
         }
 

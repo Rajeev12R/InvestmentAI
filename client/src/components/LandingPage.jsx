@@ -183,9 +183,10 @@ const LandingPage = () => {
               <ShieldCheck className="h-4.5 w-4.5 shrink-0" />
             </div>
             <div>
-              <span className="text-xs font-bold text-slate-900 block">Audited Global Feeds</span>
-              <span className="text-[10px] text-slate-500">Real-time exchange data</span>
+              <span className="text-xs font-bold text-slate-900 block">Verified Global Feeds</span>
+              <span className="text-[10px] text-slate-500">Real-time exchange & fundamental data</span>
             </div>
+
           </div>
           <div className="flex items-center gap-2.5">
             <div className="p-2 bg-blue-50 border border-blue-200 rounded-xl text-blue-700">

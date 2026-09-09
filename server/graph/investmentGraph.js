@@ -10,10 +10,11 @@ import { riskNode } from "../nodes/risk.node.js";
 import { valuationNode } from "../nodes/valuation.node.js";
 import { evidenceNode } from "../nodes/evidence.node.js";
 import { decisionNode } from "../nodes/decision.node.js";
+import { researchNode } from "../nodes/research.node.js";
 
 const graphBuilder = new StateGraph(GraphState);
 
-// 1. Register All Nodes
+// 1. Register Graph Nodes
 graphBuilder.addNode("company", companyNode);
 graphBuilder.addNode("financial", financialNode);
 graphBuilder.addNode("stock", stockNode);
@@ -22,26 +23,35 @@ graphBuilder.addNode("competitor", competitorNode);
 graphBuilder.addNode("risk", riskNode);
 graphBuilder.addNode("valuationStep", valuationNode);
 graphBuilder.addNode("evidenceStep", evidenceNode);
-graphBuilder.addNode("decision", decisionNode);
+graphBuilder.addNode("decisionStep", decisionNode);
+graphBuilder.addNode("researchStep", researchNode);
 
-// 2. Parallel Flow Architecture:
-// Step 1: START -> company
+// 2. Genuine Parallel Execution Architecture:
+// Step 1: START -> Company Resolution
 graphBuilder.addEdge(START, "company");
 
-// Step 2: Parallel fan-out from company to financial, stock, news
+// Step 2: Parallel fan-out from company to financial, stock, and news ingestion
 graphBuilder.addEdge("company", "financial");
-graphBuilder.addEdge("financial", "stock");
-graphBuilder.addEdge("stock", "news");
+graphBuilder.addEdge("company", "stock");
+graphBuilder.addEdge("company", "news");
 
-// Step 3: competitor -> risk -> valuation
+// Step 3: Fan-in to competitor peer benchmarking
+graphBuilder.addEdge("financial", "competitor");
+graphBuilder.addEdge("stock", "competitor");
 graphBuilder.addEdge("news", "competitor");
-graphBuilder.addEdge("competitor", "risk");
-graphBuilder.addEdge("risk", "valuationStep");
 
-// Step 4: valuation -> evidenceStep (Truth Layer Registry) -> decision (AI reasoning) -> END
+// Step 4: Parallel quantitative analysis (risk and valuation engines)
+graphBuilder.addEdge("competitor", "risk");
+graphBuilder.addEdge("competitor", "valuationStep");
+
+// Step 5: Fan-in to Evidence & Truth Layer Assembler / Sealer
+graphBuilder.addEdge("risk", "evidenceStep");
 graphBuilder.addEdge("valuationStep", "evidenceStep");
-graphBuilder.addEdge("evidenceStep", "decision");
-graphBuilder.addEdge("decision", END);
+
+// Step 6: Air-Gapped Decision & AI Reasoning over Sealed Truth Package
+graphBuilder.addEdge("evidenceStep", "decisionStep");
+graphBuilder.addEdge("decisionStep", "researchStep");
+graphBuilder.addEdge("researchStep", END);
 
 export const investmentGraph = graphBuilder.compile();
 
@@ -62,21 +72,27 @@ export async function analyzeCompany(companyName, investorProfile = null) {
         },
         truthPackage: null,
         provenance: [],
-        companyQualityScore: 0,
-        stockAttractivenessScore: 0,
-        investorFitScore: 0,
-        investmentScore: 0,
+        companyQualityScore: null,
+        stockAttractivenessScore: null,
+        stockAttractivenessStatus: "UNAVAILABLE",
+        investorFitScore: null,
+        investmentScore: null,
         opportunities: [],
         recommendation: null,
-        confidence: 0,
+        confidence: null,
         reasoning: "",
         pros: [],
         cons: [],
         keyFactors: [],
         investmentHorizon: "3-5 Years",
+        phase3Decision: null,
+        decision: null,
+        research: null,
         progress: [],
         errors: []
     });
 
     return result;
 }
+
+export const runInvestmentPipeline = analyzeCompany;

@@ -27,12 +27,12 @@ const EvidenceDrawer = ({ isOpen, onClose, provenance = [], confidence = {} }) =
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-blue-600" />
               <h2 className="text-lg font-bold text-slate-900">Truth Layer & Evidence Graph</h2>
-              <span className="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200">
-                Audited & Verified
+              <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${confidence?.integrityCheck !== false ? "bg-emerald-100 text-emerald-800 border-emerald-200" : "bg-amber-100 text-amber-800 border-amber-200"}`}>
+                {confidence?.integrityCheck !== false ? "Truth Package Sealed" : "Unsealed / Incomplete"}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Full transparency: View raw inputs, exact formulas, reporting periods, and primary data sources for every metric.
+              Full transparency: View raw inputs, exact formulas, reporting periods, and verified data sources for every metric.
             </p>
           </div>
           <button 
@@ -47,16 +47,19 @@ const EvidenceDrawer = ({ isOpen, onClose, provenance = [], confidence = {} }) =
         <div className="p-4 bg-blue-50/60 border-b border-blue-100 flex flex-wrap items-center justify-between gap-4 text-xs">
           <div>
             <span className="text-slate-500">Analysis Confidence Score:</span>
-            <span className="ml-2 font-bold text-blue-700 text-sm">{confidence.overall || 85}%</span>
+            <span className="ml-2 font-bold text-blue-700 text-sm">
+              {confidence?.overall !== null && confidence?.overall !== undefined ? `${confidence.overall}%` : "UNAVAILABLE"}
+            </span>
           </div>
           <div className="flex items-center gap-3 text-slate-600">
-            <span>Completeness: <strong>{confidence.dataCompleteness || 90}%</strong></span>
+            <span>Completeness: <strong>{confidence?.dataCompleteness !== null && confidence?.dataCompleteness !== undefined ? `${confidence.dataCompleteness}%` : "UNAVAILABLE"}</strong></span>
             <span>•</span>
-            <span>Source Quality: <strong>{confidence.sourceQuality || 95}%</strong></span>
+            <span>Source Quality: <strong>{confidence?.sourceQuality !== null && confidence?.sourceQuality !== undefined ? `${confidence.sourceQuality}%` : "UNAVAILABLE"}</strong></span>
             <span>•</span>
-            <span>Freshness: <strong>{confidence.freshness || 95}%</strong></span>
+            <span>Freshness: <strong>{confidence?.freshness !== null && confidence?.freshness !== undefined ? `${confidence.freshness}%` : "UNAVAILABLE"}</strong></span>
           </div>
         </div>
+
 
         {/* Search & Filter Bar */}
         <div className="p-4 border-b border-slate-100 bg-white flex flex-col sm:flex-row gap-3">
@@ -152,8 +155,9 @@ const EvidenceDrawer = ({ isOpen, onClose, provenance = [], confidence = {} }) =
         {/* Footer */}
         <div className="p-4 border-t border-slate-200 bg-slate-50 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
           <ShieldCheck className="h-4 w-4 text-emerald-600" />
-          <span>Constitution of InvestmentAI: 100% of figures are mathematically verified or primary sourced.</span>
+          <span>Constitution of InvestmentAI: Every available figure is classified by source hierarchy and calculation status.</span>
         </div>
+
 
       </div>
     </div>

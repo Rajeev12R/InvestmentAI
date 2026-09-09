@@ -2,8 +2,9 @@ import yahooFinance, { scrapeQuotePage } from "../services/yahooFinance.service.
 
 // Common Indian equity aliases mapping to NSE tickers
 const INDIAN_STOCK_MAP = {
-    'TATAMOTORS': 'TATAMOTORS.NS',
-    'TATA MOTORS': 'TATAMOTORS.NS',
+    'TATAMOTORS': 'TMPV.NS',
+    'TATA MOTORS': 'TMPV.NS',
+    'TATAMOTORS.NS': 'TMPV.NS',
     'RELIANCE': 'RELIANCE.NS',
     'RIL': 'RELIANCE.NS',
     'INFOSYS': 'INFY.NS',
@@ -44,43 +45,49 @@ export async function getCompanyProfile(companyName) {
         const cleanName = (companyName || '').trim().toUpperCase();
         let targetQuery = INDIAN_STOCK_MAP[cleanName] || companyName;
 
-        // 1. Direct Ticker Resolution Attempt (fast path for explicit tickers like MSFT, RELIANCE.NS, TATAMOTORS.NS)
+        // 1. Direct Ticker Resolution Attempt (fast path for explicit tickers)
         try {
             const directSymbol = targetQuery.toUpperCase();
             const { quoteSummary, quote } = await scrapeQuotePage(directSymbol);
-            if (quoteSummary || quote) {
+            if (quoteSummary?.price || quote?.symbol) {
                 return {
-                    name: quoteSummary.price?.longName || quoteSummary.price?.shortName || directSymbol,
-                    ticker: directSymbol,
-                    exchange: quoteSummary.price?.exchangeName || quote?.fullExchangeName || null,
-                    industry: quoteSummary.summaryProfile?.industry || null,
-                    sector: quoteSummary.summaryProfile?.sector || null,
-                    country: quoteSummary.summaryProfile?.country || null,
-                    website: quoteSummary.summaryProfile?.website || null,
-                    employees: quoteSummary.summaryProfile?.fullTimeEmployees || null,
-                    description: quoteSummary.summaryProfile?.longBusinessSummary || null,
-                    marketCap: quoteSummary.price?.marketCap || quote?.marketCap || null,
-                    currency: quoteSummary.price?.currency || quote?.currency || null
+                    name: quoteSummary?.price?.longName || quoteSummary?.price?.shortName || quote?.shortName || directSymbol,
+                    ticker: quote?.symbol || directSymbol,
+                    exchange: quoteSummary?.price?.exchangeName || quote?.fullExchangeName || null,
+                    industry: quoteSummary?.summaryProfile?.industry || null,
+                    sector: quoteSummary?.summaryProfile?.sector || null,
+                    country: quoteSummary?.summaryProfile?.country || null,
+                    website: quoteSummary?.summaryProfile?.website || null,
+                    employees: quoteSummary?.summaryProfile?.fullTimeEmployees || null,
+                    description: quoteSummary?.summaryProfile?.longBusinessSummary || null,
+                    marketCap: quoteSummary?.price?.marketCap || quote?.marketCap || null,
+                    currency: quoteSummary?.price?.currency || quote?.currency || null
                 };
             }
         } catch (directErr) {
             // Fall through to search
         }
 
-        let searchResult = await yahooFinance.search(targetQuery);
+        let searchResult = null;
+        try {
+            searchResult = await yahooFinance.search(targetQuery);
+        } catch (e) {
+            // Ignore initial search error
+        }
 
-        if ((!searchResult || !searchResult.quotes || !searchResult.quotes.length) && !cleanName.includes('.')) {
-            // Try appending .NS for Indian markets
+        if (!searchResult || !searchResult.quotes || !searchResult.quotes.length) {
+            const baseQuery = cleanName.includes('.') ? cleanName.split('.')[0] : cleanName;
             try {
-                searchResult = await yahooFinance.search(`${cleanName}.NS`);
+                searchResult = await yahooFinance.search(baseQuery);
             } catch (e) {
-                // Ignore fallback search error
+                // Ignore fallback
             }
         }
 
         if (!searchResult || !searchResult.quotes || !searchResult.quotes.length) {
             throw new Error(`Company "${companyName}" not found on global or Indian exchanges`);
         }
+
 
         const validQuotes = searchResult.quotes.filter(
             q => q.symbol && (q.quoteType === "EQUITY" || q.quoteType === "ETF" || !q.quoteType)

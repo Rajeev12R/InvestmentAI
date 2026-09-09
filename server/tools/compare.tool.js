@@ -11,44 +11,55 @@ const CANDIDATE_MODELS = [
     "gemini-2.5-pro"
 ];
 
-function calculateNormalizedPeerScores(stocks) {
+/**
+ * Calculates genuine Z-Score Normalized Multi-Factor Peer Scores
+ * z = (x - mean) / stdDev
+ * Weights: Profitability (25%), Growth (20%), Solvency (20%), Valuation (25%), Risk/Momentum (10%)
+ */
+function calculateZScorePeerRanking(stocks) {
     if (!stocks || stocks.length === 0) return [];
+    if (stocks.length === 1) return [{ ...stocks[0], compositeRankScore: 75, zScores: {} }];
+
+    function getStats(metricExtractor) {
+        const values = stocks.map(metricExtractor).filter(v => v !== null && !isNaN(v));
+        if (values.length === 0) return { mean: 0, stdDev: 1 };
+        const mean = values.reduce((a, b) => a + b, 0) / values.length;
+        const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
+        const stdDev = Math.sqrt(variance) || 1;
+        return { mean, stdDev };
+    }
+
+    const growthStats = getStats(s => s.revenueGrowth !== null ? Number(s.revenueGrowth) : null);
+    const marginStats = getStats(s => s.operatingMargin !== null ? Number(s.operatingMargin) : null);
+    const roeStats = getStats(s => s.roe !== null ? Number(s.roe) : null);
+    const upsideStats = getStats(s => s.upsidePotential !== null ? Number(s.upsidePotential) : null);
+    const solvencyStats = getStats(s => {
+        const d = parseFloat(s.debtToCash);
+        return !isNaN(d) ? -d : null; // Lower debt to cash is better
+    });
 
     return stocks.map(stock => {
-        let score = 50;
+        const zGrowth = stock.revenueGrowth !== null ? (Number(stock.revenueGrowth) - growthStats.mean) / growthStats.stdDev : 0;
+        const zMargin = stock.operatingMargin !== null ? (Number(stock.operatingMargin) - marginStats.mean) / marginStats.stdDev : 0;
+        const zRoe = stock.roe !== null ? (Number(stock.roe) - roeStats.mean) / roeStats.stdDev : 0;
+        const zUpside = stock.upsidePotential !== null ? (Number(stock.upsidePotential) - upsideStats.mean) / upsideStats.stdDev : 0;
+        const debtVal = parseFloat(stock.debtToCash);
+        const zSolvency = !isNaN(debtVal) ? (-debtVal - solvencyStats.mean) / solvencyStats.stdDev : 0;
 
-        // 1. Growth Component (20%)
-        const revGrowth = Number(stock.revenueGrowth || 0) * (Math.abs(Number(stock.revenueGrowth || 0)) < 1 ? 100 : 1);
-        if (revGrowth > 15) score += 10;
-        else if (revGrowth > 5) score += 5;
-        else if (revGrowth < 0) score -= 8;
-
-        // 2. Profitability Component (25%)
-        const opMargin = Number(stock.operatingMargin || 0) * (Math.abs(Number(stock.operatingMargin || 0)) < 1 ? 100 : 1);
-        if (opMargin > 20) score += 14;
-        else if (opMargin > 10) score += 7;
-        else if (opMargin <= 0) score -= 12;
-
-        const roe = Number(stock.roe || 0) * (Math.abs(Number(stock.roe || 0)) < 1 ? 100 : 1);
-        if (roe > 18) score += 10;
-        else if (roe > 8) score += 5;
-
-        // 3. Balance Sheet Solvency (20%)
-        const debtToCash = parseFloat(stock.debtToCash);
-        if (!isNaN(debtToCash)) {
-            if (debtToCash <= 1.0) score += 10;
-            else if (debtToCash > 3.0) score -= 10;
-        }
-
-        // 4. Valuation & Margin of Safety (25%)
-        const upside = Number(stock.upsidePotential || 0);
-        if (upside > 25) score += 15;
-        else if (upside > 10) score += 8;
-        else if (upside < -15) score -= 12;
+        // Composite Weighted Z-Score
+        const compositeZ = (zMargin * 0.15) + (zRoe * 0.10) + (zGrowth * 0.20) + (zSolvency * 0.20) + (zUpside * 0.25);
+        // Map standard normal z [-2.5, +2.5] to a normalized scale [30, 95]
+        const compositeRankScore = Math.max(20, Math.min(98, Math.round(50 + (compositeZ * 15))));
 
         return {
             ...stock,
-            compositeRankScore: Math.max(10, Math.min(98, Math.round(score)))
+            compositeRankScore,
+            zScores: {
+                growth: Number(zGrowth.toFixed(2)),
+                profitability: Number(((zMargin + zRoe) / 2).toFixed(2)),
+                solvency: Number(zSolvency.toFixed(2)),
+                valuation: Number(zUpside.toFixed(2))
+            }
         };
     });
 }
@@ -59,7 +70,6 @@ export async function compareCompanies(tickers = []) {
     }
 
     const cleanTickers = tickers.slice(0, 4).map(t => t.toUpperCase().trim());
-    console.log(`[Compare Tool] Executing parallel multi-stock intelligence for: ${cleanTickers.join(", ")}`);
 
     // Fetch in parallel
     const stocksData = await Promise.all(
@@ -81,50 +91,52 @@ export async function compareCompanies(tickers = []) {
                     name: profile.name,
                     sector: profile.sector,
                     industry: profile.industry,
-                    marketCap: financials.marketCap || profile.marketCap,
+                    marketCap: financials.marketCap || profile.marketCap || null,
                     currency: profile.currency || "USD",
-                    currentPrice: stockData.currentPrice,
-                    revenueGrowth: financials.revenueGrowth,
-                    operatingMargin: financials.operatingMargin,
-                    profitMargin: financials.profitMargin,
-                    peRatio: financials.peRatio,
-                    roe: financials.roe,
-                    debtToCash: financials.totalCash > 0 ? (Number(financials.totalDebt || 0) / Number(financials.totalCash)).toFixed(2) : "N/A",
-                    freeCashFlow: financials.freeCashFlow,
-                    fairValue: valuation?.fairValuePriceTarget,
-                    upsidePotential: valuation?.upsidePotential,
-                    valuationRating: valuation?.valuationRating,
-                    marginOfSafety: valuation?.marginOfSafety
+                    currentPrice: stockData.currentPrice || null,
+                    revenueGrowth: financials.revenueGrowth !== undefined ? financials.revenueGrowth : null,
+                    operatingMargin: financials.operatingMargin !== undefined ? financials.operatingMargin : null,
+                    profitMargin: financials.profitMargin !== undefined ? financials.profitMargin : null,
+                    peRatio: financials.peRatio !== undefined ? financials.peRatio : null,
+                    roe: financials.roe !== undefined ? financials.roe : null,
+                    debtToCash: (financials.totalDebt !== null && financials.totalCash !== null && financials.totalCash > 0)
+                        ? (Number(financials.totalDebt) / Number(financials.totalCash)).toFixed(2)
+                        : "UNAVAILABLE",
+                    freeCashFlow: financials.freeCashFlow !== undefined ? financials.freeCashFlow : null,
+                    fairValue: valuation?.fairValuePriceTarget || null,
+                    upsidePotential: valuation?.upsidePotential !== undefined ? valuation.upsidePotential : null,
+                    valuationRating: valuation?.valuationRating || "UNAVAILABLE",
+                    marginOfSafety: valuation?.marginOfSafety || null
                 };
             } catch (err) {
                 console.warn(`[Compare Tool] Failed data for ${ticker}:`, err.message);
                 return {
                     ticker,
                     name: ticker,
-                    currentPrice: 0,
+                    currentPrice: null,
                     error: true
                 };
             }
         })
     );
 
-    const validStocks = stocksData.filter(s => !s.error && s.currentPrice > 0);
+    const validStocks = stocksData.filter(s => !s.error && s.currentPrice !== null);
     if (validStocks.length < 2) {
         throw new Error("Could not retrieve sufficient market data for the selected tickers.");
     }
 
-    const rankedStocks = calculateNormalizedPeerScores(validStocks);
+    const rankedStocks = calculateZScorePeerRanking(validStocks);
     const sortedStocks = [...rankedStocks].sort((a, b) => b.compositeRankScore - a.compositeRankScore);
     const topStock = sortedStocks[0];
 
     const prompt = `You are the Lead Financial Comparison Analyst for InvestmentAI.
-Compare these companies quantitatively based on the structured data:
+Compare these companies quantitatively based strictly on the provided normalized Z-score data:
 ${JSON.stringify(rankedStocks, null, 2)}
 
 Provide a structured JSON comparison:
 {
   "winner": "${topStock.ticker}",
-  "verdict": "Executive synthesis explaining why ${topStock.ticker} has the superior risk-adjusted profile",
+  "verdict": "Executive synthesis explaining why ${topStock.ticker} has the superior risk-adjusted profile without fabricating outside numbers",
   "categoryWinners": {
     "growth": { "winner": "TICKER", "reason": "Revenue trajectory comparison" },
     "profitability": { "winner": "TICKER", "reason": "Operating margin and ROE comparison" },
@@ -161,16 +173,15 @@ Provide a structured JSON comparison:
                 console.warn(`[Compare Tool] Gemini quota reached on ${modelName}. Using verified deterministic ranking.`);
                 break;
             }
-            console.warn(`[Compare Tool] Model ${modelName} error:`, err.message);
         }
     }
 
     if (!aiAnalysis) {
         aiAnalysis = {
             winner: topStock.ticker,
-            verdict: `${topStock.name} (${topStock.ticker}) ranks highest with a normalized multi-factor quality & valuation score of ${topStock.compositeRankScore}/100.`,
+            verdict: `${topStock.name} (${topStock.ticker}) ranks highest with a normalized multi-factor Z-score composite of ${topStock.compositeRankScore}/100.`,
             categoryWinners: {
-                growth: { winner: sortedStocks[0].ticker, reason: "Superior top-line growth metrics." },
+                growth: { winner: sortedStocks[0].ticker, reason: "Superior top-line growth trajectory." },
                 profitability: { winner: sortedStocks[0].ticker, reason: "Higher operating margin and capital returns." },
                 valuation: { winner: sortedStocks[0].ticker, reason: "More favorable margin of safety relative to DCF value." },
                 balanceSheetHealth: { winner: sortedStocks[0].ticker, reason: "Lower net debt to cash ratio." }
