@@ -1,0 +1,23 @@
+/**
+ * @file job.types.js
+ * Persistent Job Queue & Worker Type Definitions for Phase 9.
+ */
+
+export const JobStatus = Object.freeze({
+  QUEUED: 'QUEUED',
+  RUNNING: 'RUNNING',
+  SUCCEEDED: 'SUCCEEDED',
+  FAILED: 'FAILED',
+  RETRYING: 'RETRYING',
+  CANCELLED: 'CANCELLED',
+  DEAD_LETTER: 'DEAD_LETTER'
+});
+
+export const JobType = Object.freeze({
+  INGESTION_TICKER: 'INGESTION_TICKER',
+  ATTENTION_SWEEP: 'ATTENTION_SWEEP',
+  PORTFOLIO_ANALYTICS: 'PORTFOLIO_ANALYTICS',
+  RESEARCH_SYNTHESIS: 'RESEARCH_SYNTHESIS',
+  RETENTION_PURGE: 'RETENTION_PURGE',
+  BACKUP_SNAPSHOT: 'BACKUP_SNAPSHOT'
+});

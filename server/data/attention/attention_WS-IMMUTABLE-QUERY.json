@@ -1,0 +1,83 @@
+{
+  "packageId": "ATT-PKG-WS-IMMUTABLE-QUERY",
+  "workspaceId": "WS-IMMUTABLE-QUERY",
+  "generatedAt": "2026-09-07T20:03:43.974Z",
+  "prioritySummary": {
+    "CRITICAL": 0,
+    "HIGH": 0,
+    "MEDIUM": 1,
+    "LOW": 0,
+    "INFORMATIONAL": 0
+  },
+  "attentionItems": [
+    {
+      "attentionId": "ATT-AAPL-DECISION-S1",
+      "ticker": "AAPL",
+      "entityType": "COMPANY",
+      "priority": "MEDIUM",
+      "score": {
+        "totalScore": 40,
+        "priority": "MEDIUM",
+        "components": {
+          "decisionChange": 30,
+          "thesisBreaker": 0,
+          "valuationDrift": 0,
+          "riskDrift": 0,
+          "eventMateriality": 0,
+          "portfolioExposure": 0,
+          "recency": 5,
+          "confidence": 5
+        }
+      },
+      "severity": "MEDIUM",
+      "category": "DECISION_CHANGE",
+      "title": "AAPL Decision Shift: BUY → AVOID",
+      "summary": "Deterministic investment decision changed from BUY to AVOID.",
+      "triggerType": "SNAPSHOT_TRANSITION",
+      "detectedAt": "2026-09-07T20:03:43.974Z",
+      "changeIds": [],
+      "eventIds": [],
+      "alertIds": [],
+      "evidenceIds": [],
+      "metrics": {
+        "valuationDriftPct": 0,
+        "riskDriftSeverity": null,
+        "portfolioWeight": 0
+      },
+      "previousDecision": "BUY",
+      "currentDecision": "AVOID",
+      "previousValuation": null,
+      "currentValuation": null,
+      "previousRisk": null,
+      "currentRisk": null,
+      "thesisStatus": "ACTIVE",
+      "thesisBreakerStatus": "STABLE",
+      "recommendedAction": "CONSIDER_EXIT",
+      "packageHash": "H1",
+      "snapshotId": "S1",
+      "whyMatters": [
+        "Deterministic investment decision shifted from BUY to AVOID.",
+        "Fair value / DCF estimate decreased by 0.0%, altering the margin of safety."
+      ],
+      "whatChanged": [
+        "Decision changed from BUY to AVOID.",
+        "Valuation estimate drifted 0.0% between snapshots."
+      ],
+      "whatInvalidates": [
+        "Reversal of driving metric triggers or upgrade in conviction/MOS back to BUY thresholds.",
+        "Fundamental revision restoring cash flow projections or revised discount rate."
+      ],
+      "investigationQuestions": [
+        "What primary fundamental factor drove the decision downgrade/upgrade from BUY to AVOID for AAPL?"
+      ],
+      "secondarySignals": []
+    }
+  ],
+  "portfolioSummary": null,
+  "snapshotIds": [
+    "S1"
+  ],
+  "totalItemCount": 1,
+  "packageHash": "7d7f184b0b9700be2feb34b2a67f8a05faa665077428acc8db741122716d6f32",
+  "isSealed": true
+}

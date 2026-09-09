@@ -1,0 +1,1546 @@
+{
+  "workspaces": {
+    "WS_CONCURRENT": {
+      "workspaceId": "WS_CONCURRENT",
+      "name": "Workspace WS_CONCURRENT",
+      "description": "Persistent workspace for equity research, thesis tracking, and change intelligence.",
+      "createdAt": "2026-09-07T20:03:43.714Z",
+      "updatedAt": "2026-09-07T20:03:43.718Z",
+      "watchlist": [
+        {
+          "ticker": "AAPL",
+          "addedAt": "2026-09-07T20:03:43.714Z",
+          "status": "ACTIVE",
+          "tags": []
+        },
+        {
+          "ticker": "JPM",
+          "addedAt": "2026-09-07T20:03:43.716Z",
+          "status": "ACTIVE",
+          "tags": []
+        },
+        {
+          "ticker": "RELIANCE.NS",
+          "addedAt": "2026-09-07T20:03:43.717Z",
+          "status": "ACTIVE",
+          "tags": []
+        },
+        {
+          "ticker": "TMPV.NS",
+          "addedAt": "2026-09-07T20:03:43.718Z",
+          "status": "ACTIVE",
+          "tags": []
+        }
+      ],
+      "holdings": [],
+      "thesisRecords": []
+    },
+    "WS_REAL_TICKER_AUDIT": {
+      "workspaceId": "WS_REAL_TICKER_AUDIT",
+      "name": "Workspace WS_REAL_TICKER_AUDIT",
+      "description": "Persistent workspace for equity research, thesis tracking, and change intelligence.",
+      "createdAt": "2026-09-07T20:03:43.721Z",
+      "updatedAt": "2026-09-07T20:03:43.727Z",
+      "watchlist": [
+        {
+          "ticker": "AAPL",
+          "addedAt": "2026-09-07T20:03:43.721Z",
+          "status": "ACTIVE",
+          "tags": []
+        },
+        {
+          "ticker": "JPM",
+          "addedAt": "2026-09-07T20:03:43.723Z",
+          "status": "ACTIVE",
+          "tags": []
+        },
+        {
+          "ticker": "RELIANCE.NS",
+          "addedAt": "2026-09-07T20:03:43.724Z",
+          "status": "ACTIVE",
+          "tags": []
+        },
+        {
+          "ticker": "TMPV.NS",
+          "addedAt": "2026-09-07T20:03:43.727Z",
+          "status": "ACTIVE",
+          "tags": []
+        }
+      ],
+      "holdings": [],
+      "thesisRecords": []
+    },
+    "WS-a3c59122-7f27-461d-8f1c-98c6523d1c71": {
+      "workspaceId": "WS-a3c59122-7f27-461d-8f1c-98c6523d1c71",
+      "name": "Workspace WS-a3c59122-7f27-461d-8f1c-98c6523d1c71",
+      "description": "Persistent workspace for equity research, thesis tracking, and change intelligence.",
+      "createdAt": "2026-09-07T20:04:22.925Z",
+      "updatedAt": "2026-09-07T20:04:22.925Z",
+      "watchlist": [],
+      "holdings": [],
+      "thesisRecords": []
+    }
+  },
+  "snapshots": {
+    "WS_CONCURRENT:AAPL:SNAP_AAPL_1788811423715_pg7s": {
+      "snapshotId": "SNAP_AAPL_1788811423715_pg7s",
+      "workspaceId": "WS_CONCURRENT",
+      "ticker": "AAPL",
+      "createdAt": "2026-09-07T20:03:43.715Z",
+      "asOf": "2026-09-07T20:03:43.714Z",
+      "truthPackageHash": "882dc2fbd8a7f3508592d4dd9bc5a1356eab3147b85d50057a687689eb9d8ad5",
+      "truthPackageVersion": "1.0.1",
+      "marketState": {
+        "currentPrice": 150,
+        "marketCap": "UNAVAILABLE",
+        "currency": "USD",
+        "beta": "UNAVAILABLE",
+        "pe": "UNAVAILABLE",
+        "pb": "UNAVAILABLE",
+        "volatility": "UNAVAILABLE"
+      },
+      "financialState": {
+        "revenue": 220000000000,
+        "fcf": 100000000000,
+        "netIncome": "UNAVAILABLE",
+        "operatingCashFlow": "UNAVAILABLE",
+        "totalDebt": 100000000000,
+        "totalCash": 30000000000,
+        "netDebt": 70000000000,
+        "operatingMargin": 0.3,
+        "fcfMargin": "UNAVAILABLE",
+        "debtToEbitda": "UNAVAILABLE",
+        "currentRatio": "UNAVAILABLE",
+        "reportingPeriod": "TTM"
+      },
+      "valuationState": {
+        "dcfFairValue": 180,
+        "dcfUpside": "UNAVAILABLE",
+        "reverseDcfGrowth": "UNAVAILABLE",
+        "relativeFairValue": "UNAVAILABLE",
+        "compositeFairValue": "UNAVAILABLE",
+        "modelAgreement": "UNAVAILABLE"
+      },
+      "riskState": {
+        "overallScore": 25,
+        "overallCategory": "LOW",
+        "financialRisk": "UNAVAILABLE",
+        "marketRisk": "UNAVAILABLE",
+        "liquidityRisk": "UNAVAILABLE",
+        "earningsQuality": "UNAVAILABLE",
+        "categorySummary": {}
+      },
+      "decisionState": {
+        "decision": "BUY",
+        "convictionScore": 85,
+        "convictionLevel": "UNAVAILABLE",
+        "primaryDrivers": [],
+        "falsificationTriggers": []
+      },
+      "thesisState": {
+        "summary": "AAPL Corp (AAPL) is evaluated with an overall 25 risk profile and intrinsic fair value of 180 USD.",
+        "bullCase": "Expansion in operating cash flows and margin stability supports fundamental outperformance.",
+        "baseCase": "Base-case intrinsic valuation evaluated at 180 USD (grounded valuation). Solvency and operating cash flows remain within historical ranges.",
+        "bearCase": "Deterioration in operating margins or emergence of cash flow divergence would impair fair value realizations.",
+        "keyDrivers": [
+          {
+            "claim": "DCF intrinsic fair value calculated at 180 USD based on 5-year discrete cash flow projections.",
+            "statementType": "CALCULATION",
+            "evidenceIds": [
+              "valuation.dcfFairValue"
+            ]
+          }
+        ]
+      },
+      "catalystState": [
+        {
+          "type": "MARGIN",
+          "description": "Operating Moat & Pricing Power: Robust operating margin of 30.0% provides structural earnings insulation against inflation and cost pressures.",
+          "timeHorizon": "Ongoing (3-5 Years)",
+          "expectedDirection": "POSITIVE",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "confidence": "HIGH"
+        }
+      ],
+      "thesisBreakerState": [
+        {
+          "trigger": "Operating Margin Deterioration below 27%",
+          "currentValue": "30.0%",
+          "threshold": "27%",
+          "direction": "CONTRACTION_BELOW_THRESHOLD",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "severity": "HIGH",
+          "impact": "Erosion of operating margin cushion would reduce forward free cash flow generation and lower DCF fair value."
+        },
+        {
+          "trigger": "Balance Sheet Leverage Spike (Net Debt / EBITDA > 3.5x)",
+          "currentValue": "undefinedx",
+          "threshold": "3.5x",
+          "direction": "EXPANSION_ABOVE_THRESHOLD",
+          "evidenceIds": [
+            "financial.totalDebt",
+            "financial.totalCash"
+          ],
+          "severity": "CRITICAL",
+          "impact": "Elevated debt service burden would restrict capital allocation flexibility and elevate financial solvency risk."
+        },
+        {
+          "trigger": "Cash Flow Divergence (Operating Cash Flow falling below Net Income)",
+          "currentValue": "Verified accounting alignment",
+          "threshold": "CFO / Net Income < 0.80x",
+          "direction": "DIVERGENCE",
+          "evidenceIds": [
+            "financial.operatingCashFlow",
+            "financial.netIncome"
+          ],
+          "severity": "HIGH",
+          "impact": "Accumulation of uncollected non-cash receivables or accruals signals deteriorating earnings quality."
+        },
+        {
+          "trigger": "Market Price Appreciation Eliminating Margin of Safety ($180)",
+          "currentValue": "$150",
+          "threshold": "$180",
+          "direction": "PRICE_CROSSOVER",
+          "evidenceIds": [
+            "valuation.dcfFairValue"
+          ],
+          "severity": "MODERATE",
+          "impact": "Price surpassing intrinsic fair value removes margin of safety and triggers a downgrade to HOLD or WATCH."
+        }
+      ],
+      "confidence": {
+        "overall": 80
+      },
+      "evidenceSummary": {
+        "factCount": 6,
+        "evidenceIds": [
+          "financial.revenue",
+          "financial.totalDebt",
+          "financial.totalCash",
+          "financial.operatingMargin",
+          "financial.freeCashFlow",
+          "financial.netDebt",
+          "valuation.dcf",
+          "valuation.dcfFairValue",
+          "financial.operatingMargins",
+          "risk.overall"
+        ]
+      },
+      "snapshotHash": "c00e4282fa6546944c66995cbbc8a6ca33879ef493d282beec38cc4026fda86b"
+    },
+    "WS_CONCURRENT:JPM:SNAP_JPM_1788811423716_wiz2": {
+      "snapshotId": "SNAP_JPM_1788811423716_wiz2",
+      "workspaceId": "WS_CONCURRENT",
+      "ticker": "JPM",
+      "createdAt": "2026-09-07T20:03:43.716Z",
+      "asOf": "2026-09-07T20:03:43.716Z",
+      "truthPackageHash": "669dc8c9025a4370b83523944d71f57a577b6116d1c4f37295f6c1a479bbff78",
+      "truthPackageVersion": "1.0.1",
+      "marketState": {
+        "currentPrice": 150,
+        "marketCap": "UNAVAILABLE",
+        "currency": "USD",
+        "beta": "UNAVAILABLE",
+        "pe": "UNAVAILABLE",
+        "pb": "UNAVAILABLE",
+        "volatility": "UNAVAILABLE"
+      },
+      "financialState": {
+        "revenue": 220000000000,
+        "fcf": 100000000000,
+        "netIncome": "UNAVAILABLE",
+        "operatingCashFlow": "UNAVAILABLE",
+        "totalDebt": 100000000000,
+        "totalCash": 30000000000,
+        "netDebt": 70000000000,
+        "operatingMargin": 0.3,
+        "fcfMargin": "UNAVAILABLE",
+        "debtToEbitda": "UNAVAILABLE",
+        "currentRatio": "UNAVAILABLE",
+        "reportingPeriod": "TTM"
+      },
+      "valuationState": {
+        "dcfFairValue": 180,
+        "dcfUpside": "UNAVAILABLE",
+        "reverseDcfGrowth": "UNAVAILABLE",
+        "relativeFairValue": "UNAVAILABLE",
+        "compositeFairValue": "UNAVAILABLE",
+        "modelAgreement": "UNAVAILABLE"
+      },
+      "riskState": {
+        "overallScore": 25,
+        "overallCategory": "LOW",
+        "financialRisk": "UNAVAILABLE",
+        "marketRisk": "UNAVAILABLE",
+        "liquidityRisk": "UNAVAILABLE",
+        "earningsQuality": "UNAVAILABLE",
+        "categorySummary": {}
+      },
+      "decisionState": {
+        "decision": "BUY",
+        "convictionScore": 85,
+        "convictionLevel": "UNAVAILABLE",
+        "primaryDrivers": [],
+        "falsificationTriggers": []
+      },
+      "thesisState": {
+        "summary": "JPM Corp (JPM) is evaluated with an overall 25 risk profile and intrinsic fair value of 180 USD.",
+        "bullCase": "Expansion in operating cash flows and margin stability supports fundamental outperformance.",
+        "baseCase": "Base-case intrinsic valuation evaluated at 180 USD (grounded valuation). Solvency and operating cash flows remain within historical ranges.",
+        "bearCase": "Deterioration in operating margins or emergence of cash flow divergence would impair fair value realizations.",
+        "keyDrivers": [
+          {
+            "claim": "DCF intrinsic fair value calculated at 180 USD based on 5-year discrete cash flow projections.",
+            "statementType": "CALCULATION",
+            "evidenceIds": [
+              "valuation.dcfFairValue"
+            ]
+          }
+        ]
+      },
+      "catalystState": [
+        {
+          "type": "MARGIN",
+          "description": "Operating Moat & Pricing Power: Robust operating margin of 30.0% provides structural earnings insulation against inflation and cost pressures.",
+          "timeHorizon": "Ongoing (3-5 Years)",
+          "expectedDirection": "POSITIVE",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "confidence": "HIGH"
+        }
+      ],
+      "thesisBreakerState": [
+        {
+          "trigger": "Operating Margin Deterioration below 27%",
+          "currentValue": "30.0%",
+          "threshold": "27%",
+          "direction": "CONTRACTION_BELOW_THRESHOLD",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "severity": "HIGH",
+          "impact": "Erosion of operating margin cushion would reduce forward free cash flow generation and lower DCF fair value."
+        },
+        {
+          "trigger": "Balance Sheet Leverage Spike (Net Debt / EBITDA > 3.5x)",
+          "currentValue": "undefinedx",
+          "threshold": "3.5x",
+          "direction": "EXPANSION_ABOVE_THRESHOLD",
+          "evidenceIds": [
+            "financial.totalDebt",
+            "financial.totalCash"
+          ],
+          "severity": "CRITICAL",
+          "impact": "Elevated debt service burden would restrict capital allocation flexibility and elevate financial solvency risk."
+        },
+        {
+          "trigger": "Cash Flow Divergence (Operating Cash Flow falling below Net Income)",
+          "currentValue": "Verified accounting alignment",
+          "threshold": "CFO / Net Income < 0.80x",
+          "direction": "DIVERGENCE",
+          "evidenceIds": [
+            "financial.operatingCashFlow",
+            "financial.netIncome"
+          ],
+          "severity": "HIGH",
+          "impact": "Accumulation of uncollected non-cash receivables or accruals signals deteriorating earnings quality."
+        },
+        {
+          "trigger": "Market Price Appreciation Eliminating Margin of Safety ($180)",
+          "currentValue": "$150",
+          "threshold": "$180",
+          "direction": "PRICE_CROSSOVER",
+          "evidenceIds": [
+            "valuation.dcfFairValue"
+          ],
+          "severity": "MODERATE",
+          "impact": "Price surpassing intrinsic fair value removes margin of safety and triggers a downgrade to HOLD or WATCH."
+        }
+      ],
+      "confidence": {
+        "overall": 80
+      },
+      "evidenceSummary": {
+        "factCount": 6,
+        "evidenceIds": [
+          "financial.revenue",
+          "financial.totalDebt",
+          "financial.totalCash",
+          "financial.operatingMargin",
+          "financial.freeCashFlow",
+          "financial.netDebt",
+          "valuation.dcf",
+          "valuation.dcfFairValue",
+          "financial.operatingMargins",
+          "risk.overall"
+        ]
+      },
+      "snapshotHash": "e26401a99a7827ff456877ee90da1b3b0b6e393829b7a14d47681134e5578195"
+    },
+    "WS_CONCURRENT:RELIANCE.NS:SNAP_RELIANCE.NS_1788811423717_msvm": {
+      "snapshotId": "SNAP_RELIANCE.NS_1788811423717_msvm",
+      "workspaceId": "WS_CONCURRENT",
+      "ticker": "RELIANCE.NS",
+      "createdAt": "2026-09-07T20:03:43.717Z",
+      "asOf": "2026-09-07T20:03:43.717Z",
+      "truthPackageHash": "e1c434616bad5255ce08c597fb0aab669c85933a3d2c5ab7fc9b5650966cc9a7",
+      "truthPackageVersion": "1.0.1",
+      "marketState": {
+        "currentPrice": 150,
+        "marketCap": "UNAVAILABLE",
+        "currency": "INR",
+        "beta": "UNAVAILABLE",
+        "pe": "UNAVAILABLE",
+        "pb": "UNAVAILABLE",
+        "volatility": "UNAVAILABLE"
+      },
+      "financialState": {
+        "revenue": 220000000000,
+        "fcf": 100000000000,
+        "netIncome": "UNAVAILABLE",
+        "operatingCashFlow": "UNAVAILABLE",
+        "totalDebt": 100000000000,
+        "totalCash": 30000000000,
+        "netDebt": 70000000000,
+        "operatingMargin": 0.3,
+        "fcfMargin": "UNAVAILABLE",
+        "debtToEbitda": "UNAVAILABLE",
+        "currentRatio": "UNAVAILABLE",
+        "reportingPeriod": "TTM"
+      },
+      "valuationState": {
+        "dcfFairValue": 180,
+        "dcfUpside": "UNAVAILABLE",
+        "reverseDcfGrowth": "UNAVAILABLE",
+        "relativeFairValue": "UNAVAILABLE",
+        "compositeFairValue": "UNAVAILABLE",
+        "modelAgreement": "UNAVAILABLE"
+      },
+      "riskState": {
+        "overallScore": 25,
+        "overallCategory": "LOW",
+        "financialRisk": "UNAVAILABLE",
+        "marketRisk": "UNAVAILABLE",
+        "liquidityRisk": "UNAVAILABLE",
+        "earningsQuality": "UNAVAILABLE",
+        "categorySummary": {}
+      },
+      "decisionState": {
+        "decision": "BUY",
+        "convictionScore": 85,
+        "convictionLevel": "UNAVAILABLE",
+        "primaryDrivers": [],
+        "falsificationTriggers": []
+      },
+      "thesisState": {
+        "summary": "RELIANCE.NS Corp (RELIANCE.NS) is evaluated with an overall 25 risk profile and intrinsic fair value of 180 INR.",
+        "bullCase": "Expansion in operating cash flows and margin stability supports fundamental outperformance.",
+        "baseCase": "Base-case intrinsic valuation evaluated at 180 INR (grounded valuation). Solvency and operating cash flows remain within historical ranges.",
+        "bearCase": "Deterioration in operating margins or emergence of cash flow divergence would impair fair value realizations.",
+        "keyDrivers": [
+          {
+            "claim": "DCF intrinsic fair value calculated at 180 INR based on 5-year discrete cash flow projections.",
+            "statementType": "CALCULATION",
+            "evidenceIds": [
+              "valuation.dcfFairValue"
+            ]
+          }
+        ]
+      },
+      "catalystState": [
+        {
+          "type": "MARGIN",
+          "description": "Operating Moat & Pricing Power: Robust operating margin of 30.0% provides structural earnings insulation against inflation and cost pressures.",
+          "timeHorizon": "Ongoing (3-5 Years)",
+          "expectedDirection": "POSITIVE",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "confidence": "HIGH"
+        }
+      ],
+      "thesisBreakerState": [
+        {
+          "trigger": "Operating Margin Deterioration below 27%",
+          "currentValue": "30.0%",
+          "threshold": "27%",
+          "direction": "CONTRACTION_BELOW_THRESHOLD",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "severity": "HIGH",
+          "impact": "Erosion of operating margin cushion would reduce forward free cash flow generation and lower DCF fair value."
+        },
+        {
+          "trigger": "Balance Sheet Leverage Spike (Net Debt / EBITDA > 3.5x)",
+          "currentValue": "undefinedx",
+          "threshold": "3.5x",
+          "direction": "EXPANSION_ABOVE_THRESHOLD",
+          "evidenceIds": [
+            "financial.totalDebt",
+            "financial.totalCash"
+          ],
+          "severity": "CRITICAL",
+          "impact": "Elevated debt service burden would restrict capital allocation flexibility and elevate financial solvency risk."
+        },
+        {
+          "trigger": "Cash Flow Divergence (Operating Cash Flow falling below Net Income)",
+          "currentValue": "Verified accounting alignment",
+          "threshold": "CFO / Net Income < 0.80x",
+          "direction": "DIVERGENCE",
+          "evidenceIds": [
+            "financial.operatingCashFlow",
+            "financial.netIncome"
+          ],
+          "severity": "HIGH",
+          "impact": "Accumulation of uncollected non-cash receivables or accruals signals deteriorating earnings quality."
+        },
+        {
+          "trigger": "Market Price Appreciation Eliminating Margin of Safety ($180)",
+          "currentValue": "$150",
+          "threshold": "$180",
+          "direction": "PRICE_CROSSOVER",
+          "evidenceIds": [
+            "valuation.dcfFairValue"
+          ],
+          "severity": "MODERATE",
+          "impact": "Price surpassing intrinsic fair value removes margin of safety and triggers a downgrade to HOLD or WATCH."
+        }
+      ],
+      "confidence": {
+        "overall": 80
+      },
+      "evidenceSummary": {
+        "factCount": 6,
+        "evidenceIds": [
+          "financial.revenue",
+          "financial.totalDebt",
+          "financial.totalCash",
+          "financial.operatingMargin",
+          "financial.freeCashFlow",
+          "financial.netDebt",
+          "valuation.dcf",
+          "valuation.dcfFairValue",
+          "financial.operatingMargins",
+          "risk.overall"
+        ]
+      },
+      "snapshotHash": "5d8d2688a93c4be234c4fda22ba4a9ad9f5732e913bc14f446bb6ed7ae4dd424"
+    },
+    "WS_CONCURRENT:TMPV.NS:SNAP_TMPV.NS_1788811423719_kvzz": {
+      "snapshotId": "SNAP_TMPV.NS_1788811423719_kvzz",
+      "workspaceId": "WS_CONCURRENT",
+      "ticker": "TMPV.NS",
+      "createdAt": "2026-09-07T20:03:43.719Z",
+      "asOf": "2026-09-07T20:03:43.718Z",
+      "truthPackageHash": "d96872f4bff0e377df0e176a4e75be59185ff017c9289f1d2262ed8cc0fe13a2",
+      "truthPackageVersion": "1.0.1",
+      "marketState": {
+        "currentPrice": 150,
+        "marketCap": "UNAVAILABLE",
+        "currency": "INR",
+        "beta": "UNAVAILABLE",
+        "pe": "UNAVAILABLE",
+        "pb": "UNAVAILABLE",
+        "volatility": "UNAVAILABLE"
+      },
+      "financialState": {
+        "revenue": 220000000000,
+        "fcf": 100000000000,
+        "netIncome": "UNAVAILABLE",
+        "operatingCashFlow": "UNAVAILABLE",
+        "totalDebt": 100000000000,
+        "totalCash": 30000000000,
+        "netDebt": 70000000000,
+        "operatingMargin": 0.3,
+        "fcfMargin": "UNAVAILABLE",
+        "debtToEbitda": "UNAVAILABLE",
+        "currentRatio": "UNAVAILABLE",
+        "reportingPeriod": "TTM"
+      },
+      "valuationState": {
+        "dcfFairValue": 180,
+        "dcfUpside": "UNAVAILABLE",
+        "reverseDcfGrowth": "UNAVAILABLE",
+        "relativeFairValue": "UNAVAILABLE",
+        "compositeFairValue": "UNAVAILABLE",
+        "modelAgreement": "UNAVAILABLE"
+      },
+      "riskState": {
+        "overallScore": 25,
+        "overallCategory": "LOW",
+        "financialRisk": "UNAVAILABLE",
+        "marketRisk": "UNAVAILABLE",
+        "liquidityRisk": "UNAVAILABLE",
+        "earningsQuality": "UNAVAILABLE",
+        "categorySummary": {}
+      },
+      "decisionState": {
+        "decision": "BUY",
+        "convictionScore": 85,
+        "convictionLevel": "UNAVAILABLE",
+        "primaryDrivers": [],
+        "falsificationTriggers": []
+      },
+      "thesisState": {
+        "summary": "TMPV.NS Corp (TMPV.NS) is evaluated with an overall 25 risk profile and intrinsic fair value of 180 INR.",
+        "bullCase": "Expansion in operating cash flows and margin stability supports fundamental outperformance.",
+        "baseCase": "Base-case intrinsic valuation evaluated at 180 INR (grounded valuation). Solvency and operating cash flows remain within historical ranges.",
+        "bearCase": "Deterioration in operating margins or emergence of cash flow divergence would impair fair value realizations.",
+        "keyDrivers": [
+          {
+            "claim": "DCF intrinsic fair value calculated at 180 INR based on 5-year discrete cash flow projections.",
+            "statementType": "CALCULATION",
+            "evidenceIds": [
+              "valuation.dcfFairValue"
+            ]
+          }
+        ]
+      },
+      "catalystState": [
+        {
+          "type": "MARGIN",
+          "description": "Operating Moat & Pricing Power: Robust operating margin of 30.0% provides structural earnings insulation against inflation and cost pressures.",
+          "timeHorizon": "Ongoing (3-5 Years)",
+          "expectedDirection": "POSITIVE",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "confidence": "HIGH"
+        }
+      ],
+      "thesisBreakerState": [
+        {
+          "trigger": "Operating Margin Deterioration below 27%",
+          "currentValue": "30.0%",
+          "threshold": "27%",
+          "direction": "CONTRACTION_BELOW_THRESHOLD",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "severity": "HIGH",
+          "impact": "Erosion of operating margin cushion would reduce forward free cash flow generation and lower DCF fair value."
+        },
+        {
+          "trigger": "Balance Sheet Leverage Spike (Net Debt / EBITDA > 3.5x)",
+          "currentValue": "undefinedx",
+          "threshold": "3.5x",
+          "direction": "EXPANSION_ABOVE_THRESHOLD",
+          "evidenceIds": [
+            "financial.totalDebt",
+            "financial.totalCash"
+          ],
+          "severity": "CRITICAL",
+          "impact": "Elevated debt service burden would restrict capital allocation flexibility and elevate financial solvency risk."
+        },
+        {
+          "trigger": "Cash Flow Divergence (Operating Cash Flow falling below Net Income)",
+          "currentValue": "Verified accounting alignment",
+          "threshold": "CFO / Net Income < 0.80x",
+          "direction": "DIVERGENCE",
+          "evidenceIds": [
+            "financial.operatingCashFlow",
+            "financial.netIncome"
+          ],
+          "severity": "HIGH",
+          "impact": "Accumulation of uncollected non-cash receivables or accruals signals deteriorating earnings quality."
+        },
+        {
+          "trigger": "Market Price Appreciation Eliminating Margin of Safety ($180)",
+          "currentValue": "$150",
+          "threshold": "$180",
+          "direction": "PRICE_CROSSOVER",
+          "evidenceIds": [
+            "valuation.dcfFairValue"
+          ],
+          "severity": "MODERATE",
+          "impact": "Price surpassing intrinsic fair value removes margin of safety and triggers a downgrade to HOLD or WATCH."
+        }
+      ],
+      "confidence": {
+        "overall": 80
+      },
+      "evidenceSummary": {
+        "factCount": 6,
+        "evidenceIds": [
+          "financial.revenue",
+          "financial.totalDebt",
+          "financial.totalCash",
+          "financial.operatingMargin",
+          "financial.freeCashFlow",
+          "financial.netDebt",
+          "valuation.dcf",
+          "valuation.dcfFairValue",
+          "financial.operatingMargins",
+          "risk.overall"
+        ]
+      },
+      "snapshotHash": "c87b2d7c2e01221c468c024905c180c4de681885c92eca222782901b2b281550"
+    },
+    "WS_REAL_TICKER_AUDIT:AAPL:SNAP_AAPL_1788811423722_mjtp": {
+      "snapshotId": "SNAP_AAPL_1788811423722_mjtp",
+      "workspaceId": "WS_REAL_TICKER_AUDIT",
+      "ticker": "AAPL",
+      "createdAt": "2026-09-07T20:03:43.722Z",
+      "asOf": "2026-09-07T20:03:43.721Z",
+      "truthPackageHash": "fbb5683a23633c88fa9882cdf6a16b70f08be6fe257b4c85b2abc1721829a060",
+      "truthPackageVersion": "1.0.1",
+      "marketState": {
+        "currentPrice": 150,
+        "marketCap": "UNAVAILABLE",
+        "currency": "USD",
+        "beta": "UNAVAILABLE",
+        "pe": "UNAVAILABLE",
+        "pb": "UNAVAILABLE",
+        "volatility": "UNAVAILABLE"
+      },
+      "financialState": {
+        "revenue": 420000000000,
+        "fcf": 100000000000,
+        "netIncome": "UNAVAILABLE",
+        "operatingCashFlow": "UNAVAILABLE",
+        "totalDebt": 100000000000,
+        "totalCash": 30000000000,
+        "netDebt": 70000000000,
+        "operatingMargin": 0.3,
+        "fcfMargin": "UNAVAILABLE",
+        "debtToEbitda": "UNAVAILABLE",
+        "currentRatio": "UNAVAILABLE",
+        "reportingPeriod": "TTM"
+      },
+      "valuationState": {
+        "dcfFairValue": 180,
+        "dcfUpside": "UNAVAILABLE",
+        "reverseDcfGrowth": "UNAVAILABLE",
+        "relativeFairValue": "UNAVAILABLE",
+        "compositeFairValue": "UNAVAILABLE",
+        "modelAgreement": "UNAVAILABLE"
+      },
+      "riskState": {
+        "overallScore": 25,
+        "overallCategory": "LOW",
+        "financialRisk": "UNAVAILABLE",
+        "marketRisk": "UNAVAILABLE",
+        "liquidityRisk": "UNAVAILABLE",
+        "earningsQuality": "UNAVAILABLE",
+        "categorySummary": {}
+      },
+      "decisionState": {
+        "decision": "BUY",
+        "convictionScore": 85,
+        "convictionLevel": "UNAVAILABLE",
+        "primaryDrivers": [],
+        "falsificationTriggers": []
+      },
+      "thesisState": {
+        "summary": "AAPL Corp (AAPL) is evaluated with an overall 25 risk profile and intrinsic fair value of 180 USD.",
+        "bullCase": "Expansion in operating cash flows and margin stability supports fundamental outperformance.",
+        "baseCase": "Base-case intrinsic valuation evaluated at 180 USD (grounded valuation). Solvency and operating cash flows remain within historical ranges.",
+        "bearCase": "Deterioration in operating margins or emergence of cash flow divergence would impair fair value realizations.",
+        "keyDrivers": [
+          {
+            "claim": "DCF intrinsic fair value calculated at 180 USD based on 5-year discrete cash flow projections.",
+            "statementType": "CALCULATION",
+            "evidenceIds": [
+              "valuation.dcfFairValue"
+            ]
+          }
+        ]
+      },
+      "catalystState": [
+        {
+          "type": "MARGIN",
+          "description": "Operating Moat & Pricing Power: Robust operating margin of 30.0% provides structural earnings insulation against inflation and cost pressures.",
+          "timeHorizon": "Ongoing (3-5 Years)",
+          "expectedDirection": "POSITIVE",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "confidence": "HIGH"
+        }
+      ],
+      "thesisBreakerState": [
+        {
+          "trigger": "Operating Margin Deterioration below 27%",
+          "currentValue": "30.0%",
+          "threshold": "27%",
+          "direction": "CONTRACTION_BELOW_THRESHOLD",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "severity": "HIGH",
+          "impact": "Erosion of operating margin cushion would reduce forward free cash flow generation and lower DCF fair value."
+        },
+        {
+          "trigger": "Balance Sheet Leverage Spike (Net Debt / EBITDA > 3.5x)",
+          "currentValue": "undefinedx",
+          "threshold": "3.5x",
+          "direction": "EXPANSION_ABOVE_THRESHOLD",
+          "evidenceIds": [
+            "financial.totalDebt",
+            "financial.totalCash"
+          ],
+          "severity": "CRITICAL",
+          "impact": "Elevated debt service burden would restrict capital allocation flexibility and elevate financial solvency risk."
+        },
+        {
+          "trigger": "Cash Flow Divergence (Operating Cash Flow falling below Net Income)",
+          "currentValue": "Verified accounting alignment",
+          "threshold": "CFO / Net Income < 0.80x",
+          "direction": "DIVERGENCE",
+          "evidenceIds": [
+            "financial.operatingCashFlow",
+            "financial.netIncome"
+          ],
+          "severity": "HIGH",
+          "impact": "Accumulation of uncollected non-cash receivables or accruals signals deteriorating earnings quality."
+        },
+        {
+          "trigger": "Market Price Appreciation Eliminating Margin of Safety ($180)",
+          "currentValue": "$150",
+          "threshold": "$180",
+          "direction": "PRICE_CROSSOVER",
+          "evidenceIds": [
+            "valuation.dcfFairValue"
+          ],
+          "severity": "MODERATE",
+          "impact": "Price surpassing intrinsic fair value removes margin of safety and triggers a downgrade to HOLD or WATCH."
+        }
+      ],
+      "confidence": {
+        "overall": 80
+      },
+      "evidenceSummary": {
+        "factCount": 6,
+        "evidenceIds": [
+          "financial.revenue",
+          "financial.totalDebt",
+          "financial.totalCash",
+          "financial.operatingMargin",
+          "financial.freeCashFlow",
+          "financial.netDebt",
+          "valuation.dcf",
+          "valuation.dcfFairValue",
+          "financial.operatingMargins",
+          "risk.overall"
+        ]
+      },
+      "snapshotHash": "309461dc7e77ca33fee443ad64be91ebc71131d8d3e3a357e3db48d0475cfc7f"
+    },
+    "WS_REAL_TICKER_AUDIT:JPM:SNAP_JPM_1788811423723_qt6e": {
+      "snapshotId": "SNAP_JPM_1788811423723_qt6e",
+      "workspaceId": "WS_REAL_TICKER_AUDIT",
+      "ticker": "JPM",
+      "createdAt": "2026-09-07T20:03:43.723Z",
+      "asOf": "2026-09-07T20:03:43.723Z",
+      "truthPackageHash": "a5ee12b06d5c78d42f934ba95b03d4433dd7b1e70fd09a7e37c921da284bd6fa",
+      "truthPackageVersion": "1.0.1",
+      "marketState": {
+        "currentPrice": 150,
+        "marketCap": "UNAVAILABLE",
+        "currency": "USD",
+        "beta": "UNAVAILABLE",
+        "pe": "UNAVAILABLE",
+        "pb": "UNAVAILABLE",
+        "volatility": "UNAVAILABLE"
+      },
+      "financialState": {
+        "revenue": 168000000000,
+        "fcf": 100000000000,
+        "netIncome": "UNAVAILABLE",
+        "operatingCashFlow": "UNAVAILABLE",
+        "totalDebt": 100000000000,
+        "totalCash": 30000000000,
+        "netDebt": 70000000000,
+        "operatingMargin": 0.3,
+        "fcfMargin": "UNAVAILABLE",
+        "debtToEbitda": "UNAVAILABLE",
+        "currentRatio": "UNAVAILABLE",
+        "reportingPeriod": "TTM"
+      },
+      "valuationState": {
+        "dcfFairValue": 180,
+        "dcfUpside": "UNAVAILABLE",
+        "reverseDcfGrowth": "UNAVAILABLE",
+        "relativeFairValue": "UNAVAILABLE",
+        "compositeFairValue": "UNAVAILABLE",
+        "modelAgreement": "UNAVAILABLE"
+      },
+      "riskState": {
+        "overallScore": 25,
+        "overallCategory": "LOW",
+        "financialRisk": "UNAVAILABLE",
+        "marketRisk": "UNAVAILABLE",
+        "liquidityRisk": "UNAVAILABLE",
+        "earningsQuality": "UNAVAILABLE",
+        "categorySummary": {}
+      },
+      "decisionState": {
+        "decision": "BUY",
+        "convictionScore": 85,
+        "convictionLevel": "UNAVAILABLE",
+        "primaryDrivers": [],
+        "falsificationTriggers": []
+      },
+      "thesisState": {
+        "summary": "JPM Corp (JPM) is evaluated with an overall 25 risk profile and intrinsic fair value of 180 USD.",
+        "bullCase": "Expansion in operating cash flows and margin stability supports fundamental outperformance.",
+        "baseCase": "Base-case intrinsic valuation evaluated at 180 USD (grounded valuation). Solvency and operating cash flows remain within historical ranges.",
+        "bearCase": "Deterioration in operating margins or emergence of cash flow divergence would impair fair value realizations.",
+        "keyDrivers": [
+          {
+            "claim": "DCF intrinsic fair value calculated at 180 USD based on 5-year discrete cash flow projections.",
+            "statementType": "CALCULATION",
+            "evidenceIds": [
+              "valuation.dcfFairValue"
+            ]
+          }
+        ]
+      },
+      "catalystState": [
+        {
+          "type": "MARGIN",
+          "description": "Operating Moat & Pricing Power: Robust operating margin of 30.0% provides structural earnings insulation against inflation and cost pressures.",
+          "timeHorizon": "Ongoing (3-5 Years)",
+          "expectedDirection": "POSITIVE",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "confidence": "HIGH"
+        }
+      ],
+      "thesisBreakerState": [
+        {
+          "trigger": "Operating Margin Deterioration below 27%",
+          "currentValue": "30.0%",
+          "threshold": "27%",
+          "direction": "CONTRACTION_BELOW_THRESHOLD",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "severity": "HIGH",
+          "impact": "Erosion of operating margin cushion would reduce forward free cash flow generation and lower DCF fair value."
+        },
+        {
+          "trigger": "Balance Sheet Leverage Spike (Net Debt / EBITDA > 3.5x)",
+          "currentValue": "undefinedx",
+          "threshold": "3.5x",
+          "direction": "EXPANSION_ABOVE_THRESHOLD",
+          "evidenceIds": [
+            "financial.totalDebt",
+            "financial.totalCash"
+          ],
+          "severity": "CRITICAL",
+          "impact": "Elevated debt service burden would restrict capital allocation flexibility and elevate financial solvency risk."
+        },
+        {
+          "trigger": "Cash Flow Divergence (Operating Cash Flow falling below Net Income)",
+          "currentValue": "Verified accounting alignment",
+          "threshold": "CFO / Net Income < 0.80x",
+          "direction": "DIVERGENCE",
+          "evidenceIds": [
+            "financial.operatingCashFlow",
+            "financial.netIncome"
+          ],
+          "severity": "HIGH",
+          "impact": "Accumulation of uncollected non-cash receivables or accruals signals deteriorating earnings quality."
+        },
+        {
+          "trigger": "Market Price Appreciation Eliminating Margin of Safety ($180)",
+          "currentValue": "$150",
+          "threshold": "$180",
+          "direction": "PRICE_CROSSOVER",
+          "evidenceIds": [
+            "valuation.dcfFairValue"
+          ],
+          "severity": "MODERATE",
+          "impact": "Price surpassing intrinsic fair value removes margin of safety and triggers a downgrade to HOLD or WATCH."
+        }
+      ],
+      "confidence": {
+        "overall": 80
+      },
+      "evidenceSummary": {
+        "factCount": 6,
+        "evidenceIds": [
+          "financial.revenue",
+          "financial.totalDebt",
+          "financial.totalCash",
+          "financial.operatingMargin",
+          "financial.freeCashFlow",
+          "financial.netDebt",
+          "valuation.dcf",
+          "valuation.dcfFairValue",
+          "financial.operatingMargins",
+          "risk.overall"
+        ]
+      },
+      "snapshotHash": "dc04617e2ccdff07228e425126c24d1f67d0a13114fa39f2d083070d8f3b8200"
+    },
+    "WS_REAL_TICKER_AUDIT:RELIANCE.NS:SNAP_RELIANCE.NS_1788811423725_dfsa": {
+      "snapshotId": "SNAP_RELIANCE.NS_1788811423725_dfsa",
+      "workspaceId": "WS_REAL_TICKER_AUDIT",
+      "ticker": "RELIANCE.NS",
+      "createdAt": "2026-09-07T20:03:43.725Z",
+      "asOf": "2026-09-07T20:03:43.724Z",
+      "truthPackageHash": "928d20ae5db2af4831b162f9a35d82981ac9e6346586c7f5504c0ed8fd3a9ed8",
+      "truthPackageVersion": "1.0.1",
+      "marketState": {
+        "currentPrice": 150,
+        "marketCap": "UNAVAILABLE",
+        "currency": "INR",
+        "beta": "UNAVAILABLE",
+        "pe": "UNAVAILABLE",
+        "pb": "UNAVAILABLE",
+        "volatility": "UNAVAILABLE"
+      },
+      "financialState": {
+        "revenue": 9975000000000,
+        "fcf": 100000000000,
+        "netIncome": "UNAVAILABLE",
+        "operatingCashFlow": "UNAVAILABLE",
+        "totalDebt": 100000000000,
+        "totalCash": 30000000000,
+        "netDebt": 70000000000,
+        "operatingMargin": 0.3,
+        "fcfMargin": "UNAVAILABLE",
+        "debtToEbitda": "UNAVAILABLE",
+        "currentRatio": "UNAVAILABLE",
+        "reportingPeriod": "TTM"
+      },
+      "valuationState": {
+        "dcfFairValue": 180,
+        "dcfUpside": "UNAVAILABLE",
+        "reverseDcfGrowth": "UNAVAILABLE",
+        "relativeFairValue": "UNAVAILABLE",
+        "compositeFairValue": "UNAVAILABLE",
+        "modelAgreement": "UNAVAILABLE"
+      },
+      "riskState": {
+        "overallScore": 25,
+        "overallCategory": "LOW",
+        "financialRisk": "UNAVAILABLE",
+        "marketRisk": "UNAVAILABLE",
+        "liquidityRisk": "UNAVAILABLE",
+        "earningsQuality": "UNAVAILABLE",
+        "categorySummary": {}
+      },
+      "decisionState": {
+        "decision": "BUY",
+        "convictionScore": 85,
+        "convictionLevel": "UNAVAILABLE",
+        "primaryDrivers": [],
+        "falsificationTriggers": []
+      },
+      "thesisState": {
+        "summary": "RELIANCE.NS Corp (RELIANCE.NS) is evaluated with an overall 25 risk profile and intrinsic fair value of 180 INR.",
+        "bullCase": "Expansion in operating cash flows and margin stability supports fundamental outperformance.",
+        "baseCase": "Base-case intrinsic valuation evaluated at 180 INR (grounded valuation). Solvency and operating cash flows remain within historical ranges.",
+        "bearCase": "Deterioration in operating margins or emergence of cash flow divergence would impair fair value realizations.",
+        "keyDrivers": [
+          {
+            "claim": "DCF intrinsic fair value calculated at 180 INR based on 5-year discrete cash flow projections.",
+            "statementType": "CALCULATION",
+            "evidenceIds": [
+              "valuation.dcfFairValue"
+            ]
+          }
+        ]
+      },
+      "catalystState": [
+        {
+          "type": "MARGIN",
+          "description": "Operating Moat & Pricing Power: Robust operating margin of 30.0% provides structural earnings insulation against inflation and cost pressures.",
+          "timeHorizon": "Ongoing (3-5 Years)",
+          "expectedDirection": "POSITIVE",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "confidence": "HIGH"
+        }
+      ],
+      "thesisBreakerState": [
+        {
+          "trigger": "Operating Margin Deterioration below 27%",
+          "currentValue": "30.0%",
+          "threshold": "27%",
+          "direction": "CONTRACTION_BELOW_THRESHOLD",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "severity": "HIGH",
+          "impact": "Erosion of operating margin cushion would reduce forward free cash flow generation and lower DCF fair value."
+        },
+        {
+          "trigger": "Balance Sheet Leverage Spike (Net Debt / EBITDA > 3.5x)",
+          "currentValue": "undefinedx",
+          "threshold": "3.5x",
+          "direction": "EXPANSION_ABOVE_THRESHOLD",
+          "evidenceIds": [
+            "financial.totalDebt",
+            "financial.totalCash"
+          ],
+          "severity": "CRITICAL",
+          "impact": "Elevated debt service burden would restrict capital allocation flexibility and elevate financial solvency risk."
+        },
+        {
+          "trigger": "Cash Flow Divergence (Operating Cash Flow falling below Net Income)",
+          "currentValue": "Verified accounting alignment",
+          "threshold": "CFO / Net Income < 0.80x",
+          "direction": "DIVERGENCE",
+          "evidenceIds": [
+            "financial.operatingCashFlow",
+            "financial.netIncome"
+          ],
+          "severity": "HIGH",
+          "impact": "Accumulation of uncollected non-cash receivables or accruals signals deteriorating earnings quality."
+        },
+        {
+          "trigger": "Market Price Appreciation Eliminating Margin of Safety ($180)",
+          "currentValue": "$150",
+          "threshold": "$180",
+          "direction": "PRICE_CROSSOVER",
+          "evidenceIds": [
+            "valuation.dcfFairValue"
+          ],
+          "severity": "MODERATE",
+          "impact": "Price surpassing intrinsic fair value removes margin of safety and triggers a downgrade to HOLD or WATCH."
+        }
+      ],
+      "confidence": {
+        "overall": 80
+      },
+      "evidenceSummary": {
+        "factCount": 6,
+        "evidenceIds": [
+          "financial.revenue",
+          "financial.totalDebt",
+          "financial.totalCash",
+          "financial.operatingMargin",
+          "financial.freeCashFlow",
+          "financial.netDebt",
+          "valuation.dcf",
+          "valuation.dcfFairValue",
+          "financial.operatingMargins",
+          "risk.overall"
+        ]
+      },
+      "snapshotHash": "e79fb38816757c8736851c95a881db53fe8011215fd07b58a67c2b562ae4d0e8"
+    },
+    "WS_REAL_TICKER_AUDIT:TMPV.NS:SNAP_TMPV.NS_1788811423730_zam4": {
+      "snapshotId": "SNAP_TMPV.NS_1788811423730_zam4",
+      "workspaceId": "WS_REAL_TICKER_AUDIT",
+      "ticker": "TMPV.NS",
+      "createdAt": "2026-09-07T20:03:43.730Z",
+      "asOf": "2026-09-07T20:03:43.727Z",
+      "truthPackageHash": "2f581fc672207b97f9756c9650a5dfbb75dbe3e2a5c605ad23cf5a01eff470a1",
+      "truthPackageVersion": "1.0.1",
+      "marketState": {
+        "currentPrice": 150,
+        "marketCap": "UNAVAILABLE",
+        "currency": "INR",
+        "beta": "UNAVAILABLE",
+        "pe": "UNAVAILABLE",
+        "pb": "UNAVAILABLE",
+        "volatility": "UNAVAILABLE"
+      },
+      "financialState": {
+        "revenue": 4725000000000,
+        "fcf": 100000000000,
+        "netIncome": "UNAVAILABLE",
+        "operatingCashFlow": "UNAVAILABLE",
+        "totalDebt": 100000000000,
+        "totalCash": 30000000000,
+        "netDebt": 70000000000,
+        "operatingMargin": 0.3,
+        "fcfMargin": "UNAVAILABLE",
+        "debtToEbitda": "UNAVAILABLE",
+        "currentRatio": "UNAVAILABLE",
+        "reportingPeriod": "TTM"
+      },
+      "valuationState": {
+        "dcfFairValue": 180,
+        "dcfUpside": "UNAVAILABLE",
+        "reverseDcfGrowth": "UNAVAILABLE",
+        "relativeFairValue": "UNAVAILABLE",
+        "compositeFairValue": "UNAVAILABLE",
+        "modelAgreement": "UNAVAILABLE"
+      },
+      "riskState": {
+        "overallScore": 25,
+        "overallCategory": "LOW",
+        "financialRisk": "UNAVAILABLE",
+        "marketRisk": "UNAVAILABLE",
+        "liquidityRisk": "UNAVAILABLE",
+        "earningsQuality": "UNAVAILABLE",
+        "categorySummary": {}
+      },
+      "decisionState": {
+        "decision": "BUY",
+        "convictionScore": 85,
+        "convictionLevel": "UNAVAILABLE",
+        "primaryDrivers": [],
+        "falsificationTriggers": []
+      },
+      "thesisState": {
+        "summary": "TMPV.NS Corp (TMPV.NS) is evaluated with an overall 25 risk profile and intrinsic fair value of 180 INR.",
+        "bullCase": "Expansion in operating cash flows and margin stability supports fundamental outperformance.",
+        "baseCase": "Base-case intrinsic valuation evaluated at 180 INR (grounded valuation). Solvency and operating cash flows remain within historical ranges.",
+        "bearCase": "Deterioration in operating margins or emergence of cash flow divergence would impair fair value realizations.",
+        "keyDrivers": [
+          {
+            "claim": "DCF intrinsic fair value calculated at 180 INR based on 5-year discrete cash flow projections.",
+            "statementType": "CALCULATION",
+            "evidenceIds": [
+              "valuation.dcfFairValue"
+            ]
+          }
+        ]
+      },
+      "catalystState": [
+        {
+          "type": "MARGIN",
+          "description": "Operating Moat & Pricing Power: Robust operating margin of 30.0% provides structural earnings insulation against inflation and cost pressures.",
+          "timeHorizon": "Ongoing (3-5 Years)",
+          "expectedDirection": "POSITIVE",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "confidence": "HIGH"
+        }
+      ],
+      "thesisBreakerState": [
+        {
+          "trigger": "Operating Margin Deterioration below 27%",
+          "currentValue": "30.0%",
+          "threshold": "27%",
+          "direction": "CONTRACTION_BELOW_THRESHOLD",
+          "evidenceIds": [
+            "financial.operatingMargin"
+          ],
+          "severity": "HIGH",
+          "impact": "Erosion of operating margin cushion would reduce forward free cash flow generation and lower DCF fair value."
+        },
+        {
+          "trigger": "Balance Sheet Leverage Spike (Net Debt / EBITDA > 3.5x)",
+          "currentValue": "undefinedx",
+          "threshold": "3.5x",
+          "direction": "EXPANSION_ABOVE_THRESHOLD",
+          "evidenceIds": [
+            "financial.totalDebt",
+            "financial.totalCash"
+          ],
+          "severity": "CRITICAL",
+          "impact": "Elevated debt service burden would restrict capital allocation flexibility and elevate financial solvency risk."
+        },
+        {
+          "trigger": "Cash Flow Divergence (Operating Cash Flow falling below Net Income)",
+          "currentValue": "Verified accounting alignment",
+          "threshold": "CFO / Net Income < 0.80x",
+          "direction": "DIVERGENCE",
+          "evidenceIds": [
+            "financial.operatingCashFlow",
+            "financial.netIncome"
+          ],
+          "severity": "HIGH",
+          "impact": "Accumulation of uncollected non-cash receivables or accruals signals deteriorating earnings quality."
+        },
+        {
+          "trigger": "Market Price Appreciation Eliminating Margin of Safety ($180)",
+          "currentValue": "$150",
+          "threshold": "$180",
+          "direction": "PRICE_CROSSOVER",
+          "evidenceIds": [
+            "valuation.dcfFairValue"
+          ],
+          "severity": "MODERATE",
+          "impact": "Price surpassing intrinsic fair value removes margin of safety and triggers a downgrade to HOLD or WATCH."
+        }
+      ],
+      "confidence": {
+        "overall": 80
+      },
+      "evidenceSummary": {
+        "factCount": 6,
+        "evidenceIds": [
+          "financial.revenue",
+          "financial.totalDebt",
+          "financial.totalCash",
+          "financial.operatingMargin",
+          "financial.freeCashFlow",
+          "financial.netDebt",
+          "valuation.dcf",
+          "valuation.dcfFairValue",
+          "financial.operatingMargins",
+          "risk.overall"
+        ]
+      },
+      "snapshotHash": "0df19303d9ec21aec7d17bf5e2cf3cc651208a40fc30defbad8e4f5b50055993"
+    }
+  },
+  "timeline": {
+    "WS_CONCURRENT:AAPL": [
+      {
+        "eventId": "EVT_AAPL_1788811423714_ih83",
+        "workspaceId": "WS_CONCURRENT",
+        "ticker": "AAPL",
+        "timestamp": "2026-09-07T20:03:43.714Z",
+        "type": "TICKER_ADDED",
+        "severity": "INFO",
+        "title": "Added AAPL to Watchlist",
+        "summary": "Started tracking AAPL for continuous change intelligence.",
+        "changes": [],
+        "impact": "",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": null
+      },
+      {
+        "eventId": "EVT_AAPL_1788811423715_xl4a",
+        "workspaceId": "WS_CONCURRENT",
+        "ticker": "AAPL",
+        "timestamp": "2026-09-07T20:03:43.715Z",
+        "type": "SNAPSHOT_CREATED",
+        "severity": "INFO",
+        "title": "Snapshot Created for AAPL",
+        "summary": "Initial investment snapshot established. Tracking enabled.",
+        "changes": [],
+        "impact": "Initial snapshot established. Monitoring baseline thesis.",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": "SNAP_AAPL_1788811423715_pg7s"
+      }
+    ],
+    "WS_CONCURRENT:JPM": [
+      {
+        "eventId": "EVT_JPM_1788811423716_h9ke",
+        "workspaceId": "WS_CONCURRENT",
+        "ticker": "JPM",
+        "timestamp": "2026-09-07T20:03:43.716Z",
+        "type": "TICKER_ADDED",
+        "severity": "INFO",
+        "title": "Added JPM to Watchlist",
+        "summary": "Started tracking JPM for continuous change intelligence.",
+        "changes": [],
+        "impact": "",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": null
+      },
+      {
+        "eventId": "EVT_JPM_1788811423716_myxd",
+        "workspaceId": "WS_CONCURRENT",
+        "ticker": "JPM",
+        "timestamp": "2026-09-07T20:03:43.716Z",
+        "type": "SNAPSHOT_CREATED",
+        "severity": "INFO",
+        "title": "Snapshot Created for JPM",
+        "summary": "Initial investment snapshot established. Tracking enabled.",
+        "changes": [],
+        "impact": "Initial snapshot established. Monitoring baseline thesis.",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": "SNAP_JPM_1788811423716_wiz2"
+      }
+    ],
+    "WS_CONCURRENT:RELIANCE.NS": [
+      {
+        "eventId": "EVT_RELIANCE.NS_1788811423717_75vf",
+        "workspaceId": "WS_CONCURRENT",
+        "ticker": "RELIANCE.NS",
+        "timestamp": "2026-09-07T20:03:43.717Z",
+        "type": "TICKER_ADDED",
+        "severity": "INFO",
+        "title": "Added RELIANCE.NS to Watchlist",
+        "summary": "Started tracking RELIANCE.NS for continuous change intelligence.",
+        "changes": [],
+        "impact": "",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": null
+      },
+      {
+        "eventId": "EVT_RELIANCE.NS_1788811423718_93g8",
+        "workspaceId": "WS_CONCURRENT",
+        "ticker": "RELIANCE.NS",
+        "timestamp": "2026-09-07T20:03:43.718Z",
+        "type": "SNAPSHOT_CREATED",
+        "severity": "INFO",
+        "title": "Snapshot Created for RELIANCE.NS",
+        "summary": "Initial investment snapshot established. Tracking enabled.",
+        "changes": [],
+        "impact": "Initial snapshot established. Monitoring baseline thesis.",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": "SNAP_RELIANCE.NS_1788811423717_msvm"
+      }
+    ],
+    "WS_CONCURRENT:TMPV.NS": [
+      {
+        "eventId": "EVT_TMPV.NS_1788811423718_johd",
+        "workspaceId": "WS_CONCURRENT",
+        "ticker": "TMPV.NS",
+        "timestamp": "2026-09-07T20:03:43.718Z",
+        "type": "TICKER_ADDED",
+        "severity": "INFO",
+        "title": "Added TMPV.NS to Watchlist",
+        "summary": "Started tracking TMPV.NS for continuous change intelligence.",
+        "changes": [],
+        "impact": "",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": null
+      },
+      {
+        "eventId": "EVT_TMPV.NS_1788811423719_l6nz",
+        "workspaceId": "WS_CONCURRENT",
+        "ticker": "TMPV.NS",
+        "timestamp": "2026-09-07T20:03:43.719Z",
+        "type": "SNAPSHOT_CREATED",
+        "severity": "INFO",
+        "title": "Snapshot Created for TMPV.NS",
+        "summary": "Initial investment snapshot established. Tracking enabled.",
+        "changes": [],
+        "impact": "Initial snapshot established. Monitoring baseline thesis.",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": "SNAP_TMPV.NS_1788811423719_kvzz"
+      }
+    ],
+    "WS_REAL_TICKER_AUDIT:AAPL": [
+      {
+        "eventId": "EVT_AAPL_1788811423721_b3sq",
+        "workspaceId": "WS_REAL_TICKER_AUDIT",
+        "ticker": "AAPL",
+        "timestamp": "2026-09-07T20:03:43.721Z",
+        "type": "TICKER_ADDED",
+        "severity": "INFO",
+        "title": "Added AAPL to Watchlist",
+        "summary": "Started tracking AAPL for continuous change intelligence.",
+        "changes": [],
+        "impact": "",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": null
+      },
+      {
+        "eventId": "EVT_AAPL_1788811423722_gasd",
+        "workspaceId": "WS_REAL_TICKER_AUDIT",
+        "ticker": "AAPL",
+        "timestamp": "2026-09-07T20:03:43.722Z",
+        "type": "SNAPSHOT_CREATED",
+        "severity": "INFO",
+        "title": "Snapshot Created for AAPL",
+        "summary": "Initial investment snapshot established. Tracking enabled.",
+        "changes": [],
+        "impact": "Initial snapshot established. Monitoring baseline thesis.",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": "SNAP_AAPL_1788811423722_mjtp"
+      }
+    ],
+    "WS_REAL_TICKER_AUDIT:JPM": [
+      {
+        "eventId": "EVT_JPM_1788811423723_gl6x",
+        "workspaceId": "WS_REAL_TICKER_AUDIT",
+        "ticker": "JPM",
+        "timestamp": "2026-09-07T20:03:43.723Z",
+        "type": "TICKER_ADDED",
+        "severity": "INFO",
+        "title": "Added JPM to Watchlist",
+        "summary": "Started tracking JPM for continuous change intelligence.",
+        "changes": [],
+        "impact": "",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": null
+      },
+      {
+        "eventId": "EVT_JPM_1788811423724_q5uq",
+        "workspaceId": "WS_REAL_TICKER_AUDIT",
+        "ticker": "JPM",
+        "timestamp": "2026-09-07T20:03:43.724Z",
+        "type": "SNAPSHOT_CREATED",
+        "severity": "INFO",
+        "title": "Snapshot Created for JPM",
+        "summary": "Initial investment snapshot established. Tracking enabled.",
+        "changes": [],
+        "impact": "Initial snapshot established. Monitoring baseline thesis.",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": "SNAP_JPM_1788811423723_qt6e"
+      }
+    ],
+    "WS_REAL_TICKER_AUDIT:RELIANCE.NS": [
+      {
+        "eventId": "EVT_RELIANCE.NS_1788811423725_uln5",
+        "workspaceId": "WS_REAL_TICKER_AUDIT",
+        "ticker": "RELIANCE.NS",
+        "timestamp": "2026-09-07T20:03:43.725Z",
+        "type": "TICKER_ADDED",
+        "severity": "INFO",
+        "title": "Added RELIANCE.NS to Watchlist",
+        "summary": "Started tracking RELIANCE.NS for continuous change intelligence.",
+        "changes": [],
+        "impact": "",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": null
+      },
+      {
+        "eventId": "EVT_RELIANCE.NS_1788811423726_132r",
+        "workspaceId": "WS_REAL_TICKER_AUDIT",
+        "ticker": "RELIANCE.NS",
+        "timestamp": "2026-09-07T20:03:43.726Z",
+        "type": "SNAPSHOT_CREATED",
+        "severity": "INFO",
+        "title": "Snapshot Created for RELIANCE.NS",
+        "summary": "Initial investment snapshot established. Tracking enabled.",
+        "changes": [],
+        "impact": "Initial snapshot established. Monitoring baseline thesis.",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": "SNAP_RELIANCE.NS_1788811423725_dfsa"
+      }
+    ],
+    "WS_REAL_TICKER_AUDIT:TMPV.NS": [
+      {
+        "eventId": "EVT_TMPV.NS_1788811423729_jjd0",
+        "workspaceId": "WS_REAL_TICKER_AUDIT",
+        "ticker": "TMPV.NS",
+        "timestamp": "2026-09-07T20:03:43.729Z",
+        "type": "TICKER_ADDED",
+        "severity": "INFO",
+        "title": "Added TMPV.NS to Watchlist",
+        "summary": "Started tracking TMPV.NS for continuous change intelligence.",
+        "changes": [],
+        "impact": "",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": null
+      },
+      {
+        "eventId": "EVT_TMPV.NS_1788811423731_cb9r",
+        "workspaceId": "WS_REAL_TICKER_AUDIT",
+        "ticker": "TMPV.NS",
+        "timestamp": "2026-09-07T20:03:43.731Z",
+        "type": "SNAPSHOT_CREATED",
+        "severity": "INFO",
+        "title": "Snapshot Created for TMPV.NS",
+        "summary": "Initial investment snapshot established. Tracking enabled.",
+        "changes": [],
+        "impact": "Initial snapshot established. Monitoring baseline thesis.",
+        "evidenceIds": [],
+        "previousSnapshotId": null,
+        "currentSnapshotId": "SNAP_TMPV.NS_1788811423730_zam4"
+      }
+    ]
+  },
+  "alerts": {},
+  "version": 1
+}

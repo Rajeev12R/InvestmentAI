@@ -1,0 +1,83 @@
+{
+  "packageId": "ATT-PKG-WS-ISOLATION-BETA",
+  "workspaceId": "WS-ISOLATION-BETA",
+  "generatedAt": "2026-09-07T20:03:43.965Z",
+  "prioritySummary": {
+    "CRITICAL": 0,
+    "HIGH": 0,
+    "MEDIUM": 1,
+    "LOW": 0,
+    "INFORMATIONAL": 0
+  },
+  "attentionItems": [
+    {
+      "attentionId": "ATT-JPM-DECISION-S2",
+      "ticker": "JPM",
+      "entityType": "COMPANY",
+      "priority": "MEDIUM",
+      "score": {
+        "totalScore": 40,
+        "priority": "MEDIUM",
+        "components": {
+          "decisionChange": 30,
+          "thesisBreaker": 0,
+          "valuationDrift": 0,
+          "riskDrift": 0,
+          "eventMateriality": 0,
+          "portfolioExposure": 0,
+          "recency": 5,
+          "confidence": 5
+        }
+      },
+      "severity": "MEDIUM",
+      "category": "DECISION_CHANGE",
+      "title": "JPM Decision Shift: BUY → AVOID",
+      "summary": "Deterministic investment decision changed from BUY to AVOID.",
+      "triggerType": "SNAPSHOT_TRANSITION",
+      "detectedAt": "2026-09-07T20:03:43.965Z",
+      "changeIds": [],
+      "eventIds": [],
+      "alertIds": [],
+      "evidenceIds": [],
+      "metrics": {
+        "valuationDriftPct": 0,
+        "riskDriftSeverity": null,
+        "portfolioWeight": 0
+      },
+      "previousDecision": "BUY",
+      "currentDecision": "AVOID",
+      "previousValuation": null,
+      "currentValuation": null,
+      "previousRisk": null,
+      "currentRisk": null,
+      "thesisStatus": "ACTIVE",
+      "thesisBreakerStatus": "STABLE",
+      "recommendedAction": "CONSIDER_EXIT",
+      "packageHash": "H2",
+      "snapshotId": "S2",
+      "whyMatters": [
+        "Deterministic investment decision shifted from BUY to AVOID.",
+        "Fair value / DCF estimate decreased by 0.0%, altering the margin of safety."
+      ],
+      "whatChanged": [
+        "Decision changed from BUY to AVOID.",
+        "Valuation estimate drifted 0.0% between snapshots."
+      ],
+      "whatInvalidates": [
+        "Reversal of driving metric triggers or upgrade in conviction/MOS back to BUY thresholds.",
+        "Fundamental revision restoring cash flow projections or revised discount rate."
+      ],
+      "investigationQuestions": [
+        "What primary fundamental factor drove the decision downgrade/upgrade from BUY to AVOID for JPM?"
+      ],
+      "secondarySignals": []
+    }
+  ],
+  "portfolioSummary": null,
+  "snapshotIds": [
+    "S2"
+  ],
+  "totalItemCount": 1,
+  "packageHash": "86abd01108772af327f5b08bf22f1aa65ddf0272958bd79a9fbc1e8363fc0511",
+  "isSealed": true
+}

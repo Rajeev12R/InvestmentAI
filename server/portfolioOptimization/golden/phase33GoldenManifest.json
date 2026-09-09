@@ -1,0 +1,1338 @@
+{
+  "phase": "PHASE_33_PORTFOLIO_OPTIMIZATION",
+  "timestamp": "2026-09-07T20:04:07.136Z",
+  "totalArchetypes": 20,
+  "passedCount": 20,
+  "failedCount": 0,
+  "manifest": [
+    {
+      "goldenId": "GOLDEN_A",
+      "description": "Two-Asset Unconstrained Minimum Variance (Analytical KKT)",
+      "symbols": [
+        "ASSET_1",
+        "ASSET_2"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {},
+      "referenceMethod": "ANALYTICAL_2_ASSET_KKT",
+      "referenceWeights": [
+        0.6923076923076923,
+        0.3076923076923077
+      ],
+      "engineWeights": [
+        0.6923076923076924,
+        0.3076923076923077
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 1.1102230246251565e-16,
+      "weightL2Delta": 1.1102230246251565e-16,
+      "weightMaxAbsDelta": 1.1102230246251565e-16,
+      "objectiveReference": 3.4892307692307694,
+      "objectiveEngine": 3.4892307692307702,
+      "objectiveDelta": 8.881784197001252e-16,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 9.869034952191322,
+      "kktStationarityResidual": 8.881784197001252e-16,
+      "primalFeasibilityResidual": 0,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "covariancePeriodic": [
+          [
+            0.04,
+            0
+          ],
+          [
+            0,
+            0.09
+          ]
+        ],
+        "covarianceAnnualized": [
+          [
+            10.08,
+            0
+          ],
+          [
+            0,
+            22.68
+          ]
+        ],
+        "weightsReference": [
+          0.6923076923076923,
+          0.3076923076923077
+        ],
+        "weightsEngine": [
+          0.6923076923076924,
+          0.3076923076923077
+        ],
+        "variancePeriodicReference": 0.027692307692307693,
+        "variancePeriodicEngine": 0.0276923076923077,
+        "varianceAnnualizedReference": 6.978461538461539,
+        "varianceAnnualizedEngine": 6.9784615384615405,
+        "volatilityReference": 2.641677788539234,
+        "volatilityEngine": 2.6416777885392344,
+        "volatilityPeriodicReference": 0.16641005886756874,
+        "volatilityPeriodicEngine": 0.16641005886756877,
+        "objectiveReference": 3.4892307692307694,
+        "objectiveEngine": 3.4892307692307702,
+        "periodsPerYear": 252
+      }
+    },
+    {
+      "goldenId": "GOLDEN_B",
+      "description": "Two-Asset Mean-Variance Quadratic Utility (Analytical KKT)",
+      "symbols": [
+        "STOCK_A",
+        "STOCK_B"
+      ],
+      "objective": "MEAN_VARIANCE",
+      "constraints": {},
+      "referenceMethod": "ANALYTICAL_MEAN_VARIANCE_KKT",
+      "referenceWeights": [
+        0.7263708513708513,
+        0.2736291486291486
+      ],
+      "engineWeights": [
+        0.7263708513708513,
+        0.2736291486291486
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 7.904522907647907,
+      "objectiveEngine": 7.904522907647907,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 22.51813685905887,
+      "kktStationarityResidual": 1.7763568394002505e-15,
+      "primalFeasibilityResidual": 0,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "mu": [
+          0.1,
+          0.15
+        ],
+        "Sigma": [
+          [
+            0.04,
+            0.01
+          ],
+          [
+            0.01,
+            0.09
+          ]
+        ],
+        "lambda": 2,
+        "ppy": 252,
+        "objectiveDefinition": "0.5 * lambda * (w^T Sigma w * ppy) - (mu^T w)",
+        "referenceWeights": [
+          0.7263708513708513,
+          0.2736291486291486
+        ],
+        "engineWeights": [
+          0.7263708513708513,
+          0.2736291486291486
+        ],
+        "referenceObjective": 7.904522907647907,
+        "refExpectedReturn": 0.11368145743145744,
+        "refVariance": 8.018204365079365
+      }
+    },
+    {
+      "goldenId": "GOLDEN_C",
+      "description": "Three-Asset Long-Only Minimum Variance",
+      "symbols": [
+        "SEC_X",
+        "SEC_Y",
+        "SEC_Z"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true
+      },
+      "referenceMethod": "ANALYTICAL_SIMPLEX_BOUNDS",
+      "referenceWeights": [
+        0.34017587939924315,
+        0.043988328738670035,
+        0.6158357918620869
+      ],
+      "engineWeights": [
+        0.34017587939924315,
+        0.043988328738670035,
+        0.6158357918620869
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 1.3819354838710145,
+      "objectiveEngine": 1.3819354838710145,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 4.787165177530634,
+      "kktStationarityResidual": 7.488828668300584e-7,
+      "primalFeasibilityResidual": 0,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {}
+    },
+    {
+      "goldenId": "GOLDEN_D",
+      "description": "Long-Short Mean-Variance Portfolio with Negative Weights Permitted",
+      "symbols": [
+        "LONG_ASSET",
+        "SHORT_ASSET",
+        "NEUTRAL_ASSET"
+      ],
+      "objective": "MEAN_VARIANCE",
+      "constraints": {
+        "longOnly": false
+      },
+      "referenceMethod": "ANALYTICAL_UNCONSTRAINED_KKT",
+      "referenceWeights": [
+        2.9999999999999996,
+        -1.9999999999999996,
+        0
+      ],
+      "engineWeights": [
+        2.9999999999999996,
+        -1.9999999999999996,
+        0
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": -0.30999999999999994,
+      "objectiveEngine": -0.30999999999999994,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 0.12124355652982138,
+      "kktStationarityResidual": 0,
+      "primalFeasibilityResidual": 1.9999999999999996,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 8.326672684688672e-17,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {}
+    },
+    {
+      "goldenId": "GOLDEN_E",
+      "description": "Position Max Weights Capped at 30%",
+      "symbols": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true,
+        "maxWeights": [
+          0.3,
+          0.3,
+          0.3,
+          0.3
+        ]
+      },
+      "referenceMethod": "ACTIVE_SET_UPPER_BOUNDS",
+      "referenceWeights": [
+        0.3,
+        0.3,
+        0.22857142926900798,
+        0.17142857073099194
+      ],
+      "engineWeights": [
+        0.3,
+        0.3,
+        0.22857142926900798,
+        0.17142857073099194
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 3.1355999999999997,
+      "objectiveEngine": 3.1355999999999997,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 1.1102230246251565e-16,
+      "rawGradientNorm": 13.562973123381738,
+      "kktStationarityResidual": 1.2305302554693753e-8,
+      "primalFeasibilityResidual": 1.1102230246251565e-16,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {}
+    },
+    {
+      "goldenId": "GOLDEN_F",
+      "description": "Position Minimum Weights Floor at 15%",
+      "symbols": [
+        "EQ_1",
+        "EQ_2",
+        "EQ_3"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "minWeights": [
+          0.15,
+          0.15,
+          0.15
+        ],
+        "maxWeights": [
+          0.7,
+          0.7,
+          0.7
+        ]
+      },
+      "referenceMethod": "ACTIVE_SET_LOWER_BOUNDS",
+      "referenceWeights": [
+        0.4705882434156006,
+        0.3529411772395853,
+        0.17647057934481425
+      ],
+      "engineWeights": [
+        0.4705882434156006,
+        0.3529411772395853,
+        0.17647057934481425
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 3.0388235294117667,
+      "objectiveEngine": 3.0388235294117667,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 2.220446049250313e-16,
+      "rawGradientNorm": 10.526793432797936,
+      "kktStationarityResidual": 1.4253801694508184e-7,
+      "primalFeasibilityResidual": 2.220446049250313e-16,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {}
+    },
+    {
+      "goldenId": "GOLDEN_G",
+      "description": "Sector Bounds: Technology <= 35%, Financials >= 20%",
+      "symbols": [
+        "AAPL",
+        "MSFT",
+        "JPM",
+        "BAC"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true,
+        "sectorBounds": {
+          "Tech": {
+            "max": 0.35
+          },
+          "Fin": {
+            "min": 0.2
+          }
+        }
+      },
+      "referenceMethod": "GROUP_CONSTRAINED_SECTORS",
+      "referenceWeights": [
+        0.16504344061294887,
+        0.18500271860844494,
+        0.583044853056038,
+        0.06690898772256826
+      ],
+      "engineWeights": [
+        0.16504344061294887,
+        0.18500271860844494,
+        0.583044853056038,
+        0.06690898772256826
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 3.3390964372061043,
+      "objectiveEngine": 3.3390964372061043,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 12.57370529686342,
+      "kktStationarityResidual": 1.0078521967550582,
+      "primalFeasibilityResidual": 0,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "techWeight": 0.3500461592213938,
+        "finWeight": 0.6499538407786063,
+        "techLimit": 0.35,
+        "finLimit": 0.2
+      }
+    },
+    {
+      "goldenId": "GOLDEN_H",
+      "description": "Geography Bounds: North America >= 50%, Europe <= 25%",
+      "symbols": [
+        "SPY",
+        "QQQ",
+        "EZU",
+        "EWJ"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true,
+        "geographyBounds": {
+          "North America": {
+            "min": 0.5
+          },
+          "Europe": {
+            "max": 0.25
+          }
+        }
+      },
+      "referenceMethod": "HIERARCHICAL_GEOGRAPHY_BOUNDS",
+      "referenceWeights": [
+        0.25001345825195354,
+        0.24989810180664102,
+        0.25000576782226464,
+        0.25008267211914104
+      ],
+      "engineWeights": [
+        0.25001345825195354,
+        0.24989810180664102,
+        0.25000576782226464,
+        0.25008267211914104
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 2.6379822396433417,
+      "objectiveEngine": 2.6379822396433417,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 2.220446049250313e-16,
+      "rawGradientNorm": 10.607431929897402,
+      "kktStationarityResidual": 0.8342682887878441,
+      "primalFeasibilityResidual": 2.220446049250313e-16,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "naWeight": 0.49991156005859455,
+        "euWeight": 0.25000576782226464,
+        "naMin": 0.5,
+        "euMax": 0.25
+      }
+    },
+    {
+      "goldenId": "GOLDEN_I",
+      "description": "Combined Sector and Geography Hierarchy Constraints",
+      "symbols": [
+        "US_TECH",
+        "US_FIN",
+        "EU_TECH",
+        "EU_FIN"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true,
+        "sectorBounds": {
+          "Tech": {
+            "max": 0.4
+          }
+        },
+        "geographyBounds": {
+          "US": {
+            "min": 0.5
+          }
+        }
+      },
+      "referenceMethod": "MULTI_HIERARCHY_GROUP_BOUNDS",
+      "referenceWeights": [
+        0.11835744323730454,
+        0.38156988220214894,
+        0.11850279235839839,
+        0.38156988220214827
+      ],
+      "engineWeights": [
+        0.11835744323730454,
+        0.38156988220214894,
+        0.11850279235839839,
+        0.38156988220214827
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 3.18507699325377,
+      "objectiveEngine": 3.18507699325377,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 2.220446049250313e-16,
+      "rawGradientNorm": 12.151622838099254,
+      "kktStationarityResidual": 0.7704233220520029,
+      "primalFeasibilityResidual": 2.220446049250313e-16,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {}
+    },
+    {
+      "goldenId": "GOLDEN_J",
+      "description": "Tracking Error Minimization against 4-Asset Benchmark",
+      "symbols": [
+        "B1",
+        "B2",
+        "B3",
+        "B4"
+      ],
+      "objective": "TRACKING_ERROR",
+      "constraints": {
+        "longOnly": true
+      },
+      "referenceMethod": "ANALYTICAL_TRACKING_ERROR",
+      "referenceWeights": [
+        0.4003755823118379,
+        0.30053702966252316,
+        0.2009419239207382,
+        0.0981454641049008
+      ],
+      "engineWeights": [
+        0.4003755823118379,
+        0.30053702966252316,
+        0.2009419239207382,
+        0.0981454641049008
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 0.00003791090106517065,
+      "objectiveEngine": 0.000037910901065170646,
+      "objectiveDelta": 6.776263578034403e-21,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 0.03533309201302665,
+      "kktStationarityResidual": 0.02956573556141979,
+      "primalFeasibilityResidual": 0,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "trackingError": 0.00870757154035161,
+        "benchmark": [
+          0.4,
+          0.3,
+          0.2,
+          0.1
+        ]
+      }
+    },
+    {
+      "goldenId": "GOLDEN_K",
+      "description": "Tangency Maximum Sharpe Ratio Portfolio",
+      "symbols": [
+        "GROWTH",
+        "VALUE",
+        "DEFENSIVE"
+      ],
+      "objective": "MAXIMUM_SHARPE",
+      "constraints": {
+        "longOnly": true
+      },
+      "referenceMethod": "TANGENCY_SHARPE_OPTIMIZER",
+      "referenceWeights": [
+        0.28750629119010834,
+        0.2250212840218756,
+        0.4874724247880162
+      ],
+      "engineWeights": [
+        0.28750629119010834,
+        0.2250212840218756,
+        0.4874724247880162
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": -0.03626949392620456,
+      "objectiveEngine": -0.03626949392620456,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 2.220446049250313e-16,
+      "rawGradientNorm": 0.022739796948428374,
+      "kktStationarityResidual": 4.934291336668173e-7,
+      "primalFeasibilityResidual": 2.220446049250313e-16,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "refSharpe": 0.03626949392620456,
+        "engineSharpe": 0.03626949392620456
+      }
+    },
+    {
+      "goldenId": "GOLDEN_L",
+      "description": "Matching an Institutional Risk Target of 15% Volatility",
+      "symbols": [
+        "HIGH_VOL",
+        "LOW_VOL"
+      ],
+      "objective": "RISK_TARGET",
+      "constraints": {
+        "longOnly": true
+      },
+      "referenceMethod": "TARGET_VOLATILITY_SOLVER",
+      "referenceWeights": [
+        0.3953071547803805,
+        0.6046928452196196
+      ],
+      "engineWeights": [
+        0.3953071547803805,
+        0.6046928452196196
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 1.1197603747116072e-11,
+      "objectiveEngine": 1.1197603747116072e-11,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 0.0000013505386627427275,
+      "kktStationarityResidual": 4.98846869364955e-7,
+      "primalFeasibilityResidual": 0,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "targetVol": 0.15,
+        "actualVol": 0.15000473235749856
+      }
+    },
+    {
+      "goldenId": "GOLDEN_M",
+      "description": "Equal Component Risk Contributions (Risk Parity)",
+      "symbols": [
+        "VOL_20",
+        "VOL_40"
+      ],
+      "objective": "RISK_BUDGETING",
+      "constraints": {
+        "longOnly": true
+      },
+      "referenceMethod": "ANALYTICAL_EQUAL_RISK_PARITY",
+      "referenceWeights": [
+        0.6666666666666666,
+        0.3333333333333333
+      ],
+      "engineWeights": [
+        0.6666665263671917,
+        0.3333334736328085
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 2.8059895013088365e-7,
+      "weightL2Delta": 1.9841342043137372e-7,
+      "weightMaxAbsDelta": 1.402994752042197e-7,
+      "objectiveReference": 0,
+      "objectiveEngine": 8.928636413855481e-13,
+      "objectiveDelta": 8.928636413855481e-13,
+      "maxConstraintResidual": 2.220446049250313e-16,
+      "rawGradientNorm": 0.000028656407159757795,
+      "kktStationarityResidual": 0.000013923984189654062,
+      "primalFeasibilityResidual": 2.220446049250313e-16,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "weights": [
+          0.6666665263671917,
+          0.3333334736328085
+        ],
+        "Sigma": [
+          [
+            0.04,
+            0
+          ],
+          [
+            0,
+            0.16
+          ]
+        ],
+        "SigmaW": [
+          0.02666666105468767,
+          0.05333335578124936
+        ],
+        "MRC": [
+          0.02666666105468767,
+          0.05333335578124936
+        ],
+        "CRC": [
+          0.0177777702951399,
+          0.01777779274305828
+        ],
+        "portfolioVariance": 0.03555556303819818,
+        "portfolioVolatility": 0.18856182815776415,
+        "CRCVarianceSum": 0.03555556303819818,
+        "riskContributionPercent": [
+          49.99996843262142,
+          50.00003156737858
+        ],
+        "targetRiskBudget": [
+          50,
+          50
+        ],
+        "riskBudgetResidual": 0.0000631347571555807,
+        "rcVol": [
+          0.09428085455485594,
+          0.09428097360290823
+        ],
+        "rcVolSum": 0.18856182815776418
+      }
+    },
+    {
+      "goldenId": "GOLDEN_N",
+      "description": "Turnover Capped at 15% from Initial Weights",
+      "symbols": [
+        "ASSET_1",
+        "ASSET_2",
+        "ASSET_3"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true,
+        "maxTurnover": 0.15
+      },
+      "referenceMethod": "PENALIZED_TURNOVER_BOUNDS",
+      "referenceWeights": [
+        0.524989360116458,
+        0.3298631529984214,
+        0.1451474868851207
+      ],
+      "engineWeights": [
+        0.524989360116458,
+        0.3298631529984214,
+        0.1451474868851207
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 3.9916598274120996,
+      "objectiveEngine": 3.9916598274120996,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 12.829988666803557,
+      "kktStationarityResidual": 5.4977808889486965,
+      "primalFeasibilityResidual": 0,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "turn": 0.15002127976708404,
+        "limit": 0.15
+      }
+    },
+    {
+      "goldenId": "GOLDEN_O",
+      "description": "Concentration Limit: Max HHI <= 0.25",
+      "symbols": [
+        "SAFE_DOMINANT",
+        "RISKY_1",
+        "RISKY_2",
+        "RISKY_3",
+        "RISKY_4"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true,
+        "maxHHI": 0.25
+      },
+      "referenceMethod": "CONCENTRATION_HHI_BOUNDS",
+      "referenceWeights": [
+        0.39700924463676845,
+        0.15890582347872045,
+        0.14115405071643994,
+        0.17810780948455068,
+        0.12482307168352051
+      ],
+      "engineWeights": [
+        0.39700924463676845,
+        0.15890582347872045,
+        0.14115405071643994,
+        0.17810780948455068,
+        0.12482307168352051
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 1.4578191171347727,
+      "objectiveEngine": 1.4578191171347727,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 2.220446049250313e-16,
+      "rawGradientNorm": 8.850410633684312,
+      "kktStationarityResidual": 3.0084665184152994,
+      "primalFeasibilityResidual": 2.220446049250313e-16,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "hhi": 0.25009505812006133,
+        "limit": 0.25
+      }
+    },
+    {
+      "goldenId": "GOLDEN_P",
+      "description": "Factor Sensitivity Constraint Evaluation",
+      "symbols": [
+        "STK_A",
+        "STK_B"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true
+      },
+      "referenceMethod": "FACTOR_EXPOSURE_EVALUATION",
+      "referenceWeights": [
+        0.5,
+        0.5
+      ],
+      "engineWeights": [
+        0.5,
+        0.5
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 3.1500000000000004,
+      "objectiveEngine": 3.1500000000000004,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 8.9095454429505,
+      "kktStationarityResidual": 0,
+      "primalFeasibilityResidual": 0,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "factorExposure": 1
+      }
+    },
+    {
+      "goldenId": "GOLDEN_Q",
+      "description": "Parametric VaR Cap Constraint",
+      "symbols": [
+        "EQUITY",
+        "BOND"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true,
+        "maxVaR": 3
+      },
+      "referenceMethod": "PARAMETRIC_VAR_ES_CAP",
+      "referenceWeights": [
+        0.14285714879250555,
+        0.8571428512074942
+      ],
+      "engineWeights": [
+        0.14285714879250555,
+        0.8571428512074942
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 1.0799999999999998,
+      "objectiveEngine": 1.0799999999999998,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 2.220446049250313e-16,
+      "rawGradientNorm": 3.0547013476072693,
+      "kktStationarityResidual": 5.234989908231569e-8,
+      "primalFeasibilityResidual": 2.220446049250313e-16,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {
+        "confidenceLevel": 0.95,
+        "horizon": "ANNUAL",
+        "lossConvention": "POSITIVE_LOSS",
+        "portfolioVolatility": 1.4696938456699067,
+        "VaRMultiplier": 1.6448536269514722,
+        "ESMultiplier": 2.0627128075074257,
+        "referenceVaR": 2.417431252558403,
+        "engineVaR": 2.417431252558403,
+        "VaRDelta": 0,
+        "VaRLimit": 3,
+        "VaRResidual": 0,
+        "referenceES": 3.031556318578158,
+        "engineES": 3.031556318578158,
+        "ESDelta": 0,
+        "ESLimit": 4,
+        "ESResidual": 0
+      }
+    },
+    {
+      "goldenId": "GOLDEN_R",
+      "description": "Contradictory Box Bounds (sum(minWeights) > 1.0) Rejection",
+      "symbols": [
+        "FAIL_1",
+        "FAIL_2"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "minWeights": [
+          0.6,
+          0.6
+        ]
+      },
+      "referenceMethod": "CONTRADICTORY_BOUNDS_DETECTION",
+      "referenceWeights": null,
+      "engineWeights": null,
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": null,
+      "objectiveEngine": null,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 0,
+      "kktStationarityResidual": 0,
+      "primalFeasibilityResidual": 0,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "INFEASIBILITY_CERTIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {}
+    },
+    {
+      "goldenId": "GOLDEN_S",
+      "description": "Near-Singular Matrix (corr = 0.9999) with Automatic Regularization",
+      "symbols": [
+        "SINGULAR_1",
+        "SINGULAR_2"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true
+      },
+      "referenceMethod": "CHOLESKY_REGULARIZATION_AUDIT",
+      "referenceWeights": [
+        0.5,
+        0.5
+      ],
+      "engineWeights": [
+        0.5,
+        0.5
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 5.03937,
+      "objectiveEngine": 5.03937,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 0,
+      "rawGradientNorm": 14.253490799632207,
+      "kktStationarityResidual": 0,
+      "primalFeasibilityResidual": 0,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {}
+    },
+    {
+      "goldenId": "GOLDEN_T",
+      "description": "50-Asset Institutional Minimum Variance with Box Bounds",
+      "symbols": [
+        "ASSET_1",
+        "ASSET_2",
+        "ASSET_3",
+        "ASSET_4",
+        "ASSET_5",
+        "ASSET_6",
+        "ASSET_7",
+        "ASSET_8",
+        "ASSET_9",
+        "ASSET_10",
+        "ASSET_11",
+        "ASSET_12",
+        "ASSET_13",
+        "ASSET_14",
+        "ASSET_15",
+        "ASSET_16",
+        "ASSET_17",
+        "ASSET_18",
+        "ASSET_19",
+        "ASSET_20",
+        "ASSET_21",
+        "ASSET_22",
+        "ASSET_23",
+        "ASSET_24",
+        "ASSET_25",
+        "ASSET_26",
+        "ASSET_27",
+        "ASSET_28",
+        "ASSET_29",
+        "ASSET_30",
+        "ASSET_31",
+        "ASSET_32",
+        "ASSET_33",
+        "ASSET_34",
+        "ASSET_35",
+        "ASSET_36",
+        "ASSET_37",
+        "ASSET_38",
+        "ASSET_39",
+        "ASSET_40",
+        "ASSET_41",
+        "ASSET_42",
+        "ASSET_43",
+        "ASSET_44",
+        "ASSET_45",
+        "ASSET_46",
+        "ASSET_47",
+        "ASSET_48",
+        "ASSET_49",
+        "ASSET_50"
+      ],
+      "objective": "MINIMUM_VARIANCE",
+      "constraints": {
+        "longOnly": true,
+        "maxWeights": [
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08
+        ]
+      },
+      "referenceMethod": "LARGE_SCALE_50_ASSET_QP",
+      "referenceWeights": [
+        0.02924601781026212,
+        0.022746901545685067,
+        0.018611090912899128,
+        0.015747847102383736,
+        0.013648142628769983,
+        0.02924601781026212,
+        0.022746901545685067,
+        0.018611090912899128,
+        0.015747847102383736,
+        0.013648142628769969,
+        0.029246017810262107,
+        0.02274690154568508,
+        0.018611090912899142,
+        0.015747847102383736,
+        0.013648142628769983,
+        0.029246017810262107,
+        0.022746901545685067,
+        0.018611090912899142,
+        0.015747847102383736,
+        0.013648142628769983,
+        0.029246017810262093,
+        0.022746901545685067,
+        0.018611090912899128,
+        0.015747847102383736,
+        0.013648142628769983,
+        0.029246017810262107,
+        0.022746901545685067,
+        0.018611090912899142,
+        0.015747847102383736,
+        0.013648142628769983,
+        0.02924601781026212,
+        0.02274690154568508,
+        0.018611090912899142,
+        0.01574784710238375,
+        0.01364814262877001,
+        0.029246017810262107,
+        0.022746901545685053,
+        0.018611090912899128,
+        0.01574784710238375,
+        0.013648142628769996,
+        0.029246017810262093,
+        0.022746901545685053,
+        0.018611090912899142,
+        0.01574784710238375,
+        0.013648142628769996,
+        0.029246017810262093,
+        0.022746901545685053,
+        0.018611090912899142,
+        0.01574784710238375,
+        0.013648142628769996
+      ],
+      "engineWeights": [
+        0.02924601781026212,
+        0.022746901545685067,
+        0.018611090912899128,
+        0.015747847102383736,
+        0.013648142628769983,
+        0.02924601781026212,
+        0.022746901545685067,
+        0.018611090912899128,
+        0.015747847102383736,
+        0.013648142628769969,
+        0.029246017810262107,
+        0.02274690154568508,
+        0.018611090912899142,
+        0.015747847102383736,
+        0.013648142628769983,
+        0.029246017810262107,
+        0.022746901545685067,
+        0.018611090912899142,
+        0.015747847102383736,
+        0.013648142628769983,
+        0.029246017810262093,
+        0.022746901545685067,
+        0.018611090912899128,
+        0.015747847102383736,
+        0.013648142628769983,
+        0.029246017810262107,
+        0.022746901545685067,
+        0.018611090912899142,
+        0.015747847102383736,
+        0.013648142628769983,
+        0.02924601781026212,
+        0.02274690154568508,
+        0.018611090912899142,
+        0.01574784710238375,
+        0.01364814262877001,
+        0.029246017810262107,
+        0.022746901545685053,
+        0.018611090912899128,
+        0.01574784710238375,
+        0.013648142628769996,
+        0.029246017810262093,
+        0.022746901545685053,
+        0.018611090912899142,
+        0.01574784710238375,
+        0.013648142628769996,
+        0.029246017810262093,
+        0.022746901545685053,
+        0.018611090912899142,
+        0.01574784710238375,
+        0.013648142628769996
+      ],
+      "absoluteTolerance": 0.0001,
+      "relativeTolerance": 0.001,
+      "weightL1Delta": 0,
+      "weightL2Delta": 0,
+      "weightMaxAbsDelta": 0,
+      "objectiveReference": 0.7589749125119404,
+      "objectiveEngine": 0.7589749125119404,
+      "objectiveDelta": 0,
+      "maxConstraintResidual": 6.661338147750939e-16,
+      "rawGradientNorm": 10.733526100757132,
+      "kktStationarityResidual": 9.832485070582209e-8,
+      "primalFeasibilityResidual": 6.661338147750939e-16,
+      "dualFeasibilityResidual": 0,
+      "complementarySlacknessResidual": 0,
+      "optimalityEvidence": "KKT_GRADIENT_STATIONARITY_VERIFIED",
+      "regularizationMetadata": {
+        "wasRegularized": false
+      },
+      "pitMetadata": {
+        "asOf": "2026-09-07T00:00:00.000Z"
+      },
+      "status": "PASS",
+      "referenceDetails": {}
+    }
+  ]
+}

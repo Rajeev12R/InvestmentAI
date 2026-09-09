@@ -1,0 +1,211 @@
+/**
+ * Phase 17 — Institutional Tax-Aware Portfolio Intelligence & After-Tax Optimization
+ * Canonical Deterministic Types, Enums & Cryptographic Utilities
+ */
+
+import crypto from 'crypto';
+
+export function deepFreeze(obj) {
+  if (obj === null || typeof obj !== 'object') return obj;
+  Object.freeze(obj);
+  for (const key of Object.keys(obj)) {
+    const val = obj[key];
+    if (val !== null && typeof val === 'object' && !Object.isFrozen(val)) {
+      deepFreeze(val);
+    }
+  }
+  return obj;
+}
+
+export function canonicalStringify(data) {
+  if (data === null || typeof data !== 'object') {
+    return JSON.stringify(data);
+  }
+  if (Array.isArray(data)) {
+    return '[' + data.map(canonicalStringify).join(',') + ']';
+  }
+  const keys = Object.keys(data).sort();
+  const pairs = keys.map(k => JSON.stringify(k) + ':' + canonicalStringify(data[k]));
+  return '{' + pairs.join(',') + '}';
+}
+
+export function canonicalHash(data) {
+  const jsonStr = canonicalStringify(data);
+  return crypto.createHash('sha256').update(jsonStr).digest('hex');
+}
+
+export const TaxStatus = Object.freeze({
+  PASS: 'PASS',
+  UNAVAILABLE: 'UNAVAILABLE',
+  INSUFFICIENT_DATA: 'INSUFFICIENT_DATA',
+  INVALID_INPUT: 'INVALID_INPUT',
+  STALE_DATA: 'STALE_DATA',
+  CONFLICT: 'CONFLICT',
+  TEMPORAL_VIOLATION: 'TEMPORAL_VIOLATION',
+  POLICY_NOT_FOUND: 'POLICY_NOT_FOUND',
+  POLICY_VERSION_INVALID: 'POLICY_VERSION_INVALID',
+  AUTHORIZATION_FAILURE: 'AUTHORIZATION_FAILURE',
+  NUMERICAL_FAILURE: 'NUMERICAL_FAILURE',
+  DOUBLE_COUNTED_TAX_EVENT: 'DOUBLE_COUNTED_TAX_EVENT',
+  TAX_RULE_UNAVAILABLE: 'TAX_RULE_UNAVAILABLE',
+  NO_CONFIGURED_WASH_SALE_RULE: 'NO_CONFIGURED_WASH_SALE_RULE',
+  TAX_LOT_UNAVAILABLE: 'TAX_LOT_UNAVAILABLE',
+  COST_BASIS_UNAVAILABLE: 'COST_BASIS_UNAVAILABLE',
+  JURISDICTION_UNAVAILABLE: 'JURISDICTION_UNAVAILABLE',
+  AFTER_TAX_RESULT_UNAVAILABLE: 'AFTER_TAX_RESULT_UNAVAILABLE',
+  INFEASIBLE_CONSTRAINTS: 'INFEASIBLE_CONSTRAINTS',
+  TAX_AWARE_OPTIMIZATION_UNAVAILABLE: 'TAX_AWARE_OPTIMIZATION_UNAVAILABLE',
+  TAX_AWARE_REBALANCE_PREFERRED: 'TAX_AWARE_REBALANCE_PREFERRED'
+});
+
+export const JurisdictionStatus = Object.freeze({
+  LIVE_CONNECTED: 'LIVE_CONNECTED',
+  CONFIGURED: 'CONFIGURED',
+  SYNTHETIC: 'SYNTHETIC',
+  UNAVAILABLE: 'UNAVAILABLE',
+  STALE: 'STALE',
+  CONFLICT: 'CONFLICT'
+});
+
+export const AccountType = Object.freeze({
+  TAXABLE: 'TAXABLE',
+  TAX_DEFERRED: 'TAX_DEFERRED',
+  TAX_EXEMPT: 'TAX_EXEMPT',
+  UNKNOWN: 'UNKNOWN'
+});
+
+export const CostBasisMethod = Object.freeze({
+  FIFO: 'FIFO',
+  LIFO: 'LIFO',
+  SPECIFIC_LOT: 'SPECIFIC_LOT'
+});
+
+export const HoldingPeriodClass = Object.freeze({
+  SHORT_TERM: 'SHORT_TERM',
+  LONG_TERM: 'LONG_TERM',
+  EXEMPT: 'EXEMPT',
+  UNKNOWN: 'UNKNOWN'
+});
+
+export const WashSaleStatus = Object.freeze({
+  ALLOWED: 'ALLOWED',
+  DISALLOWED: 'DISALLOWED',
+  POTENTIAL_RESTRICTION: 'POTENTIAL_RESTRICTION',
+  UNKNOWN: 'UNKNOWN',
+  TAX_RULE_UNAVAILABLE: 'TAX_RULE_UNAVAILABLE'
+});
+
+export const HarvestStatus = Object.freeze({
+  HARVEST_CANDIDATE: 'HARVEST_CANDIDATE',
+  NOT_ELIGIBLE: 'NOT_ELIGIBLE',
+  INSUFFICIENT_DATA: 'INSUFFICIENT_DATA',
+  TAX_RULE_UNAVAILABLE: 'TAX_RULE_UNAVAILABLE',
+  WASH_SALE_RISK: 'WASH_SALE_RISK',
+  COST_EXCEEDS_BENEFIT: 'COST_EXCEEDS_BENEFIT'
+});
+
+export const TaxLabel = Object.freeze({
+  ACTUAL: 'ACTUAL',
+  ESTIMATED: 'ESTIMATED',
+  UNAVAILABLE: 'UNAVAILABLE'
+});
+
+export const DataProvenance = Object.freeze({
+  REAL_DATA: 'REAL_DATA',
+  LIVE_CONNECTED: 'LIVE_CONNECTED',
+  INTEGRATION_PROVEN: 'INTEGRATION_PROVEN',
+  PRODUCTION_PROVEN_ENGINE: 'PRODUCTION_PROVEN_ENGINE',
+  GOLDEN_SYNTHETIC: 'GOLDEN_SYNTHETIC',
+  CONFIGURED: 'CONFIGURED',
+  ADAPTER_READY: 'ADAPTER_READY',
+  INSUFFICIENT_DATA: 'INSUFFICIENT_DATA',
+  UNAVAILABLE: 'UNAVAILABLE'
+});
+
+export const DividendClassification = Object.freeze({
+  QUALIFIED: 'QUALIFIED',
+  NON_QUALIFIED: 'NON_QUALIFIED',
+  ORDINARY: 'ORDINARY',
+  CAPITAL_GAIN_DISTRIBUTION: 'CAPITAL_GAIN_DISTRIBUTION',
+  RETURN_OF_CAPITAL: 'RETURN_OF_CAPITAL',
+  UNKNOWN: 'UNKNOWN'
+});
+
+export const ScenarioType = Object.freeze({
+  A_NO_REBALANCE: 'SCENARIO_A_NO_REBALANCE',
+  B_FULL_TARGET: 'SCENARIO_B_FULL_TARGET',
+  C_TAX_AWARE: 'SCENARIO_C_TAX_AWARE',
+  D_HARVEST_ONLY: 'SCENARIO_D_HARVEST_ONLY',
+  E_PARTIAL_REBALANCE: 'SCENARIO_E_PARTIAL_REBALANCE'
+});
+
+export const TaxCategory = Object.freeze({
+  ACTUAL_TAX_PAID: 'ACTUAL_TAX_PAID',
+  ESTIMATED_REALIZATION_TAX: 'ESTIMATED_REALIZATION_TAX',
+  ESTIMATED_LIQUIDATION_TAX: 'ESTIMATED_LIQUIDATION_TAX',
+  EMBEDDED_UNREALIZED_TAX: 'EMBEDDED_UNREALIZED_TAX',
+  DIVIDEND_WITHHOLDING_TAX: 'DIVIDEND_WITHHOLDING_TAX',
+  TRANSACTION_TAX: 'TRANSACTION_TAX',
+  TRANSACTION_COST: 'TRANSACTION_COST'
+});
+
+export const SecurityType = Object.freeze({
+  EQUITY: 'EQUITY',
+  ETF: 'ETF',
+  BOND: 'BOND',
+  MUTUAL_FUND: 'MUTUAL_FUND',
+  REIT: 'REIT',
+  OTHER: 'OTHER'
+});
+
+export const TaxMethodologyVersion = Object.freeze({
+  V1_LEGACY_SUBTRACTION: 'V1_LEGACY_SUBTRACTION',
+  V2_GEOMETRIC_SUBPERIOD_LINKING: 'V2_GEOMETRIC_SUBPERIOD_LINKING'
+});
+
+export const ValuationBoundary = Object.freeze({
+  PRE_TAX_PRE_COST: 'PRE_TAX_PRE_COST',
+  POST_TAX: 'POST_TAX',
+  POST_TRANSACTION_COST: 'POST_TRANSACTION_COST',
+  POST_ALL_INVESTOR_COSTS: 'POST_ALL_INVESTOR_COSTS'
+});
+
+export const TaxPaymentSource = Object.freeze({
+  PORTFOLIO: 'PORTFOLIO',
+  INVESTOR_EXTERNAL: 'INVESTOR_EXTERNAL',
+  WITHHELD_FROM_DISTRIBUTION: 'WITHHELD_FROM_DISTRIBUTION'
+});
+
+export const CashFlowClassification = Object.freeze({
+  INVESTOR_CONTRIBUTION: 'INVESTOR_CONTRIBUTION',
+  INVESTOR_WITHDRAWAL: 'INVESTOR_WITHDRAWAL',
+  TAX_PAID_EXTERNAL: 'TAX_PAID_EXTERNAL',
+  TAX_PAID_FROM_PORTFOLIO: 'TAX_PAID_FROM_PORTFOLIO',
+  DIVIDEND_RECEIVED: 'DIVIDEND_RECEIVED',
+  DIVIDEND_WITHHOLDING: 'DIVIDEND_WITHHOLDING',
+  TRANSACTION_COST: 'TRANSACTION_COST',
+  ENDING_PORTFOLIO_VALUE: 'ENDING_PORTFOLIO_VALUE'
+});
+
+export const AfterTaxReturnMethodology = Object.freeze({
+  ACTUAL_AFTER_TAX: 'ACTUAL_AFTER_TAX',
+  ESTIMATED_AFTER_TAX: 'ESTIMATED_AFTER_TAX',
+  LIQUIDATION_ADJUSTED: 'LIQUIDATION_ADJUSTED',
+  UNAVAILABLE: 'UNAVAILABLE'
+});
+
+export const CashFlowTiming = Object.freeze({
+  BEGINNING_OF_SUBPERIOD: 'BEGINNING_OF_SUBPERIOD',
+  END_OF_SUBPERIOD: 'END_OF_SUBPERIOD',
+  INTRA_PERIOD: 'INTRA_PERIOD',
+  UNKNOWN: 'UNKNOWN'
+});
+
+export const RateType = Object.freeze({
+  STATUTORY_FIXED: 'STATUTORY_FIXED',
+  TAXPAYER_DEPENDENT: 'TAXPAYER_DEPENDENT',
+  TAXPAYER_SLICE: 'TAXPAYER_SLICE',
+  CONFIGURED_ASSUMPTION: 'CONFIGURED_ASSUMPTION'
+});
+
+

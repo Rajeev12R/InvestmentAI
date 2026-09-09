@@ -1,0 +1,155 @@
+/**
+ * server/knowledgeGraph/kg.types.js
+ * 
+ * Phase 23: Institutional Knowledge Graph Data Models, Types, Enums & Canonical Hashing
+ * Strict separation between verified graph facts, derived relationships, model estimates, and AI hypotheses.
+ */
+
+import crypto from 'crypto';
+
+export const KGNodeType = Object.freeze({
+  COMPANY: 'COMPANY',
+  ISSUER: 'ISSUER',
+  SECURITY: 'SECURITY',
+  PORTFOLIO: 'PORTFOLIO',
+  POSITION: 'POSITION',
+  SECTOR: 'SECTOR',
+  INDUSTRY: 'INDUSTRY',
+  GEOGRAPHY: 'GEOGRAPHY',
+  MACRO_SERIES: 'MACRO_SERIES',
+  MACRO_REGIME: 'MACRO_REGIME',
+  FINANCIAL_FACT: 'FINANCIAL_FACT',
+  EARNINGS_EVENT: 'EARNINGS_EVENT',
+  FORECAST: 'FORECAST',
+  VALUATION: 'VALUATION',
+  RISK: 'RISK',
+  CATALYST: 'CATALYST',
+  THESIS: 'THESIS',
+  DECISION: 'DECISION',
+  EXPECTED_DRIVER: 'EXPECTED_DRIVER',
+  OBSERVED_OUTCOME: 'OBSERVED_OUTCOME',
+  ATTENTION_ITEM: 'ATTENTION_ITEM',
+  SCENARIO: 'SCENARIO',
+  LIQUIDITY_PROFILE: 'LIQUIDITY_PROFILE',
+  COMPLIANCE_RULE: 'COMPLIANCE_RULE',
+  EVIDENCE: 'EVIDENCE',
+  SOURCE: 'SOURCE',
+  CORPORATE_EVENT: 'CORPORATE_EVENT'
+});
+
+export const KGRelationshipType = Object.freeze({
+  SECURITY_ISSUED_BY: 'SECURITY_ISSUED_BY',
+  COMPANY_IN_SECTOR: 'COMPANY_IN_SECTOR',
+  COMPANY_IN_INDUSTRY: 'COMPANY_IN_INDUSTRY',
+  COMPANY_DOMICILED_IN: 'COMPANY_DOMICILED_IN',
+  COMPANY_GENERATES_REVENUE_FROM: 'COMPANY_GENERATES_REVENUE_FROM',
+  COMPANY_DEPENDS_ON: 'COMPANY_DEPENDS_ON',
+  COMPANY_COMPETES_WITH: 'COMPANY_COMPETES_WITH',
+  COMPANY_SUPPLIES: 'COMPANY_SUPPLIES',
+  COMPANY_CUSTOMER_OF: 'COMPANY_CUSTOMER_OF',
+  COMPANY_OWNS: 'COMPANY_OWNS',
+  COMPANY_CONTROLLED_BY: 'COMPANY_CONTROLLED_BY',
+  SECURITY_HELD_BY: 'SECURITY_HELD_BY',
+  PORTFOLIO_EXPOSED_TO: 'PORTFOLIO_EXPOSED_TO',
+  SECURITY_EXPOSED_TO_MACRO: 'SECURITY_EXPOSED_TO_MACRO',
+  COMPANY_EXPOSED_TO_MACRO: 'COMPANY_EXPOSED_TO_MACRO',
+  SECURITY_HAS_RISK: 'SECURITY_HAS_RISK',
+  SECURITY_HAS_CATALYST: 'SECURITY_HAS_CATALYST',
+  THESIS_ABOUT: 'THESIS_ABOUT',
+  DECISION_ABOUT: 'DECISION_ABOUT',
+  DECISION_DEPENDS_ON_FACT: 'DECISION_DEPENDS_ON_FACT',
+  FORECAST_DEPENDS_ON_FACT: 'FORECAST_DEPENDS_ON_FACT',
+  VALUATION_DEPENDS_ON_FORECAST: 'VALUATION_DEPENDS_ON_FORECAST',
+  RISK_DEPENDS_ON_FACT: 'RISK_DEPENDS_ON_FACT',
+  EVENT_CHANGED_FACT: 'EVENT_CHANGED_FACT',
+  EVENT_CHANGED_FORECAST: 'EVENT_CHANGED_FORECAST',
+  EVENT_CHANGED_THESIS: 'EVENT_CHANGED_THESIS',
+  FACT_SUPPORTS_THESIS: 'FACT_SUPPORTS_THESIS',
+  EVIDENCE_SUPPORTS_FACT: 'EVIDENCE_SUPPORTS_FACT',
+  EVIDENCE_SUPPORTS_RELATIONSHIP: 'EVIDENCE_SUPPORTS_RELATIONSHIP',
+  SCENARIO_AFFECTS_SECURITY: 'SCENARIO_AFFECTS_SECURITY',
+  SCENARIO_AFFECTS_PORTFOLIO: 'SCENARIO_AFFECTS_PORTFOLIO',
+  LIQUIDITY_CONSTRAINT_AFFECTS_POSITION: 'LIQUIDITY_CONSTRAINT_AFFECTS_POSITION',
+  COMPLIANCE_RULE_APPLIES_TO: 'COMPLIANCE_RULE_APPLIES_TO',
+  ATTENTION_ITEM_REFERENCES: 'ATTENTION_ITEM_REFERENCES',
+  EXPECTED_DRIVER_SUPPORTS_THESIS: 'EXPECTED_DRIVER_SUPPORTS_THESIS',
+  OBSERVED_OUTCOME_TESTS_DRIVER: 'OBSERVED_OUTCOME_TESTS_DRIVER'
+});
+
+export const KGRelationshipStatus = Object.freeze({
+  VERIFIED: 'VERIFIED',
+  VALIDATED: 'VALIDATED',
+  DERIVED: 'DERIVED',
+  MODEL_ESTIMATE: 'MODEL_ESTIMATE',
+  CONFIGURED: 'CONFIGURED',
+  UNVERIFIED_SOURCE: 'UNVERIFIED_SOURCE',
+  CONFLICTED: 'CONFLICTED',
+  UNAVAILABLE: 'UNAVAILABLE',
+  EXPIRED: 'EXPIRED',
+  AI_HYPOTHESIS: 'AI_HYPOTHESIS'
+});
+
+export const KGImpactCategory = Object.freeze({
+  INFORMATIONAL: 'INFORMATIONAL',
+  POTENTIAL_STALENESS: 'POTENTIAL_STALENESS',
+  MATERIAL_DEPENDENCY: 'MATERIAL_DEPENDENCY',
+  THESIS_IMPACT: 'THESIS_IMPACT',
+  DECISION_IMPACT: 'DECISION_IMPACT',
+  PORTFOLIO_IMPACT: 'PORTFOLIO_IMPACT',
+  COMPLIANCE_IMPACT: 'COMPLIANCE_IMPACT'
+});
+
+export const KGSourceTier = Object.freeze({
+  TIER_1_REGULATORY_FILING: 'TIER_1_REGULATORY_FILING',
+  TIER_1_CENTRAL_BANK: 'TIER_1_CENTRAL_BANK',
+  TIER_2_EXCHANGE_INDEX: 'TIER_2_EXCHANGE_INDEX',
+  TIER_3_INSTITUTIONAL_CONSENSUS: 'TIER_3_INSTITUTIONAL_CONSENSUS',
+  TIER_4_VENDOR_FEED: 'TIER_4_VENDOR_FEED',
+  TIER_5_SYNTHETIC_FIXTURE: 'TIER_5_SYNTHETIC_FIXTURE'
+});
+
+export const KGVerificationStatus = Object.freeze({
+  VERIFIED_DIRECT_AUTHORITY: 'VERIFIED_DIRECT_AUTHORITY',
+  VERIFIED_AUDIT_TRAIL: 'VERIFIED_AUDIT_TRAIL',
+  UNVERIFIED_SOURCE: 'UNVERIFIED_SOURCE'
+});
+
+function deterministicStringify(obj) {
+  if (obj === null || obj === undefined) return 'null';
+  if (typeof obj !== 'object') return JSON.stringify(obj);
+  if (Array.isArray(obj)) {
+    return '[' + obj.map(item => deterministicStringify(item)).join(',') + ']';
+  }
+  const keys = Object.keys(obj).sort();
+  const pairs = keys.map(k => `${JSON.stringify(k)}:${deterministicStringify(obj[k])}`);
+  return '{' + pairs.join(',') + '}';
+}
+
+/**
+ * Deterministic canonical SHA-256 hash generator
+ */
+export function canonicalHash(payload) {
+  if (payload === null || payload === undefined) return null;
+  const canonicalString = deterministicStringify(payload);
+  return crypto.createHash('sha256').update(canonicalString).digest('hex');
+}
+
+export const canonicalSha256 = canonicalHash;
+
+/**
+ * Deep recursive object freezing
+ */
+export function deepFreeze(obj) {
+  if (obj === null || typeof obj !== 'object') return obj;
+  Object.freeze(obj);
+  Object.getOwnPropertyNames(obj).forEach(prop => {
+    if (
+      obj[prop] !== null &&
+      (typeof obj[prop] === 'object' || typeof obj[prop] === 'function') &&
+      !Object.isFrozen(obj[prop])
+    ) {
+      deepFreeze(obj[prop]);
+    }
+  });
+  return obj;
+}

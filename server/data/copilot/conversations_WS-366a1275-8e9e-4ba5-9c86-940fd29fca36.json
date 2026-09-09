@@ -1,0 +1,54 @@
+[
+  {
+    "id": "CONV-WS-366a1275-8e9e-4ba5-9c86-940fd29fca36-1788811424755-798",
+    "conversationId": "CONV-WS-366a1275-8e9e-4ba5-9c86-940fd29fca36-1788811424755-798",
+    "workspaceId": "WS-366a1275-8e9e-4ba5-9c86-940fd29fca36",
+    "title": "New Investment Conversation",
+    "messages": [
+      {
+        "id": "USER-1788811424757",
+        "messageId": "USER-1788811424757",
+        "role": "user",
+        "content": "Show portfolio holdings and risks",
+        "timestamp": "2026-09-07T20:03:44.757Z"
+      },
+      {
+        "id": "MSG-CONV-WS-366a1275-8e9e-4ba5-9c86-940fd29fca36-1788811424755-798-1788811424757",
+        "messageId": "MSG-CONV-WS-366a1275-8e9e-4ba5-9c86-940fd29fca36-1788811424755-798-1788811424757",
+        "role": "assistant",
+        "content": "Portfolio holds 0 active positions with Herfindahl Index (HHI) of 0 and 0 effective independent bets.",
+        "intent": "PORTFOLIO_QUERY",
+        "citations": [
+          {
+            "citationId": "CIT-PORTFOLIO-1",
+            "claim": "Verified signal from VALUATION_ENGINE",
+            "evidenceId": "VAL-PORTFOLIO-DCF",
+            "sourceType": "VALUATION_ENGINE",
+            "sourceAuthority": "DETERMINISTIC_VALUATION",
+            "authorityTier": "DERIVED",
+            "timestamp": "2026-09-06T00:00:00.000Z",
+            "period": "LATEST",
+            "packageHash": "8853c5cf04a6d81246275089a6b1ce091eca4476b249ae07c4967381e706f519",
+            "verifiedHash": "8853c5cf04a6d81246275089a6b1ce091eca4476b249ae07c4967381e706f519"
+          },
+          {
+            "citationId": "CIT-PORTFOLIO-2",
+            "claim": "Verified signal from DECISION_ENGINE",
+            "evidenceId": "DEC-PORTFOLIO-STATUS",
+            "sourceType": "DECISION_ENGINE",
+            "sourceAuthority": "INSTITUTIONAL_DECISION",
+            "authorityTier": "AUTHORITATIVE",
+            "timestamp": "2026-09-06T00:00:00.000Z",
+            "period": "LATEST",
+            "packageHash": "8853c5cf04a6d81246275089a6b1ce091eca4476b249ae07c4967381e706f519",
+            "verifiedHash": "8853c5cf04a6d81246275089a6b1ce091eca4476b249ae07c4967381e706f519"
+          }
+        ],
+        "contextHash": "8853c5cf04a6d81246275089a6b1ce091eca4476b249ae07c4967381e706f519",
+        "timestamp": "2026-09-07T20:03:44.757Z"
+      }
+    ],
+    "createdAt": "2026-09-07T20:03:44.755Z",
+    "updatedAt": "2026-09-07T20:03:44.757Z"
+  }
+]

