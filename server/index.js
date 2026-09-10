@@ -143,7 +143,7 @@ app.use('/api/alerts', alertRoutes);
 app.use('/api/reports', reportRoutes);
 
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(port, () => {
+  app.listen(port, async () => {
         await initializePersistence();
         console.log(`Server Started at port: ${port}`);
     });
