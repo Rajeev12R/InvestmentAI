@@ -51,6 +51,11 @@ const ExecutiveSummary = ({
   };
 
   const recStyle = getRecommendationStyle(recommendation);
+  const getClaimText = (item) => {
+    if (typeof item === 'string') return item;
+    if (typeof item?.claim === 'string') return item.claim;
+    return JSON.stringify(item);
+  };
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-6">
@@ -183,7 +188,7 @@ const ExecutiveSummary = ({
               pros.slice(0, 3).map((p, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-emerald-500 font-bold shrink-0">✓</span>
-                  <span className="leading-relaxed">{p}</span>
+                  <span className="leading-relaxed">{getClaimText(p)}</span>
                 </li>
               ))
             ) : (
@@ -203,7 +208,7 @@ const ExecutiveSummary = ({
               cons.slice(0, 3).map((c, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold shrink-0">⚠</span>
-                  <span className="leading-relaxed">{c}</span>
+                  <span className="leading-relaxed">{getClaimText(c)}</span>
                 </li>
               ))
             ) : (

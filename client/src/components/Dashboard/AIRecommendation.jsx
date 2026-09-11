@@ -56,8 +56,14 @@ const AIRecommendation = ({
   // Helper to extract clean claim text
   const getClaimText = (item) => {
     if (typeof item === 'string') return item;
-    return item?.claim || JSON.stringify(item);
+    const claim = item?.claim;
+    if (typeof claim === 'string') return claim;
+    return claim ? JSON.stringify(claim) : JSON.stringify(item);
   };
+
+  const getTriggerText = (trigger) => (
+    typeof trigger === 'string' ? trigger : JSON.stringify(trigger)
+  );
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 space-y-6 shadow-sm">
@@ -191,7 +197,7 @@ const AIRecommendation = ({
           </div>
           <ul className="list-disc pl-5 space-y-1.5 text-xs text-slate-600">
             {falsificationTriggers.map((trigger, idx) => (
-              <li key={idx} className="leading-relaxed">{trigger}</li>
+              <li key={idx} className="leading-relaxed">{getTriggerText(trigger)}</li>
             ))}
           </ul>
         </div>
