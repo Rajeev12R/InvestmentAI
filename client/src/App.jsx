@@ -19,6 +19,7 @@ import LandingPage from './components/LandingPage.jsx';
 import DashboardPage from './components/DashboardPage.jsx';
 import ComparePage from './components/ComparePage.jsx';
 import WatchlistPage from './components/WatchlistPage.jsx';
+import IPOPage from './components/IPOPage.jsx';
 import WorkspaceDashboard from './components/Workspace/WorkspaceDashboard.jsx';
 
 // SaaS Product Pages
@@ -127,6 +128,18 @@ const App = () => {
                   <Navbar />
                   <main className="flex-1 flex flex-col">
                     <WorkspaceDashboard />
+                  </main>
+                </div>
+              }
+            />
+            <Route
+              path="/ipo"
+              element={
+                <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
+                  <TickerBar />
+                  <Navbar />
+                  <main className="flex-1 flex flex-col">
+                    <IPOPage />
                   </main>
                 </div>
               }

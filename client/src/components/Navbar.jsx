@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Search, TrendingUp, Swords, Star, Globe2 } from 'lucide-react';
+import { Search, TrendingUp, Swords, Star, Globe2, FileText } from 'lucide-react';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -78,6 +78,18 @@ const Navbar = () => {
         >
           <Star className="h-3.5 w-3.5" />
           <span>Watchlist</span>
+        </Link>
+
+        <Link
+          to="/ipo"
+          className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all ${
+            location.pathname === '/ipo'
+              ? 'bg-amber-600 text-white shadow-md shadow-amber-600/20'
+              : 'border border-transparent text-slate-600 hover:border-slate-200 hover:bg-slate-100 hover:text-slate-900'
+          }`}
+        >
+          <FileText className="h-3.5 w-3.5" />
+          <span>IPO</span>
         </Link>
       </div>
     </header>
