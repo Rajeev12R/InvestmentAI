@@ -13,6 +13,7 @@ const yahooFinance = new YahooFinance({
 });
 
 const cache = new Map();
+const inFlightRequests = new Map();
 
 function cleanRawValues(obj) {
     if (obj === null || obj === undefined) {
@@ -41,42 +42,62 @@ export async function scrapeQuotePage(symbol) {
         return cache.get(cleanSymbol);
     }
 
-    console.log(`[Yahoo Service] Fetching data for ${cleanSymbol}...`);
-    
-    let quoteSummary = null;
-    let quote = null;
+    if (inFlightRequests.has(cleanSymbol)) {
+        console.log(`[Yahoo Service] Joining in-flight request for ${cleanSymbol}`);
+        return inFlightRequests.get(cleanSymbol);
+    }
 
+    const request = (async () => {
+        console.log(`[Yahoo Service] Fetching data for ${cleanSymbol}...`);
+
+        let quoteSummary = null;
+        let quote = null;
+        let wasRateLimited = false;
+
+        try {
+            quoteSummary = await yahooFinance.quoteSummary(cleanSymbol, {
+                modules: [
+                    "price",
+                    "summaryProfile",
+                    "financialData",
+                    "defaultKeyStatistics",
+                    "summaryDetail"
+                ]
+            });
+        } catch (err) {
+            wasRateLimited ||= err.statusCode === 429 || err.status === 429;
+            console.warn(`[Yahoo Service] quoteSummary warning for ${cleanSymbol}:`, err.message);
+        }
+
+        try {
+            quote = await yahooFinance.quote(cleanSymbol);
+        } catch (err) {
+            wasRateLimited ||= err.statusCode === 429 || err.status === 429;
+            console.warn(`[Yahoo Service] quote warning for ${cleanSymbol}:`, err.message);
+        }
+
+        if (!quoteSummary && !quote) {
+            if (wasRateLimited) {
+                throw new Error(`Yahoo Finance rate-limited requests for "${cleanSymbol}" (HTTP 429). Please wait and try again.`);
+            }
+            throw new Error(`Could not retrieve financial and stock data for ticker "${cleanSymbol}". Please check if the ticker symbol is valid.`);
+        }
+
+        const result = {
+            quoteSummary: cleanRawValues(quoteSummary) || {},
+            quote: cleanRawValues(quote) || {}
+        };
+
+        cache.set(cleanSymbol, result);
+        return result;
+    })();
+
+    inFlightRequests.set(cleanSymbol, request);
     try {
-        quoteSummary = await yahooFinance.quoteSummary(cleanSymbol, {
-            modules: [
-                "price",
-                "summaryProfile",
-                "financialData",
-                "defaultKeyStatistics",
-                "summaryDetail"
-            ]
-        });
-    } catch (err) {
-        console.warn(`[Yahoo Service] quoteSummary warning for ${cleanSymbol}:`, err.message);
+        return await request;
+    } finally {
+        inFlightRequests.delete(cleanSymbol);
     }
-
-    try {
-        quote = await yahooFinance.quote(cleanSymbol);
-    } catch (err) {
-        console.warn(`[Yahoo Service] quote warning for ${cleanSymbol}:`, err.message);
-    }
-
-    if (!quoteSummary && !quote) {
-        throw new Error(`Could not retrieve financial and stock data for ticker "${cleanSymbol}". Please check if the ticker symbol is valid.`);
-    }
-
-    const result = {
-        quoteSummary: cleanRawValues(quoteSummary) || {},
-        quote: cleanRawValues(quote) || {}
-    };
-
-    cache.set(cleanSymbol, result);
-    return result;
 }
 
 export default yahooFinance;
