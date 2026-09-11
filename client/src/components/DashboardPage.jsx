@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { analyzeCompany } from '../utils/api';
 import LoadingProgress from './LoadingProgress';
 import ExecutiveSummary from './Dashboard/ExecutiveSummary';
@@ -20,6 +20,8 @@ import { AlertCircle, ArrowLeft, RefreshCw, FileText, Share2, Star, ShieldCheck,
 
 const DashboardPage = () => {
   const { ticker } = useParams();
+  const [searchParams] = useSearchParams();
+  const securityType = searchParams.get('securityType');
   const [loading, setLoading] = useState(true);
   const [progressIndex, setProgressIndex] = useState(0);
   const [data, setData] = useState(null);
@@ -114,7 +116,11 @@ const DashboardPage = () => {
       setProgressIndex((prev) => (prev < 4 ? prev + 1 : prev));
     }, 450);
 
-    analyzeCompany(ticker, false, investorProfile)
+    const securityContext = securityType === 'IPO'
+      ? { securityType: 'IPO', lifecycleStatus: 'ANNOUNCED' }
+      : null;
+
+    analyzeCompany(ticker, false, investorProfile, securityContext)
       .then((res) => {
         if (!isMounted) return;
         if (res.success && res.data) {
@@ -139,7 +145,7 @@ const DashboardPage = () => {
       isMounted = false;
       clearInterval(timer);
     };
-  }, [ticker, retryCount]);
+  }, [ticker, retryCount, securityType]);
 
   const handleRetry = () => {
     setRetryCount((prev) => prev + 1);
@@ -316,6 +322,7 @@ const DashboardPage = () => {
             keyFactors={data.keyFactors}
             reasoning={data.reasoning}
             phase3Decision={data.phase3Decision || data.decision}
+            ipoAnalysis={data.ipoAnalysis || data.phase3Decision?.ipoAnalysis}
           />
         </div>
 

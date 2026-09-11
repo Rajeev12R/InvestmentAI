@@ -2,6 +2,7 @@ import { DECISION_OUTCOMES, FIT_SCORES } from './decision.types.js';
 import { evaluateInvestorFit } from './investorFit.engine.js';
 import { calculateConviction } from './conviction.engine.js';
 import { buildDecisionEvidenceGraph } from './decisionEvidence.engine.js';
+import { makeIpoInvestmentDecision } from '../features/ipo/ipoDecision.engine.js';
 
 /**
  * Generates falsification conditions ("What could change this decision?").
@@ -54,8 +55,21 @@ export function makeInvestmentDecision({
   valuation = {},
   riskProfile = {},
   investorProfile = 'BALANCED_VALUE',
-  financialFacts = {}
+  financialFacts = {},
+  securityContext = {}
 } = {}) {
+  if (String(securityContext.securityType || '').toUpperCase() === 'IPO') {
+    return {
+      ...makeIpoInvestmentDecision({ securityContext, riskProfile }),
+      investorFit: null,
+      evidenceGraph: [],
+      metadata: {
+        engine: 'InvestmentAI-IPO-UnderwritingFeature',
+        evaluatedAt: new Date().toISOString()
+      }
+    };
+  }
+
   // 1. Evaluate Investor Fit
   const investorFit = evaluateInvestorFit({
     investorProfile,

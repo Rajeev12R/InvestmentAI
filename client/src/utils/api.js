@@ -8,12 +8,21 @@ import { apiClient, ApiError, ApiErrorCode } from '../services/apiClient.js';
 
 // --- Analysis & Research APIs ---
 
-export const analyzeCompany = async (companyName) => {
+export const analyzeCompany = async (companyName, forceRefresh = false, investorProfile = null, securityContext = null) => {
   try {
-    return await apiClient.post('/api/analyze', { companyName });
+    return await apiClient.post('/api/analyze', { companyName, forceRefresh, investorProfile, securityContext });
   } catch (error) {
     console.error('API Error:', error);
     throw new Error(error.message || 'Failed to analyze company');
+  }
+};
+
+export const getIpoIntelligence = async (companyName, ticker) => {
+  try {
+    return await apiClient.post('/api/ipo/intelligence', { companyName, ticker });
+  } catch (error) {
+    console.error('IPO Intelligence API Error:', error);
+    throw new Error(error.message || 'Failed to retrieve IPO intelligence');
   }
 };
 

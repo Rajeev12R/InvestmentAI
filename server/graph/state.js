@@ -2,6 +2,7 @@ import { Annotation } from "@langchain/langgraph";
 
 export const GraphState = Annotation.Root({
     companyName: Annotation(),
+    securityContext: Annotation(),
     companyProfile: Annotation(),
     financials: Annotation(),
     stockData: Annotation(),

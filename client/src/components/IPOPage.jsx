@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, Search, ShieldCheck, Scale, Flame, ArrowUpRight } from 'lucide-react';
 
-const ACTIVE_IPOS = [
+export const ACTIVE_IPOS = [
   {
     ticker: 'MANIKA-IPO',
     name: 'Manika Plastech',
@@ -295,7 +295,7 @@ const IPOPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const cleanCompany = company.trim().toUpperCase();
-    if (cleanCompany) navigate(`/company/${cleanCompany}?securityType=IPO`);
+    if (cleanCompany) navigate(`/ipo/review/${cleanCompany}`);
   };
 
   return (
@@ -400,7 +400,7 @@ const IPOPage = () => {
                     <td className="px-5 py-4">
                       <button
                         type="button"
-                        onClick={() => navigate(`/company/${ipo.ticker}?securityType=IPO`)}
+                        onClick={() => navigate(`/ipo/review/${ipo.ticker}`)}
                         className="text-left font-bold text-blue-600 hover:underline"
                       >
                         {ipo.name}
@@ -425,7 +425,7 @@ const IPOPage = () => {
                     <td className="px-5 py-4 text-right">
                       <button
                         type="button"
-                        onClick={() => navigate(`/company/${ipo.ticker}?securityType=IPO`)}
+                        onClick={() => navigate(`/ipo/review/${ipo.ticker}`)}
                         className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1.5 text-[10px] font-black uppercase text-blue-700 hover:bg-blue-100"
                       >
                         Review <ArrowUpRight className="h-3 w-3" />

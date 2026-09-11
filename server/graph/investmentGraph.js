@@ -55,9 +55,10 @@ graphBuilder.addEdge("researchStep", END);
 
 export const investmentGraph = graphBuilder.compile();
 
-export async function analyzeCompany(companyName, investorProfile = null) {
+export async function analyzeCompany(companyName, investorProfile = null, securityContext = null) {
     const result = await investmentGraph.invoke({
         companyName,
+        securityContext: securityContext || { securityType: "PUBLIC_EQUITY", lifecycleStatus: "LISTED" },
         companyProfile: null,
         financials: null,
         stockData: null,

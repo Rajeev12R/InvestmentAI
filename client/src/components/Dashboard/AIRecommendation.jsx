@@ -8,7 +8,8 @@ const AIRecommendation = ({
   cons = [], 
   keyFactors = [], 
   reasoning,
-  phase3Decision 
+  phase3Decision,
+  ipoAnalysis
 }) => {
   const getRecommendationTheme = (rec) => {
     const formatted = (rec || '').toUpperCase();
@@ -100,6 +101,35 @@ const AIRecommendation = ({
         <div className="bg-slate-50 border border-slate-200/80 p-4 rounded-xl text-xs text-slate-700 leading-relaxed font-medium">
           <span className="font-bold text-slate-900 block mb-1">Executive Thesis:</span>
           {reasoning}
+        </div>
+      )}
+
+      {ipoAnalysis && (
+        <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-900">IPO Underwriting Review</span>
+            <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black uppercase text-amber-700">
+              {ipoAnalysis.status || 'INCOMPLETE'}
+            </span>
+          </div>
+          {ipoAnalysis.underwritingScore !== undefined && (
+            <p className="text-xs font-semibold text-slate-700">Underwriting score: {ipoAnalysis.underwritingScore}/100</p>
+          )}
+          {ipoAnalysis.missingEvidence?.length > 0 && (
+            <p className="text-xs leading-relaxed text-slate-700">
+              Missing evidence: {ipoAnalysis.missingEvidence.join(', ')}.
+            </p>
+          )}
+          {ipoAnalysis.categoryScores && (
+            <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {Object.entries(ipoAnalysis.categoryScores).map(([category, value]) => (
+                <div key={category} className="rounded-lg border border-amber-200/80 bg-white/70 px-2.5 py-2">
+                  <span className="block text-[9px] font-bold uppercase text-slate-500">{category.replace(/([A-Z])/g, ' $1')}</span>
+                  <span className="text-sm font-black text-slate-900">{value === null ? 'N/A' : `${value}/100`}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

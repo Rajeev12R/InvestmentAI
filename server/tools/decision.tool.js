@@ -4,6 +4,7 @@ import { makeInvestmentDecision as runDeterministicDecisionEngine } from "../dec
 import { evaluateInvestorFit } from "../decision/investorFit.engine.js";
 import { calculateConviction } from "../decision/conviction.engine.js";
 import { buildDecisionEvidenceGraph } from "../decision/decisionEvidence.engine.js";
+import { makeIpoInvestmentDecision } from "../features/ipo/ipoDecision.engine.js";
 
 const CANDIDATE_MODELS = [
     "gemini-2.5-flash",
@@ -23,6 +24,38 @@ const CANDIDATE_MODELS = [
  * - Missing Current Ratio does not fabricate 1.2.
  */
 export function calculateTriFactorScores(state) {
+    if (String(state.securityContext?.securityType || '').toUpperCase() === 'IPO') {
+        const ipoDecision = makeIpoInvestmentDecision({
+            securityContext: {
+                ...state.securityContext,
+                financials: state.securityContext.financials || state.financials,
+                balanceSheet: state.securityContext.balanceSheet || state.financials?.balanceSheet,
+                governance: state.securityContext.governance || state.companyProfile?.governance
+            },
+            riskProfile: state.risks?.riskProfile || state.risks || {}
+        });
+        const categoryScores = ipoDecision.ipoAnalysis?.categoryScores || {};
+        const investmentScore = ipoDecision.ipoAnalysis?.underwritingScore ?? null;
+
+        return {
+            companyQualityScore: categoryScores.actualOperations,
+            stockAttractivenessScore: categoryScores.offerValuation,
+            stockAttractivenessStatus: 'IPO_UNDERWRITING',
+            valuationStatus: 'IPO_OFFER_VALUATION',
+            decisionStatus: 'IPO_UNDERWRITING',
+            decisionBasis: ['Dedicated IPO underwriting scorecard; listed-equity stock scoring was not used.'],
+            investorFitScore: null,
+            investmentScore,
+            recommendation: ipoDecision.recommendation,
+            reasoning: `IPO underwriting score is ${investmentScore ?? 'unavailable'}/100. ${ipoDecision.primaryDrivers?.[0] || 'Evidence review is incomplete.'}`,
+            pros: ipoDecision.pros || ipoDecision.primaryDrivers || [],
+            cons: ipoDecision.cons || [],
+            keyFactors: Object.entries(categoryScores).map(([name, score]) => `${name}: ${score ?? 'UNAVAILABLE'}/100`),
+            phase3Decision: ipoDecision,
+            ipoAnalysis: ipoDecision.ipoAnalysis
+        };
+    }
+
     const fin = state.financials || {};
     const stock = state.stockData || {};
     const valuation = state.valuation || {};
@@ -200,7 +233,8 @@ export function calculateTriFactorScores(state) {
         valuation,
         riskProfile: state.risks?.riskProfile || state.risks || {},
         investorProfile: investorProfile.goal || investorProfile.riskTolerance || 'BALANCED_VALUE',
-        financialFacts: state.truthPackage?.financialFacts || {}
+        financialFacts: state.truthPackage?.financialFacts || {},
+        securityContext: state.securityContext || {}
     });
 
     let recommendation = phase3Decision.decision || "HOLD";
@@ -242,6 +276,19 @@ export function calculateTriFactorScores(state) {
 
 export async function makeInvestmentDecision(state) {
     const scores = calculateTriFactorScores(state);
+
+    if (String(state.securityContext?.securityType || '').toUpperCase() === 'IPO') {
+        return {
+            ...scores,
+            confidence: scores.phase3Decision?.convictionScore || null,
+            pros: scores.pros.map((claim) => ({ claim, evidenceIds: [] })),
+            cons: scores.cons.map((claim) => ({ claim, evidenceIds: [] })),
+            keyFactors: scores.keyFactors.map((claim) => ({ claim, evidenceIds: [] })),
+            investmentHorizon: 'IPO_EVENT_DRIVEN',
+            phase3Decision: scores.phase3Decision
+        };
+    }
+
     const truthPackage = state.truthPackage;
 
     // Strict Invariant: LLM MUST receive ONLY the validated/sealed Truth Package.

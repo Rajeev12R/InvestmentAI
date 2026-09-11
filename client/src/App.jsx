@@ -20,6 +20,7 @@ import DashboardPage from './components/DashboardPage.jsx';
 import ComparePage from './components/ComparePage.jsx';
 import WatchlistPage from './components/WatchlistPage.jsx';
 import IPOPage from './components/IPOPage.jsx';
+import IPOReviewDashboard from './components/IPOReviewDashboard.jsx';
 import WorkspaceDashboard from './components/Workspace/WorkspaceDashboard.jsx';
 
 // SaaS Product Pages
@@ -140,6 +141,18 @@ const App = () => {
                   <Navbar />
                   <main className="flex-1 flex flex-col">
                     <IPOPage />
+                  </main>
+                </div>
+              }
+            />
+            <Route
+              path="/ipo/review/:ticker"
+              element={
+                <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
+                  <TickerBar />
+                  <Navbar />
+                  <main className="flex-1 flex flex-col">
+                    <IPOReviewDashboard />
                   </main>
                 </div>
               }

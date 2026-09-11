@@ -6,7 +6,7 @@ const analysisCache = new Map();
 
 export const analyzecontroller = async (req, res) => {
     try {
-        const { companyName, forceRefresh, investorProfile } = req.body;
+        const { companyName, forceRefresh, investorProfile, securityContext } = req.body;
 
         if (!companyName) {
             return res.status(400).json({
@@ -35,7 +35,7 @@ export const analyzecontroller = async (req, res) => {
         }
 
         console.log(`[Truth Layer Pipeline] Executing institutional research synthesis for ${normalizedKey}...`);
-        const result = await analyzeCompany(companyName, investorProfile);
+        const result = await analyzeCompany(companyName, investorProfile, securityContext);
 
         // Store in cache
         if (result && result.companyProfile) {
